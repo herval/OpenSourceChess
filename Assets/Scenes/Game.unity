@@ -288,18 +288,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cffdaac1f38994c2b9b0c99f5c54d65e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WhiteRook: {fileID: 8961313353959678775, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  WhiteKing: {fileID: -3634579306437949663, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  WhiteQueen: {fileID: 5448714003219461527, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  WhiteBishop: {fileID: -5328559636081169149, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  WhitePawn: {fileID: 8119914460904272794, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  WhiteKnight: {fileID: 7856119208249216779, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  BlackRook: {fileID: 8570351521447719361, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  BlackKing: {fileID: -8461481532810318459, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  BlackQueen: {fileID: 5951064363449065227, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  BlackBishop: {fileID: 1283048056379061930, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  BlackPawn: {fileID: 4898133528527232323, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
-  BlackKnight: {fileID: 2283227604467292873, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  LightRook: {fileID: 8961313353959678775, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  LightKing: {fileID: -3634579306437949663, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  LightQueen: {fileID: 5448714003219461527, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  LightBishop: {fileID: -5328559636081169149, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  LightPawn: {fileID: 8119914460904272794, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  LightKnight: {fileID: 7856119208249216779, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  DarkRook: {fileID: 8570351521447719361, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  DarkKing: {fileID: -8461481532810318459, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  DarkQueen: {fileID: 5951064363449065227, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  DarkBishop: {fileID: 1283048056379061930, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  DarkPawn: {fileID: 4898133528527232323, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
+  DarkKnight: {fileID: 2283227604467292873, guid: d19b14ac4815b4af2a78fdc164090dcb, type: 3}
   piecePrefab: {fileID: 8142466828272293925, guid: 0b44d19b0792244fa8ac06e330af934b, type: 3}
 --- !u!114 &457989839
 MonoBehaviour:
