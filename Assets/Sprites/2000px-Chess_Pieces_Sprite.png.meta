@@ -1,0 +1,1147 @@
+fileFormatVersion: 2
+guid: d19b14ac4815b4af2a78fdc164090dcb
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5448714003219461527
+    second: queen1
+  - first:
+      213: -5252056964783822159
+    second: queen1
+  - first:
+      213: -5328559636081169149
+    second: bishop1
+  - first:
+      213: 7856119208249216779
+    second: knight1
+  - first:
+      213: 8961313353959678775
+    second: rook1
+  - first:
+      213: 8119914460904272794
+    second: pawn1
+  - first:
+      213: 5951064363449065227
+    second: queen2
+  - first:
+      213: -5818760463253086888
+    second: queen2
+  - first:
+      213: 1283048056379061930
+    second: bishop2
+  - first:
+      213: 2283227604467292873
+    second: knight2
+  - first:
+      213: 8570351521447719361
+    second: rook2
+  - first:
+      213: 4898133528527232323
+    second: pawn2
+  - first:
+      213: -706231103676872562
+    second: 2000px-Chess_Pieces_Sprite_12
+  - first:
+      213: 6249593038676026740
+    second: 2000px-Chess_Pieces_Sprite_13
+  - first:
+      213: -3559922559451037323
+    second: 2000px-Chess_Pieces_Sprite_14
+  - first:
+      213: 7134668510830779675
+    second: 2000px-Chess_Pieces_Sprite_15
+  - first:
+      213: 6444016490747540403
+    second: 2000px-Chess_Pieces_Sprite_16
+  - first:
+      213: 7549514810957808112
+    second: 2000px-Chess_Pieces_Sprite_17
+  - first:
+      213: -2094549887782887227
+    second: 2000px-Chess_Pieces_Sprite_18
+  - first:
+      213: 6971365170157772553
+    second: 2000px-Chess_Pieces_Sprite_19
+  - first:
+      213: -5583365910646085990
+    second: 2000px-Chess_Pieces_Sprite_20
+  - first:
+      213: -8703668991746995692
+    second: 2000px-Chess_Pieces_Sprite_21
+  - first:
+      213: -8283621856583881966
+    second: 2000px-Chess_Pieces_Sprite_22
+  - first:
+      213: 6839982841081523513
+    second: 2000px-Chess_Pieces_Sprite_23
+  - first:
+      213: 2460053457139845343
+    second: 2000px-Chess_Pieces_Sprite_24
+  - first:
+      213: -8783977876794025396
+    second: 2000px-Chess_Pieces_Sprite_25
+  - first:
+      213: -6882391258679794883
+    second: 2000px-Chess_Pieces_Sprite_26
+  - first:
+      213: 873413733735095944
+    second: 2000px-Chess_Pieces_Sprite_27
+  - first:
+      213: 6807518022750068612
+    second: 2000px-Chess_Pieces_Sprite_28
+  - first:
+      213: -2042809973880778853
+    second: 2000px-Chess_Pieces_Sprite_29
+  - first:
+      213: -5646813623233480212
+    second: 2000px-Chess_Pieces_Sprite_30
+  - first:
+      213: 498001328944241625
+    second: 2000px-Chess_Pieces_Sprite_31
+  - first:
+      213: -6601926322775120306
+    second: 2000px-Chess_Pieces_Sprite_32
+  - first:
+      213: 1506942108167210967
+    second: 2000px-Chess_Pieces_Sprite_33
+  - first:
+      213: 3547300082784561875
+    second: 2000px-Chess_Pieces_Sprite_34
+  - first:
+      213: -5428819970793419976
+    second: 2000px-Chess_Pieces_Sprite_35
+  - first:
+      213: 5409504778824947971
+    second: 2000px-Chess_Pieces_Sprite_36
+  - first:
+      213: -5505716017220198749
+    second: 2000px-Chess_Pieces_Sprite_37
+  - first:
+      213: -1379107473156200434
+    second: 2000px-Chess_Pieces_Sprite_38
+  - first:
+      213: -7305170446010401568
+    second: 2000px-Chess_Pieces_Sprite_39
+  - first:
+      213: -3393671339164289628
+    second: 2000px-Chess_Pieces_Sprite_40
+  - first:
+      213: 8301473917766256346
+    second: 2000px-Chess_Pieces_Sprite_41
+  - first:
+      213: 385982897965060337
+    second: 2000px-Chess_Pieces_Sprite_42
+  - first:
+      213: 3756078114914407455
+    second: 2000px-Chess_Pieces_Sprite_43
+  - first:
+      213: -4471959747008744938
+    second: 2000px-Chess_Pieces_Sprite_44
+  - first:
+      213: 3610311728091663844
+    second: 2000px-Chess_Pieces_Sprite_45
+  - first:
+      213: 1397247253349406469
+    second: 2000px-Chess_Pieces_Sprite_46
+  - first:
+      213: -7091984890215130730
+    second: 2000px-Chess_Pieces_Sprite_47
+  - first:
+      213: 6334632271326432401
+    second: 2000px-Chess_Pieces_Sprite_48
+  - first:
+      213: 8612623237727121052
+    second: 2000px-Chess_Pieces_Sprite_49
+  - first:
+      213: -1381401135113393706
+    second: 2000px-Chess_Pieces_Sprite_50
+  - first:
+      213: 1765760800590588610
+    second: 2000px-Chess_Pieces_Sprite_51
+  - first:
+      213: 3528054496716079312
+    second: 2000px-Chess_Pieces_Sprite_52
+  - first:
+      213: 7321674868082880771
+    second: 2000px-Chess_Pieces_Sprite_53
+  - first:
+      213: 4776249163364795188
+    second: 2000px-Chess_Pieces_Sprite_54
+  - first:
+      213: 1114452305128062899
+    second: 2000px-Chess_Pieces_Sprite_55
+  - first:
+      213: -8629769561900952834
+    second: 2000px-Chess_Pieces_Sprite_56
+  - first:
+      213: 5718841731436727795
+    second: 2000px-Chess_Pieces_Sprite_57
+  - first:
+      213: -9176236297809010277
+    second: 2000px-Chess_Pieces_Sprite_58
+  - first:
+      213: 4191799596906525399
+    second: 2000px-Chess_Pieces_Sprite_59
+  - first:
+      213: -907597433022097488
+    second: 2000px-Chess_Pieces_Sprite_60
+  - first:
+      213: 8867970364503313404
+    second: 2000px-Chess_Pieces_Sprite_61
+  - first:
+      213: 1118475088974064186
+    second: 2000px-Chess_Pieces_Sprite_62
+  - first:
+      213: 5751555502966589210
+    second: 2000px-Chess_Pieces_Sprite_63
+  - first:
+      213: 198583805612322029
+    second: 2000px-Chess_Pieces_Sprite_64
+  - first:
+      213: -7754003193458195008
+    second: 2000px-Chess_Pieces_Sprite_65
+  - first:
+      213: -4990900564724745550
+    second: 2000px-Chess_Pieces_Sprite_66
+  - first:
+      213: -7957691179544071415
+    second: 2000px-Chess_Pieces_Sprite_67
+  - first:
+      213: 4565321785335304607
+    second: 2000px-Chess_Pieces_Sprite_68
+  - first:
+      213: 1540008675604628163
+    second: 2000px-Chess_Pieces_Sprite_69
+  - first:
+      213: 6744429701647070319
+    second: 2000px-Chess_Pieces_Sprite_70
+  - first:
+      213: 1843740163353519015
+    second: 2000px-Chess_Pieces_Sprite_71
+  - first:
+      213: 2619189194121059167
+    second: 2000px-Chess_Pieces_Sprite_72
+  - first:
+      213: 3948454646334117784
+    second: 2000px-Chess_Pieces_Sprite_73
+  - first:
+      213: -6303687096316297123
+    second: 2000px-Chess_Pieces_Sprite_74
+  - first:
+      213: -5964464762307955089
+    second: 2000px-Chess_Pieces_Sprite_75
+  - first:
+      213: -5281742583386260314
+    second: 2000px-Chess_Pieces_Sprite_76
+  - first:
+      213: -5027091077775892693
+    second: 2000px-Chess_Pieces_Sprite_77
+  - first:
+      213: 1781564225987074395
+    second: 2000px-Chess_Pieces_Sprite_78
+  - first:
+      213: 7439519538811456273
+    second: 2000px-Chess_Pieces_Sprite_79
+  - first:
+      213: 2012702759231056236
+    second: 2000px-Chess_Pieces_Sprite_80
+  - first:
+      213: -8112460491847431829
+    second: 2000px-Chess_Pieces_Sprite_81
+  - first:
+      213: 2274911762456003589
+    second: 2000px-Chess_Pieces_Sprite_82
+  - first:
+      213: -729962690936193015
+    second: 2000px-Chess_Pieces_Sprite_83
+  - first:
+      213: 7948887273243702727
+    second: 2000px-Chess_Pieces_Sprite_84
+  - first:
+      213: 1488765546555230027
+    second: 2000px-Chess_Pieces_Sprite_85
+  - first:
+      213: 4022624144087670388
+    second: 2000px-Chess_Pieces_Sprite_86
+  - first:
+      213: -7684540709459784392
+    second: 2000px-Chess_Pieces_Sprite_87
+  - first:
+      213: 2987015859033717608
+    second: 2000px-Chess_Pieces_Sprite_88
+  - first:
+      213: 4805868362766814200
+    second: 2000px-Chess_Pieces_Sprite_89
+  - first:
+      213: 6702275669962721631
+    second: 2000px-Chess_Pieces_Sprite_90
+  - first:
+      213: 4500449319146120488
+    second: 2000px-Chess_Pieces_Sprite_91
+  - first:
+      213: -3844837422627775905
+    second: 2000px-Chess_Pieces_Sprite_92
+  - first:
+      213: -749714024864201721
+    second: 2000px-Chess_Pieces_Sprite_93
+  - first:
+      213: 6422848845062345362
+    second: 2000px-Chess_Pieces_Sprite_94
+  - first:
+      213: 6826385008430522766
+    second: 2000px-Chess_Pieces_Sprite_95
+  - first:
+      213: 6107140523309878493
+    second: 2000px-Chess_Pieces_Sprite_96
+  - first:
+      213: 2432114349643379372
+    second: 2000px-Chess_Pieces_Sprite_97
+  - first:
+      213: 431369490238042174
+    second: 2000px-Chess_Pieces_Sprite_98
+  - first:
+      213: -8425920902244862904
+    second: 2000px-Chess_Pieces_Sprite_99
+  - first:
+      213: -5088340728954691255
+    second: 2000px-Chess_Pieces_Sprite_100
+  - first:
+      213: 3970827707149298187
+    second: 2000px-Chess_Pieces_Sprite_101
+  - first:
+      213: -4684380545670189301
+    second: 2000px-Chess_Pieces_Sprite_102
+  - first:
+      213: 7734851630620045425
+    second: 2000px-Chess_Pieces_Sprite_103
+  - first:
+      213: -8089311587144527093
+    second: 2000px-Chess_Pieces_Sprite_104
+  - first:
+      213: -782220114958879613
+    second: 2000px-Chess_Pieces_Sprite_105
+  - first:
+      213: -742022360094999181
+    second: 2000px-Chess_Pieces_Sprite_106
+  - first:
+      213: -8079835849914631783
+    second: 2000px-Chess_Pieces_Sprite_107
+  - first:
+      213: -4355407064082610342
+    second: 2000px-Chess_Pieces_Sprite_108
+  - first:
+      213: -6084074755199449365
+    second: 2000px-Chess_Pieces_Sprite_109
+  - first:
+      213: -8186953987575136952
+    second: 2000px-Chess_Pieces_Sprite_110
+  - first:
+      213: 5719141249801533928
+    second: 2000px-Chess_Pieces_Sprite_111
+  - first:
+      213: 6097134782031871159
+    second: 2000px-Chess_Pieces_Sprite_112
+  - first:
+      213: -6804403768461828194
+    second: 2000px-Chess_Pieces_Sprite_113
+  - first:
+      213: -2089463166769685935
+    second: 2000px-Chess_Pieces_Sprite_114
+  - first:
+      213: -8368595228199815060
+    second: 2000px-Chess_Pieces_Sprite_115
+  - first:
+      213: -6172331943380026742
+    second: 2000px-Chess_Pieces_Sprite_116
+  - first:
+      213: -6052473509513043030
+    second: 2000px-Chess_Pieces_Sprite_117
+  - first:
+      213: -2162085160613528049
+    second: 2000px-Chess_Pieces_Sprite_118
+  - first:
+      213: 3463820764717853315
+    second: 2000px-Chess_Pieces_Sprite_119
+  - first:
+      213: 8925769318726737603
+    second: 2000px-Chess_Pieces_Sprite_120
+  - first:
+      213: -3735898915414450721
+    second: 2000px-Chess_Pieces_Sprite_121
+  - first:
+      213: -7315037849642498185
+    second: 2000px-Chess_Pieces_Sprite_122
+  - first:
+      213: -2230576290399542361
+    second: 2000px-Chess_Pieces_Sprite_123
+  - first:
+      213: -2779392678886260823
+    second: 2000px-Chess_Pieces_Sprite_124
+  - first:
+      213: 7457392257654579779
+    second: 2000px-Chess_Pieces_Sprite_125
+  - first:
+      213: 4466879990240903435
+    second: 2000px-Chess_Pieces_Sprite_126
+  - first:
+      213: 5875808530375337679
+    second: 2000px-Chess_Pieces_Sprite_127
+  - first:
+      213: -5114520518716543542
+    second: 2000px-Chess_Pieces_Sprite_128
+  - first:
+      213: -323743889488771510
+    second: 2000px-Chess_Pieces_Sprite_129
+  - first:
+      213: -3244666492972163377
+    second: 2000px-Chess_Pieces_Sprite_130
+  - first:
+      213: 3384387893658395672
+    second: 2000px-Chess_Pieces_Sprite_131
+  - first:
+      213: -756532804355431351
+    second: 2000px-Chess_Pieces_Sprite_132
+  - first:
+      213: -978118958311140343
+    second: 2000px-Chess_Pieces_Sprite_133
+  - first:
+      213: -4210443078718146996
+    second: 2000px-Chess_Pieces_Sprite_134
+  - first:
+      213: 4599266395359476414
+    second: 2000px-Chess_Pieces_Sprite_135
+  - first:
+      213: 3846232858681210517
+    second: 2000px-Chess_Pieces_Sprite_136
+  - first:
+      213: 3063973066316806634
+    second: 2000px-Chess_Pieces_Sprite_137
+  - first:
+      213: 6866853213409748149
+    second: 2000px-Chess_Pieces_Sprite_138
+  - first:
+      213: 5023019063849439854
+    second: 2000px-Chess_Pieces_Sprite_139
+  - first:
+      213: -5667972446560632969
+    second: 2000px-Chess_Pieces_Sprite_140
+  - first:
+      213: 8941086820713428040
+    second: 2000px-Chess_Pieces_Sprite_141
+  - first:
+      213: 773590748336765660
+    second: 2000px-Chess_Pieces_Sprite_142
+  - first:
+      213: 5864490484382636952
+    second: 2000px-Chess_Pieces_Sprite_143
+  - first:
+      213: -5577819774551726513
+    second: 2000px-Chess_Pieces_Sprite_144
+  - first:
+      213: 3189320521123334438
+    second: 2000px-Chess_Pieces_Sprite_145
+  - first:
+      213: 3301814792034180506
+    second: 2000px-Chess_Pieces_Sprite_146
+  - first:
+      213: -5935880371700262529
+    second: 2000px-Chess_Pieces_Sprite_147
+  - first:
+      213: 5684360753520565697
+    second: 2000px-Chess_Pieces_Sprite_148
+  - first:
+      213: 675041617592394019
+    second: 2000px-Chess_Pieces_Sprite_149
+  - first:
+      213: 8000565823627151557
+    second: 2000px-Chess_Pieces_Sprite_150
+  - first:
+      213: -4219338624808141171
+    second: 2000px-Chess_Pieces_Sprite_151
+  - first:
+      213: 5564709580007059881
+    second: 2000px-Chess_Pieces_Sprite_152
+  - first:
+      213: -5363132066005836328
+    second: 2000px-Chess_Pieces_Sprite_153
+  - first:
+      213: 5217377640503111199
+    second: 2000px-Chess_Pieces_Sprite_154
+  - first:
+      213: -3536491129554866392
+    second: 2000px-Chess_Pieces_Sprite_155
+  - first:
+      213: -8061270528680520308
+    second: 2000px-Chess_Pieces_Sprite_156
+  - first:
+      213: 8152691649452245125
+    second: 2000px-Chess_Pieces_Sprite_157
+  - first:
+      213: -1548212546186820989
+    second: 2000px-Chess_Pieces_Sprite_158
+  - first:
+      213: -4507349751973012409
+    second: 2000px-Chess_Pieces_Sprite_159
+  - first:
+      213: 1528367850435117405
+    second: 2000px-Chess_Pieces_Sprite_160
+  - first:
+      213: 3549180264307969117
+    second: 2000px-Chess_Pieces_Sprite_161
+  - first:
+      213: 3089542286813827767
+    second: 2000px-Chess_Pieces_Sprite_162
+  - first:
+      213: -878934434504247615
+    second: 2000px-Chess_Pieces_Sprite_163
+  - first:
+      213: -1926401725354377249
+    second: 2000px-Chess_Pieces_Sprite_164
+  - first:
+      213: -7657357837146505021
+    second: 2000px-Chess_Pieces_Sprite_165
+  - first:
+      213: -7094030473065037955
+    second: 2000px-Chess_Pieces_Sprite_166
+  - first:
+      213: 7668393238456040164
+    second: 2000px-Chess_Pieces_Sprite_167
+  - first:
+      213: -3781031445510088260
+    second: 2000px-Chess_Pieces_Sprite_168
+  - first:
+      213: -826939991100560016
+    second: 2000px-Chess_Pieces_Sprite_169
+  - first:
+      213: 6763564107939908004
+    second: 2000px-Chess_Pieces_Sprite_170
+  - first:
+      213: 5334446495797975560
+    second: 2000px-Chess_Pieces_Sprite_171
+  - first:
+      213: 6525720266919676063
+    second: 2000px-Chess_Pieces_Sprite_172
+  - first:
+      213: -2787556215256007542
+    second: 2000px-Chess_Pieces_Sprite_173
+  - first:
+      213: -655888636559830739
+    second: 2000px-Chess_Pieces_Sprite_174
+  - first:
+      213: 940699006574406662
+    second: 2000px-Chess_Pieces_Sprite_175
+  - first:
+      213: -1164952807319334376
+    second: 2000px-Chess_Pieces_Sprite_176
+  - first:
+      213: -2673718320424605586
+    second: 2000px-Chess_Pieces_Sprite_177
+  - first:
+      213: -4452717818513770530
+    second: 2000px-Chess_Pieces_Sprite_178
+  - first:
+      213: 3813897459953581668
+    second: 2000px-Chess_Pieces_Sprite_179
+  - first:
+      213: 2126212946450206036
+    second: 2000px-Chess_Pieces_Sprite_180
+  - first:
+      213: 6763385165876365792
+    second: 2000px-Chess_Pieces_Sprite_181
+  - first:
+      213: -6634817019551825919
+    second: 2000px-Chess_Pieces_Sprite_182
+  - first:
+      213: -2674879050554293205
+    second: 2000px-Chess_Pieces_Sprite_183
+  - first:
+      213: 5684984269242995961
+    second: 2000px-Chess_Pieces_Sprite_184
+  - first:
+      213: -506332453477186841
+    second: 2000px-Chess_Pieces_Sprite_185
+  - first:
+      213: -4337994428036062991
+    second: 2000px-Chess_Pieces_Sprite_186
+  - first:
+      213: 6584346052007658400
+    second: 2000px-Chess_Pieces_Sprite_187
+  - first:
+      213: 6563367035718525029
+    second: 2000px-Chess_Pieces_Sprite_188
+  - first:
+      213: -4788855723225266760
+    second: 2000px-Chess_Pieces_Sprite_189
+  - first:
+      213: -7827815006241506017
+    second: 2000px-Chess_Pieces_Sprite_190
+  - first:
+      213: -3725297367836259360
+    second: 2000px-Chess_Pieces_Sprite_191
+  - first:
+      213: -1545268192837468401
+    second: 2000px-Chess_Pieces_Sprite_192
+  - first:
+      213: 8087848510443718603
+    second: 2000px-Chess_Pieces_Sprite_193
+  - first:
+      213: 3914108312913993266
+    second: 2000px-Chess_Pieces_Sprite_194
+  - first:
+      213: 3837522679854461449
+    second: 2000px-Chess_Pieces_Sprite_195
+  - first:
+      213: 6480099849143844125
+    second: 2000px-Chess_Pieces_Sprite_196
+  - first:
+      213: 3102545733553432059
+    second: 2000px-Chess_Pieces_Sprite_197
+  - first:
+      213: -8060740432084500349
+    second: 2000px-Chess_Pieces_Sprite_198
+  - first:
+      213: -485249699459947672
+    second: 2000px-Chess_Pieces_Sprite_199
+  - first:
+      213: -3870557275412992774
+    second: 2000px-Chess_Pieces_Sprite_200
+  - first:
+      213: -2969401121978508552
+    second: 2000px-Chess_Pieces_Sprite_201
+  - first:
+      213: 331380043807522210
+    second: 2000px-Chess_Pieces_Sprite_202
+  - first:
+      213: 2153643646072559277
+    second: 2000px-Chess_Pieces_Sprite_203
+  - first:
+      213: 2655360129380059492
+    second: 2000px-Chess_Pieces_Sprite_204
+  - first:
+      213: 4105610316658181614
+    second: 2000px-Chess_Pieces_Sprite_205
+  - first:
+      213: -7052835048185363351
+    second: 2000px-Chess_Pieces_Sprite_206
+  - first:
+      213: -2768397908806318607
+    second: 2000px-Chess_Pieces_Sprite_207
+  - first:
+      213: 3147039873841086280
+    second: 2000px-Chess_Pieces_Sprite_208
+  - first:
+      213: -3361688217249612324
+    second: 2000px-Chess_Pieces_Sprite_209
+  - first:
+      213: -1369740233087441748
+    second: 2000px-Chess_Pieces_Sprite_210
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: 0
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: king1
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 367
+        width: 259
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: -4}
+        - {x: -20, y: -14}
+        - {x: -20, y: -32}
+        - {x: 32, y: -32}
+        - {x: 32, y: -19}
+        - {x: 20, y: -4}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 795b7947488bd9b40800000000000000
+      internalID: 5448714003219461527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: queen1
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 370
+        width: 286
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1baa1f16402fc17b0800000000000000
+      internalID: -5252056964783822159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bishop1
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 373
+        width: 257
+        height: 259
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30da5ee2e372d06b0800000000000000
+      internalID: -5328559636081169149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: knight1
+      rect:
+        serializedVersion: 2
+        x: 1038
+        y: 372
+        width: 250
+        height: 249
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0f41d0ebca860d60800000000000000
+      internalID: 7856119208249216779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rook1
+      rect:
+        serializedVersion: 2
+        x: 1394
+        y: 372
+        width: 212
+        height: 234
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7332bbf240bfc5c70800000000000000
+      internalID: 8961313353959678775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pawn1
+      rect:
+        serializedVersion: 2
+        x: 1738
+        y: 368
+        width: 183
+        height: 238
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a93b1c85e2bbfa070800000000000000
+      internalID: 8119914460904272794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: king2
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 34
+        width: 259
+        height: 261
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0f1eda228d669250800000000000000
+      internalID: 5951064363449065227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: queen2
+      rect:
+        serializedVersion: 2
+        x: 357
+        y: 28
+        width: 286
+        height: 267
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85d56b2103c9f3fa0800000000000000
+      internalID: -5818760463253086888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bishop2
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 40
+        width: 257
+        height: 259
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa6ba3ec86d4ec110800000000000000
+      internalID: 1283048056379061930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: knight2
+      rect:
+        serializedVersion: 2
+        x: 1038
+        y: 38
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ca93a1c867afaf10800000000000000
+      internalID: 2283227604467292873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rook2
+      rect:
+        serializedVersion: 2
+        x: 1394
+        y: 38
+        width: 212
+        height: 235
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c1be141d4100f670800000000000000
+      internalID: 8570351521447719361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pawn2
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 35
+        width: 183
+        height: 238
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34ddb462e7aa9f340800000000000000
+      internalID: 4898133528527232323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: -406, y: -72.5}
+      - {x: -406, y: -60.5}
+      - {x: -428, y: -39.5}
+      - {x: -444, y: -36.5}
+      - {x: -525, y: -36.5}
+      - {x: -530, y: -54.5}
+      - {x: -554, y: -39.5}
+      - {x: -577, y: -38.5}
+      - {x: -598, y: -73.5}
+      - {x: -572, y: -91.5}
+      - {x: -605, y: -70.5}
+      - {x: -610, y: -67.5}
+      - {x: -630, y: -64.5}
+      - {x: -645, y: -71.5}
+      - {x: -645, y: -104.5}
+      - {x: -632, y: -111.5}
+      - {x: -618, y: -271.5}
+      - {x: -604, y: -307.5}
+      - {x: -394, y: -307.5}
+      - {x: -368, y: -303.5}
+      - {x: -355, y: -201.5}
+      - {x: -355, y: -68.5}
+      - {x: -369, y: -58.5}
+    - - {x: -933, y: -36.5}
+      - {x: -965, y: -47.5}
+      - {x: -965, y: -214.5}
+      - {x: -910, y: -301.5}
+      - {x: -762, y: -301.5}
+      - {x: -702, y: -226.5}
+      - {x: -702, y: -123.5}
+      - {x: -739, y: -36.5}
+    - - {x: 790, y: -58.5}
+      - {x: 788, y: -60.5}
+      - {x: 736, y: -214.5}
+      - {x: 736, y: -300.5}
+      - {x: 923, y: -300.5}
+      - {x: 923, y: -142.5}
+      - {x: 872, y: -58.5}
+    - - {x: 86, y: -43.5}
+      - {x: 36, y: -101.5}
+      - {x: 36, y: -263.5}
+      - {x: 60, y: -297.5}
+      - {x: 290, y: -297.5}
+      - {x: 290, y: -124.5}
+      - {x: 203, y: -43.5}
+    - - {x: 407, y: -58.5}
+      - {x: 406, y: -62.5}
+      - {x: 407, y: -106.5}
+      - {x: 393, y: -205.5}
+      - {x: 392, y: -216.5}
+      - {x: 392, y: -297.5}
+      - {x: 608, y: -297.5}
+      - {x: 608, y: -58.5}
+    - - {x: -76, y: -137.5}
+      - {x: -135, y: -32.5}
+      - {x: -190, y: -32.5}
+      - {x: -258, y: -141.5}
+      - {x: -231, y: -241.5}
+      - {x: -222, y: -248.5}
+      - {x: -277, y: -258.5}
+      - {x: -296, y: -272.5}
+      - {x: -297, y: -278.5}
+      - {x: -297, y: -287.5}
+      - {x: -286, y: -295.5}
+      - {x: -43, y: -295.5}
+      - {x: -36, y: -291.5}
+      - {x: -36, y: -272.5}
+      - {x: -59, y: -249.5}
+    - - {x: -813, y: 297.5}
+      - {x: -849, y: 297.5}
+      - {x: -866, y: 284.5}
+      - {x: -862, y: 270.5}
+      - {x: -960, y: 209.5}
+      - {x: -965, y: 193.5}
+      - {x: -965, y: 130.5}
+      - {x: -925, y: 48.5}
+      - {x: -892, y: 31.5}
+      - {x: -757, y: 31.5}
+      - {x: -702, y: 94.5}
+      - {x: -702, y: 200.5}
+      - {x: -738, y: 224.5}
+    - - {x: 803, y: 274.5}
+      - {x: 762, y: 199.5}
+      - {x: 736, y: 70.5}
+      - {x: 736, y: 32.5}
+      - {x: 923, y: 32.5}
+      - {x: 923, y: 69.5}
+      - {x: 906, y: 209.5}
+      - {x: 856, y: 274.5}
+    - - {x: -391, y: 276.5}
+      - {x: -410, y: 249.5}
+      - {x: -407, y: 260.5}
+      - {x: -416, y: 294.5}
+      - {x: -461, y: 291.5}
+      - {x: -466, y: 272.5}
+      - {x: -480, y: 300.5}
+      - {x: -510, y: 300.5}
+      - {x: -522, y: 296.5}
+      - {x: -526, y: 272.5}
+      - {x: -515, y: 258.5}
+      - {x: -523, y: 191.5}
+      - {x: -532, y: 282.5}
+      - {x: -567, y: 300.5}
+      - {x: -571, y: 300.5}
+      - {x: -645, y: 269.5}
+      - {x: -645, y: 168.5}
+      - {x: -602, y: 34.5}
+      - {x: -446, y: 34.5}
+      - {x: -409, y: 37.5}
+      - {x: -395, y: 50.5}
+      - {x: -355, y: 220.5}
+      - {x: -355, y: 268.5}
+    - - {x: 84, y: 289.5}
+      - {x: 62, y: 283.5}
+      - {x: 36, y: 183.5}
+      - {x: 36, y: 44.5}
+      - {x: 80, y: 36.5}
+      - {x: 290, y: 36.5}
+      - {x: 290, y: 162.5}
+      - {x: 268, y: 265.5}
+      - {x: 168, y: 289.5}
+    - - {x: 392, y: 274.5}
+      - {x: 392, y: 41.5}
+      - {x: 393, y: 36.5}
+      - {x: 608, y: 36.5}
+      - {x: 608, y: 177.5}
+      - {x: 593, y: 269.5}
+      - {x: 589, y: 274.5}
+    - - {x: -297, y: 40.5}
+      - {x: -290, y: 37.5}
+      - {x: -36, y: 37.5}
+      - {x: -36, y: 193.5}
+      - {x: -39, y: 215.5}
+      - {x: -138, y: 300.5}
+      - {x: -222, y: 300.5}
+      - {x: -297, y: 159.5}
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
