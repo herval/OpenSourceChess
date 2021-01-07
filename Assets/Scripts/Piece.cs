@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -169,16 +169,4 @@ public class Piece : MonoBehaviour
 
         return tryMove(newX, newY, deltaX, deltaY, maxMoves-1, tiles, validMoves, onlyWhenCapturing);
     }
-
-    //public static GameObject Create(Piece.Type type, bool white)
-    //{
-    //    //Sprite spr = spriteManager.SpriteFor(type, white);
-    //    return null; //Instantiate(WhiteBishop)
-    //}
-
-
-    //public bool CanMoveTo(Tile tile)
-    //{
-    //    return false;
-    //}
 }

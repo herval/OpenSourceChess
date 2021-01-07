@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        TurnStatusDisplay.text = (currentPlayerFacingUp ? "White" : "Black") + "'s turn";
+        TurnStatusDisplay.text = (currentPlayerFacingUp ? "Light" : "Dark") + "'s turn";
     }
 
     private void DragPieceAround()

@@ -6,19 +6,19 @@ using UnityEngine;
 public class PieceFactory : MonoBehaviour
 {
 
-    public Sprite WhiteRook;
-    public Sprite WhiteKing;
-    public Sprite WhiteQueen;
-    public Sprite WhiteBishop;
-    public Sprite WhitePawn;
-    public Sprite WhiteKnight;
+    public Sprite LightRook;
+    public Sprite LightKing;
+    public Sprite LightQueen;
+    public Sprite LightBishop;
+    public Sprite LightPawn;
+    public Sprite LightKnight;
 
-    public Sprite BlackRook;
-    public Sprite BlackKing;
-    public Sprite BlackQueen;
-    public Sprite BlackBishop;
-    public Sprite BlackPawn;
-    public Sprite BlackKnight;
+    public Sprite DarkRook;
+    public Sprite DarkKing;
+    public Sprite DarkQueen;
+    public Sprite DarkBishop;
+    public Sprite DarkPawn;
+    public Sprite DarkKnight;
 
 
     public GameObject piecePrefab;
@@ -38,22 +38,22 @@ public class PieceFactory : MonoBehaviour
         switch (type)
         {
             case Piece.Type.Bishop:
-                sm.sprite = faceUp ? WhiteBishop : BlackBishop;
+                sm.sprite = faceUp ? LightBishop : DarkBishop;
                 break;
             case Piece.Type.King:
-                sm.sprite = faceUp ? WhiteKing : BlackKing;
+                sm.sprite = faceUp ? LightKing : DarkKing;
                 break;
             case Piece.Type.Queen:
-                sm.sprite = faceUp ? WhiteQueen : BlackQueen;
+                sm.sprite = faceUp ? LightQueen : DarkQueen;
                 break;
             case Piece.Type.Rook:
-                sm.sprite = faceUp ? WhiteRook : BlackRook;
+                sm.sprite = faceUp ? LightRook : DarkRook;
                 break;
             case Piece.Type.Pawn:
-                sm.sprite = faceUp ? WhitePawn : BlackPawn;
+                sm.sprite = faceUp ? LightPawn : DarkPawn;
                 break;
             case Piece.Type.Knight:
-                sm.sprite = faceUp ? WhiteKnight : BlackKnight;
+                sm.sprite = faceUp ? LightKnight : DarkKnight;
                 break;
             default:
                 Debug.Log("Unsupported type: " + type);

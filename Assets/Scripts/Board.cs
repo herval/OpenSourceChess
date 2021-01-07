@@ -27,9 +27,9 @@ public class Board : MonoBehaviour
         arrangementManager.Initialize(this);
     }
 
-    public void AddPiece(Piece.Type piece, bool isWhite, int x, int y)
+    public void AddPiece(Piece.Type piece, bool isLight, int x, int y)
     {
-        GameObject p = pieceFactory.Create(tiles[x,y].transform, piece, isWhite);
+        GameObject p = pieceFactory.Create(tiles[x,y].transform, piece, isLight);
 
         p.transform.position = tiles[x, y].transform.position;
     }
@@ -75,7 +75,7 @@ public class Board : MonoBehaviour
                 tileObj.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(newTileScaleX, newTileScaleY, 0f); // reescale for reals
 
 
-                // if the square is double odd or double even, it‘s black (diagonals)
+                // if the square is double odd or double even, it‘s Dark (diagonals)
                 if (x % 2 != 0 && y % 2 != 0 || x % 2 == 0 && y % 2 == 0)
                 {
                     nextColor = darkTiles;
