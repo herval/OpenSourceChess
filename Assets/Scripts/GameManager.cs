@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public Text TurnStatusDisplay;
     public Board board;
+    public StandardGameArrangement arrangementManager;
 
     bool currentPlayerFacingUp = true;
 
@@ -21,7 +22,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        computePotentialMoves();
+        arrangementManager = new StandardGameArrangement();
+        board.Reset();
+        arrangementManager.Initialize(board);
+        board.ComputePotentialMoves();
     }
 
     // Update is called once per frame
@@ -48,7 +52,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (MoveToTile(tile))
                     {
-                        computePotentialMoves();
+                        board.ComputePotentialMoves();
                         currentPlayerFacingUp = !currentPlayerFacingUp; // alternate player
                     }
                 }
@@ -68,17 +72,6 @@ public class GameManager : MonoBehaviour
         else
         { // select nothing
             HighlightTile(null); // TODO do we need to do this on update?
-        }
-    }
-
-    private void computePotentialMoves()
-    {
-        var tiles = board.Tiles();
-        for(int x = 0; x < board.width; x++)
-        {
-            for(int y = 0; y < board.height; y++) {
-                tiles[x,y].CurrentPiece()?.ComputeMoves(x, y, tiles);
-            }
         }
     }
 

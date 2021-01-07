@@ -12,20 +12,12 @@ public class Board : MonoBehaviour
     public GameObject tilePrefab;
 
     public PieceFactory pieceFactory;
-    public StandardGameArrangement arrangementManager;
 
     public Color darkTiles;
     public Color clearTiles;
 
     Tile[,] tiles;
     
-
-    private void Start()
-    {
-        RenderBoard();
-
-        arrangementManager.Initialize(this);
-    }
 
     public void AddPiece(Piece.Type piece, bool isLight, int x, int y)
     {
@@ -34,7 +26,18 @@ public class Board : MonoBehaviour
         p.transform.position = tiles[x, y].transform.position;
     }
 
-    private void RenderBoard()
+    public void ComputePotentialMoves()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                tiles[x, y].CurrentPiece()?.ComputeMoves(x, y, tiles);
+            }
+        }
+    }
+
+    public void Reset()
     {
         Color nextColor;
 
