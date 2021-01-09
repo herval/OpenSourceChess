@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public SpriteRenderer avatar;
-    public DumbAI turnManager;
+    public TurnManager turnManager;
     public Color color;
 
     public bool facingUp;

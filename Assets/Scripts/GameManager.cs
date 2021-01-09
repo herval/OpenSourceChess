@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public Text TurnStatusDisplay;
     public Board board;
-    public StandardGameArrangement arrangementManager;
+    public GameArrangement arrangementManager;
 
     public Player playerOne;
     public Player playerTwo;

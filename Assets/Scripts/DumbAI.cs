@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // pick a random piece and move it to any available position
-public class DumbAI : MonoBehaviour
+public class DumbAI : TurnManager
 {
-    public PieceCommand ActOn(Player player, Board board)
+    public override PieceCommand ActOn(Player player, Board board)
     {
         // if no piece can move, declare defeat
         if(player.Pieces.FindAll(p => p.PotentialMoves.Count > 0).Count == 00)
