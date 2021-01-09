@@ -26,8 +26,10 @@ public class Piece : MonoBehaviour
 
     public List<Tile> PotentialMoves = new List<Tile>();
 
-    // TODO store x,y here?
 
+    static (int, int)[] forward = new (int, int)[] {
+        (0, 1),
+    };
 
     static (int, int)[] diagonals = new (int, int)[] {
         (1, 1),
@@ -119,18 +121,10 @@ public class Piece : MonoBehaviour
                 PotentialMoves = tryAll(linears, tile.x, tile.y, int.MaxValue, tiles);
                 break;
             case Piece.Type.Pawn:
-                // TODO if first move, can move one or two squares
+                // if first move, can move one or two squares
+                int maxSquares = movedAtLeastOnce ? 1 : 2;
 
-                if(!movedAtLeastOnce)
-                {
-                    PotentialMoves.AddRange(
-                        tryMove(tile.x, tile.y, 0, 2, 1, tiles, new List<Tile>(), false, true)
-                    );
-                }
-
-                PotentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, 0, 1, 1, tiles, new List<Tile>(), false, true)
-                );
+                PotentialMoves = tryAll(forward, tile.x, tile.y, maxSquares, tiles, false, true);
 
                 // eating diagonally
                 PotentialMoves.AddRange(
@@ -149,13 +143,13 @@ public class Piece : MonoBehaviour
         }
     }
 
-    private List<Tile> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles)
+    private List<Tile> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, bool onlyWhenCapturing = false, bool onlyMoveNoEat = false)
     {
         var res = new List<Tile>();
         foreach(var xy in directions)
         {
             res.AddRange(
-                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Tile>())
+                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Tile>(), onlyWhenCapturing, onlyMoveNoEat)
             );
         }
 
@@ -163,7 +157,7 @@ public class Piece : MonoBehaviour
     }
 
     // TODO simplify all the bools
-    private List<Tile> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Tile> validMoves, bool onlyWhenCapturing = false, bool onlyMoveNoEat = false)
+    private List<Tile> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Tile> validMoves, bool onlyWhenCapturing, bool onlyMoveNoEat)
     {
         // flip the y axis when piece is facing down
         int yFlip = facingUp ? 1 : -1;
@@ -193,6 +187,6 @@ public class Piece : MonoBehaviour
             return validMoves;
         }
 
-        return tryMove(newX, newY, deltaX, deltaY, maxMoves-1, tiles, validMoves, onlyWhenCapturing);
+        return tryMove(newX, newY, deltaX, deltaY, maxMoves-1, tiles, validMoves, onlyWhenCapturing, onlyMoveNoEat);
     }
 }
