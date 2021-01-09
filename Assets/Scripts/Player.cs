@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
     public DumbAI turnManager;
     public Color color;
 
+    public bool facingUp;
+
+    public List<Piece> Pieces = new List<Piece>();
+
     private void Update()
     {
         avatar.color = color;
@@ -16,6 +20,6 @@ public class Player : MonoBehaviour
     // Called when a player's turn starts
     void OnTurn(Board board)
     {
-        turnManager?.ActOn(board);
+        turnManager?.ActOn(this, board);
     }
 }

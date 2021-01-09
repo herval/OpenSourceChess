@@ -15,12 +15,12 @@ public class StandardGameArrangement : MonoBehaviour
     // Start is called before the first frame update
     public void Initialize(Board board, Player playerOne, Player playerTwo)
     {
-        // render top pieces
+        // render top pieces, they always belong to player two
         for (int x = 0; x < arrangement.GetLength(0); x++)
         {
             for (int y = 0; y < arrangement.GetLength(1); y++)
             {
-                board.AddPiece(arrangement[x, y], false, y, board.height-x-1, playerTwo.color);
+                board.AddPiece(arrangement[x, y], y, board.height-x-1, playerTwo);
             }
         }
 
@@ -30,7 +30,7 @@ public class StandardGameArrangement : MonoBehaviour
         {
             for (int y = 0; y < arrangement.GetLength(1); y++)
             {
-                board.AddPiece(arrangement[x, y], true, y, x, playerOne.color);
+                board.AddPiece(arrangement[x, y], y, x, playerOne);
             }
         }
 

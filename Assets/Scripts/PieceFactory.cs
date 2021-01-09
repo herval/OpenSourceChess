@@ -25,15 +25,16 @@ public class PieceFactory : MonoBehaviour
 
     //public GameObject[] piecePrefabs;
 
-    public GameObject Create(Transform parent, Piece.Type type, bool faceUp, Color color)
+    public Piece Create(Tile tile, Piece.Type type, bool faceUp, Color color)
     {
-        var piece = Instantiate(piecePrefab, parent);
+        var piece = Instantiate(piecePrefab, tile.transform);
         var sm = piece.GetComponent<SpriteRenderer>();
 
         var p = piece.GetComponent<Piece>();
         p.type = type;
         p.facingUp = faceUp;
         p.color = color;
+        p.tile = tile;
 
         // TODO decouple facing from piece color
         switch (type)
@@ -62,7 +63,7 @@ public class PieceFactory : MonoBehaviour
         }
 
         Debug.Log("piece created: " + type + ", "+ faceUp);
-        return piece;
+        return piece.GetComponent<Piece>();
     }
 
 }

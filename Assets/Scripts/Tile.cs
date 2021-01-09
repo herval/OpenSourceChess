@@ -10,6 +10,9 @@ public class Tile : MonoBehaviour
     internal bool PotentialMove = false;
     public Color Color;
 
+    public int x;
+    public int y;
+
     public Piece CurrentPiece()
     {
         return GetComponentInChildren<Piece>();
@@ -25,6 +28,8 @@ public class Tile : MonoBehaviour
             Destroy(CurrentPiece().gameObject);
         }
 
+        // TODO remove this and move it all to piece.SetTile(); instead
+        piece.tile = this;
         piece.movedAtLeastOnce = true;
         piece.transform.parent = this.transform;
         piece.transform.position = this.transform.position; // TODO animate

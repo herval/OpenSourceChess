@@ -19,9 +19,10 @@ public class Board : MonoBehaviour
     Tile[,] tiles;
     
 
-    public void AddPiece(Piece.Type piece, bool facingUp, int x, int y, Color color)
+    public void AddPiece(Piece.Type piece, int x, int y, Player player)
     {
-        GameObject p = pieceFactory.Create(tiles[x,y].transform, piece, facingUp, color);
+        Piece p = pieceFactory.Create(tiles[x,y], piece, player.facingUp, player.color);
+        player.Pieces.Add(p);
 
         p.transform.position = tiles[x, y].transform.position;
     }
@@ -32,7 +33,7 @@ public class Board : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                tiles[x, y].CurrentPiece()?.ComputeMoves(x, y, tiles);
+                tiles[x, y].CurrentPiece()?.ComputeMoves(tiles);
             }
         }
     }
@@ -89,8 +90,11 @@ public class Board : MonoBehaviour
                 }
 
                 // alternate colors
-                tileObj.GetComponent<Tile>().Color = nextColor;
                 tiles[x, y] = tileObj.GetComponent<Tile>();
+                tiles[x, y].Color = nextColor;
+
+                tiles[x, y].x = x;
+                tiles[x, y].y = y;
             }
         }
 
