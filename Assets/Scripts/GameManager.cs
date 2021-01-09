@@ -11,9 +11,10 @@ public class GameManager : MonoBehaviour
     public Board board;
     public StandardGameArrangement arrangementManager;
 
-    bool currentPlayerFacingUp = true;
+    public Player playerOne;
+    public Player playerTwo;
+    Player currentPlayer;
 
-    
     Tile currentHighlightedTile;
     Tile currentSelectedTile;
     List<Tile> currentPotentialMoves = new List<Tile>();
@@ -22,6 +23,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        currentPlayer = playerOne;
+
+        playerOne.color = Color.white; // TODO randomized option
+        playerTwo.color = Color.black;
+        playerTwo.turnManager = new DumbAI();
+
         arrangementManager = new StandardGameArrangement();
         board.Reset();
         arrangementManager.Initialize(board, playerOne, playerTwo);
