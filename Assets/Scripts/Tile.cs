@@ -13,16 +13,11 @@ public class Tile : MonoBehaviour
     public int x;
     public int y;
 
-    public Piece CurrentPiece()
-    {
-        return GetComponentInChildren<Piece>();
-    }
+    public Piece CurrentPiece; // TODO using this bc GetComponent introduces bugs when updating states (eg if u change the current piece in a given turn, recomputing moves wont happen)
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(Piece);
-
         // TODO use <Renderer>.material
 
         if (Selected)

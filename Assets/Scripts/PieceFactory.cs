@@ -64,7 +64,8 @@ public class PieceFactory : MonoBehaviour
         }
 
         Debug.Log("piece created: " + type + ", "+ faceUp);
-        return piece.GetComponent<Piece>();
+        tile.CurrentPiece = p;
+        return p;
     }
 
 }

@@ -135,8 +135,7 @@ public class GameManager : MonoBehaviour
 
     private bool CanSelect(Tile tile)
     {
-        return tile.CurrentPiece() != null &&
-            tile.CurrentPiece().color == currentPlayer.color;
+        return tile.CurrentPiece?.color == currentPlayer.color;
     }
 
     private void UpdateUI()
@@ -203,7 +202,7 @@ public class GameManager : MonoBehaviour
         }
 
         // TODO if player can select...
-        Piece current = tile.CurrentPiece();
+        Piece current = tile.CurrentPiece;
         if(current != null)
         {
             tile.Selected = true;
@@ -232,7 +231,7 @@ public class GameManager : MonoBehaviour
         }
 
         // highlight only pieces you own - except when dragging one already
-        if (tile.CurrentPiece()?.color == currentPlayer.color && currentPiece == null)
+        if (tile.CurrentPiece?.color == currentPlayer.color && currentPiece == null)
         {
             tile.Highlighted = true;
             currentHighlightedTile = tile;

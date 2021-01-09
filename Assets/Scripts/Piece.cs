@@ -70,12 +70,13 @@ public class Piece : MonoBehaviour
     public void MoveTo(Tile tile)
     {
         // destroy existing child piece
-        var c = tile.CurrentPiece();
+        var c = tile.CurrentPiece;
         if (c != null && c != this)
         {
             Debug.Log("Killing existing on " + this);
-            tile.CurrentPiece().Kill();
+            tile.CurrentPiece.Kill();
         }
+        tile.CurrentPiece = this;
 
         this.tile = tile;
         this.movedAtLeastOnce = true;
@@ -91,7 +92,7 @@ public class Piece : MonoBehaviour
 
     public bool CanMoveTo(Tile tile)
     {
-        if (tile.CurrentPiece()?.facingUp == this.facingUp)
+        if (tile.CurrentPiece?.facingUp == this.facingUp)
         {
             return false; // can't eat own pieces
         }
@@ -174,15 +175,15 @@ public class Piece : MonoBehaviour
 
         var t = tiles[newX, newY];
         // can eat when target is empty or contains enemy OR when it contains an enemy if onlyWhenCapturing is true
-        if ((t.CurrentPiece() == null || t.CurrentPiece()?.facingUp != this.facingUp)
-            && (!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece() != null)) // can only move to that position if there's a capturable piece
-            && (!onlyMoveNoEat || (onlyMoveNoEat && t.CurrentPiece() == null))) // can only move when there's NOT a capturable piece
+        if ((t.CurrentPiece == null || t.CurrentPiece?.facingUp != this.facingUp)
+            && (!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece != null)) // can only move to that position if there's a capturable piece
+            && (!onlyMoveNoEat || (onlyMoveNoEat && t.CurrentPiece == null))) // can only move when there's NOT a capturable piece
         {
             validMoves.Add(tiles[newX, newY]);
         }
 
         // can't move further when hitting another piece
-        if(t.CurrentPiece() != null)
+        if(t.CurrentPiece != null)
         {
             return validMoves;
         }
