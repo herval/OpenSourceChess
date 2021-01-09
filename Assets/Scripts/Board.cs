@@ -79,7 +79,7 @@ public class Board : MonoBehaviour
 
 
                 // if the square is double odd or double even, it‘s Dark (diagonals)
-                if (x % 2 != 0 && y % 2 != 0 || x % 2 == 0 && y % 2 == 0)
+                if ((x+y) % 2 != 0)
                 {
                     nextColor = darkTiles;
                 }
@@ -105,25 +105,30 @@ public class Board : MonoBehaviour
 
     internal Tile TileAt(int x, int y)
     {
-        return tiles[x, y].GetComponent<Tile>();
+        return tiles[x, y];
     }
 
     private void OnDrawGizmos()
     {
+        Gizmos.DrawWireCube(
+            new Vector3(0, 0, 0),
+            new Vector3(width * tilePrefab.transform.localScale.x, height * tilePrefab.transform.localScale.y, 0)
+        );
 
-        //Gizmos.DrawWireCube(
-        //    new Vector3(0, 0, 0),
-        //    new Vector3(width * tilePrefab.transform.localScale.x, height * tilePrefab.transform.localScale.y, 0) // TODO fix this shit
-        //);
+        // TODO draw the board wire
+        //float tw= width / tilePrefab.transform.localScale.x;
+        //float th = height / tilePrefab.transform.localScale.y;
+        //Vector3 size = new Vector3(tw, th);
+
         //for (int x = 0; x < tiles.GetLength(0); x++)
         //{
         //    for (int y = 0; y < tiles.GetLength(1); y++)
         //    {
-        //        ////SpriteRenderer sprite = tiles[x, y].GetComponent<SpriteRenderer>();
-        //        //Gizmos.DrawWireCube(
-        //        //    sprite.bounds.center,
-        //        //    sprite.bounds.size
-        //        //);
+        //        Vector3 pos = new Vector3(x * tw, y * th);
+        //        Gizmos.DrawWireCube(
+        //            pos,
+        //            size
+        //        );
         //        Debug.Log("here");
         //    }
         //}
