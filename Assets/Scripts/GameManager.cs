@@ -23,16 +23,18 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        currentPlayer = playerOne;
-
         playerOne.color = Color.white; // TODO randomized option
+        playerOne.facingUp = true;
+
         playerTwo.color = Color.black;
+        playerTwo.facingUp = false;
         playerTwo.turnManager = new DumbAI();
 
         arrangementManager = new StandardGameArrangement();
         board.Reset();
         arrangementManager.Initialize(board, playerOne, playerTwo);
-        board.ComputePotentialMoves();
+
+        OnNextTurn();
     }
 
     // Update is called once per frame
@@ -59,8 +61,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (MoveToTile(tile))
                     {
-                        board.ComputePotentialMoves();
-                        currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne; // alternate player
+                        OnNextTurn();
                     }
                 }
                 else
@@ -79,6 +80,36 @@ public class GameManager : MonoBehaviour
         else
         { // select nothing
             HighlightTile(null); // TODO do we need to do this on update?
+        }
+    }
+
+    private void OnNextTurn()
+    {
+        board.ComputePotentialMoves();
+        if (currentPlayer == null)
+        {
+            currentPlayer = playerOne;
+        }
+        else
+        {
+            currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne; // alternate player
+        }
+
+        PieceCommand c = currentPlayer.turnManager?.ActOn(currentPlayer, board);
+        switch(c)
+        {
+            case null:
+                return;
+            case LoseGame l:
+                // TODO implement end of game
+                return;
+            case MoveTo m:
+                SelectTile(m.piece.tile);
+                MoveToTile(m.tile);
+                OnNextTurn();
+                return;
+            default:
+                throw new Exception("Unhandled command: " + c);
         }
     }
 

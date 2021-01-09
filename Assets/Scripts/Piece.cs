@@ -19,6 +19,7 @@ public class Piece : MonoBehaviour
     //Sprite sprite;
     public bool facingUp;
     public Color color;
+    public Tile tile;
 
     public bool movedAtLeastOnce = false;
 
@@ -74,7 +75,7 @@ public class Piece : MonoBehaviour
         return this.PotentialMoves.Contains(tile);
     }
 
-    internal void ComputeMoves(int currentX, int currentY, Tile[,] tiles)
+    internal void ComputeMoves(Tile[,] tiles)
     {
         PotentialMoves.Clear();
 
@@ -83,17 +84,17 @@ public class Piece : MonoBehaviour
         {
             case Piece.Type.Bishop:
                 // verticals until hitting something
-                PotentialMoves = tryAll(diagonals, currentX, currentY, int.MaxValue, tiles);
+                PotentialMoves = tryAll(diagonals, tile.x, tile.y, int.MaxValue, tiles);
                 break;
             case Piece.Type.King:
-                PotentialMoves = tryAll(adjacencies, currentX, currentY, 1, tiles);
+                PotentialMoves = tryAll(adjacencies, tile.x, tile.y, 1, tiles);
                 break;
             case Piece.Type.Queen:
-                PotentialMoves = tryAll(adjacencies, currentX, currentY, int.MaxValue, tiles);
+                PotentialMoves = tryAll(adjacencies, tile.x, tile.y, int.MaxValue, tiles);
                 break;
             case Piece.Type.Rook:
                 // straight lines until hitting an adversary
-                PotentialMoves = tryAll(linears, currentX, currentY, int.MaxValue, tiles);
+                PotentialMoves = tryAll(linears, tile.x, tile.y, int.MaxValue, tiles);
                 break;
             case Piece.Type.Pawn:
                 // TODO if first move, can move one or two squares
@@ -101,25 +102,25 @@ public class Piece : MonoBehaviour
                 if(!movedAtLeastOnce)
                 {
                     PotentialMoves.AddRange(
-                        tryMove(currentX, currentY, 0, 2, 1, tiles, new List<Tile>())
+                        tryMove(tile.x, tile.y, 0, 2, 1, tiles, new List<Tile>())
                     );
                 }
 
                 PotentialMoves.AddRange(
-                    tryMove(currentX, currentY, 0, 1, 1, tiles, new List<Tile>())
+                    tryMove(tile.x, tile.y, 0, 1, 1, tiles, new List<Tile>())
                 );
 
                 // eating diagonally
                 PotentialMoves.AddRange(
-                    tryMove(currentX, currentY, 1, 1, 1, tiles, new List<Tile>(), true)
+                    tryMove(tile.x, tile.y, 1, 1, 1, tiles, new List<Tile>(), true)
                 );
                 PotentialMoves.AddRange(
-                    tryMove(currentX, currentY, -1, 1, 1, tiles, new List<Tile>(), true)
+                    tryMove(tile.x, tile.y, -1, 1, 1, tiles, new List<Tile>(), true)
                 );
 
                 break;
             case Piece.Type.Knight:
-                PotentialMoves = tryAll(knightMoves, currentX, currentY, 1, tiles);
+                PotentialMoves = tryAll(knightMoves, tile.x, tile.y, 1, tiles);
                 break;
             default:
                 return;
