@@ -13,14 +13,14 @@ public class StandardGameArrangement : MonoBehaviour
 
 
     // Start is called before the first frame update
-    public void Initialize(Board board)
+    public void Initialize(Board board, Player playerOne, Player playerTwo)
     {
         // render top pieces
         for (int x = 0; x < arrangement.GetLength(0); x++)
         {
             for (int y = 0; y < arrangement.GetLength(1); y++)
             {
-                board.AddPiece(arrangement[x, y], false, y, board.height-x-1);
+                board.AddPiece(arrangement[x, y], false, y, board.height-x-1, playerTwo.color);
             }
         }
 
@@ -30,7 +30,7 @@ public class StandardGameArrangement : MonoBehaviour
         {
             for (int y = 0; y < arrangement.GetLength(1); y++)
             {
-                board.AddPiece(arrangement[x, y], true, y, x);
+                board.AddPiece(arrangement[x, y], true, y, x, playerOne.color);
             }
         }
 

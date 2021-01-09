@@ -18,6 +18,7 @@ public class Piece : MonoBehaviour
     public Type type;
     //Sprite sprite;
     public bool facingUp;
+    public Color color;
 
     public bool movedAtLeastOnce = false;
 

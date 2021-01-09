@@ -19,9 +19,9 @@ public class Board : MonoBehaviour
     Tile[,] tiles;
     
 
-    public void AddPiece(Piece.Type piece, bool isLight, int x, int y)
+    public void AddPiece(Piece.Type piece, bool facingUp, int x, int y, Color color)
     {
-        GameObject p = pieceFactory.Create(tiles[x,y].transform, piece, isLight);
+        GameObject p = pieceFactory.Create(tiles[x,y].transform, piece, facingUp, color);
 
         p.transform.position = tiles[x, y].transform.position;
     }

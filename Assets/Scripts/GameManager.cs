@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     {
         arrangementManager = new StandardGameArrangement();
         board.Reset();
-        arrangementManager.Initialize(board);
+        arrangementManager.Initialize(board, playerOne, playerTwo);
         board.ComputePotentialMoves();
     }
 
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
                     if (MoveToTile(tile))
                     {
                         board.ComputePotentialMoves();
-                        currentPlayerFacingUp = !currentPlayerFacingUp; // alternate player
+                        currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne; // alternate player
                     }
                 }
                 else
@@ -98,12 +98,12 @@ public class GameManager : MonoBehaviour
     private bool CanSelect(Tile tile)
     {
         return tile.CurrentPiece() != null &&
-            tile.CurrentPiece().facingUp == currentPlayerFacingUp;
+            tile.CurrentPiece().color == currentPlayer.color;
     }
 
     private void UpdateUI()
     {
-        TurnStatusDisplay.text = (currentPlayerFacingUp ? "Light" : "Dark") + "'s turn";
+        TurnStatusDisplay.text = (currentPlayer.color == Color.black ? "Dark" : "Light") + "'s turn";
     }
 
     private void DragPieceAround()
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour
         }
 
         // highlight only pieces you own - except when dragging one already
-        if (tile.CurrentPiece()?.facingUp == currentPlayerFacingUp && currentPiece == null)
+        if (tile.CurrentPiece()?.color == currentPlayer.color && currentPiece == null)
         {
             tile.Highlighted = true;
             currentHighlightedTile = tile;
