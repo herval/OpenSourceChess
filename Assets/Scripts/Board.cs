@@ -21,7 +21,7 @@ public class Board : MonoBehaviour
 
     public void AddPiece(Piece.Type piece, int x, int y, Player player)
     {
-        Piece p = pieceFactory.Create(tiles[x,y], piece, player.facingUp, player.color);
+        Piece p = pieceFactory.Create(tiles[x,y], piece, player.facingUp, player);
         player.Pieces.Add(p);
 
         p.transform.position = tiles[x, y].transform.position;

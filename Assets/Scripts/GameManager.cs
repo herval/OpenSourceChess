@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour
         // put piece back
         if(tile == currentSelectedTile)
         {
-            tile.SetPiece(currentPiece);
+            currentPiece.MoveTo(tile);
             SelectTile(null);
             return false;
         }
@@ -174,7 +174,7 @@ public class GameManager : MonoBehaviour
         // move to new tile
         if (currentPiece?.CanMoveTo(tile) ?? false)
         {
-            tile.SetPiece(currentPiece);
+            currentPiece.MoveTo(tile);
             SelectTile(null);
             return true;
         }

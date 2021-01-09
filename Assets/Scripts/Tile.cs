@@ -18,23 +18,6 @@ public class Tile : MonoBehaviour
         return GetComponentInChildren<Piece>();
     }
 
-    public void SetPiece(Piece piece)
-    {
-        // destroy existing child piece
-        var c = CurrentPiece();
-        if (c != null && c != piece)
-        {
-            Debug.Log("Killing existing on " + this);
-            Destroy(CurrentPiece().gameObject);
-        }
-
-        // TODO remove this and move it all to piece.SetTile(); instead
-        piece.tile = this;
-        piece.movedAtLeastOnce = true;
-        piece.transform.parent = this.transform;
-        piece.transform.position = this.transform.position; // TODO animate
-    }
-
     // Update is called once per frame
     void Update()
     {

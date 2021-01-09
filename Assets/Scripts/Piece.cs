@@ -20,6 +20,7 @@ public class Piece : MonoBehaviour
     public bool facingUp;
     public Color color;
     public Tile tile;
+    public Player player;
 
     public bool movedAtLeastOnce = false;
 
@@ -64,6 +65,27 @@ public class Piece : MonoBehaviour
         (-1, -2)
     };
 
+    public void MoveTo(Tile tile)
+    {
+        // destroy existing child piece
+        var c = tile.CurrentPiece();
+        if (c != null && c != this)
+        {
+            Debug.Log("Killing existing on " + this);
+            tile.CurrentPiece().Kill();
+        }
+
+        this.tile = tile;
+        this.movedAtLeastOnce = true;
+        this.transform.parent = tile.transform;
+        this.transform.position = tile.transform.position; // TODO animate
+    }
+
+    public void Kill()
+    {
+        Destroy(gameObject);
+        player.Pieces.Remove(this);
+    }
 
     public bool CanMoveTo(Tile tile)
     {
