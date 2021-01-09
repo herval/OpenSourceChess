@@ -124,20 +124,20 @@ public class Piece : MonoBehaviour
                 if(!movedAtLeastOnce)
                 {
                     PotentialMoves.AddRange(
-                        tryMove(tile.x, tile.y, 0, 2, 1, tiles, new List<Tile>())
+                        tryMove(tile.x, tile.y, 0, 2, 1, tiles, new List<Tile>(), false, true)
                     );
                 }
 
                 PotentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, 0, 1, 1, tiles, new List<Tile>())
+                    tryMove(tile.x, tile.y, 0, 1, 1, tiles, new List<Tile>(), false, true)
                 );
 
                 // eating diagonally
                 PotentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, 1, 1, 1, tiles, new List<Tile>(), true)
+                    tryMove(tile.x, tile.y, 1, 1, 1, tiles, new List<Tile>(), true, false)
                 );
                 PotentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, -1, 1, 1, tiles, new List<Tile>(), true)
+                    tryMove(tile.x, tile.y, -1, 1, 1, tiles, new List<Tile>(), true, false)
                 );
 
                 break;
@@ -162,7 +162,8 @@ public class Piece : MonoBehaviour
         return res;
     }
 
-    private List<Tile> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Tile> validMoves, bool onlyWhenCapturing = false)
+    // TODO simplify all the bools
+    private List<Tile> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Tile> validMoves, bool onlyWhenCapturing = false, bool onlyMoveNoEat = false)
     {
         // flip the y axis when piece is facing down
         int yFlip = facingUp ? 1 : -1;
@@ -180,7 +181,8 @@ public class Piece : MonoBehaviour
         var t = tiles[newX, newY];
         // can eat when target is empty or contains enemy OR when it contains an enemy if onlyWhenCapturing is true
         if ((t.CurrentPiece() == null || t.CurrentPiece()?.facingUp != this.facingUp)
-            && (!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece() != null)))
+            && (!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece() != null)) // can only move to that position if there's a capturable piece
+            && (!onlyMoveNoEat || (onlyMoveNoEat && t.CurrentPiece() == null))) // can only move when there's NOT a capturable piece
         {
             validMoves.Add(tiles[newX, newY]);
         }
