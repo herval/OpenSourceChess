@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     Player currentPlayer;
 
     Tile currentHighlightedTile;
-    Tile currentSelectedTile;
     List<Tile> currentPotentialMoves = new List<Tile>();
     private Piece currentPiece;
 
@@ -66,10 +65,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    if (CanSelect(tile))
-                    {
-                        SelectTile(tile);
-                    }
+                    SelectPiece(tile?.CurrentPiece);
                 }
             }
             else
@@ -104,7 +100,7 @@ public class GameManager : MonoBehaviour
                 // TODO implement end of game
                 return;
             case MoveTo m:
-                SelectTile(m.piece.tile);
+                SelectPiece(m.piece);
                 MoveToTile(m.tile);
                 OnNextTurn();
                 return;
@@ -113,7 +109,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void UpdatePotentialMoves()
+    private void HighlightPotentialMoves()
     {
         // render potential moves
         if(currentPiece != null)
@@ -133,9 +129,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private bool CanSelect(Tile tile)
+    private bool CanSelect(Piece piece)
     {
-        return tile.CurrentPiece?.color == currentPlayer.color;
+        return piece?.color == currentPlayer.color;
     }
 
     private void UpdateUI()
@@ -156,29 +152,33 @@ public class GameManager : MonoBehaviour
     private bool MoveToTile(Tile tile)
     {
         // no bueno
-        if(currentPiece == null || currentSelectedTile == null)
+        if(currentPiece == null)
         {
-            Debug.Log("Trying to move null piece? " + currentPiece + " / " + currentSelectedTile);
+            Debug.Log("Trying to move null piece? " + currentPiece);
             return false;
         }
 
-        // put piece back
-        if(tile == currentSelectedTile)
-        {
-            currentPiece.MoveTo(tile);
-            SelectTile(null);
-            return false;
-        }
+        bool moved = currentPiece.MoveTo(tile);
+        SelectPiece(null);
+        return moved;
 
-        // move to new tile
-        if (currentPiece?.CanMoveTo(tile) ?? false)
-        {
-            currentPiece.MoveTo(tile);
-            SelectTile(null);
-            return true;
-        }
+        //// put piece back
+        //if (tile == currentPiece.tile)
+        //{
+        //    currentPiece.MoveTo(tile);
+        //    SelectPiece(null);
+        //    return false;
+        //}
 
-        return false;
+        //// move to new tile
+        //if (currentPiece?.CanMoveTo(tile) ?? false)
+        //{
+        //    currentPiece.MoveTo(tile);
+        //    SelectPiece(null);
+        //    return true;
+        //}
+
+        //return false;
         //else // move back to home
         //{
         //    // TODO animate?
@@ -188,28 +188,23 @@ public class GameManager : MonoBehaviour
         //}
     }
 
-   
 
-    private void SelectTile(Tile tile)
+
+    private void SelectPiece(Piece piece)
     {
-        if(tile == null)
+        if (piece == null)
         {
-            currentSelectedTile.Selected = false;
-            currentSelectedTile = null;
             currentPiece = null;
-            UpdatePotentialMoves();
+            HighlightPotentialMoves();
             return;
         }
 
-        // TODO if player can select...
-        Piece current = tile.CurrentPiece;
-        if(current != null)
-        {
-            tile.Selected = true;
-            Debug.Log("Selecting piece: " + current);
-            currentPiece = current;
-            currentSelectedTile = tile;
-            UpdatePotentialMoves();
+        if (CanSelect(piece))
+        { 
+            piece.Select();
+            Debug.Log("Selecting piece: " + piece);
+            currentPiece = piece;
+            HighlightPotentialMoves();
         }
     }
 

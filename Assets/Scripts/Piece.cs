@@ -15,18 +15,6 @@ public class Piece : MonoBehaviour
         Pawn,
     }
 
-    public Type type;
-    //Sprite sprite;
-    public bool facingUp;
-    public Color color;
-    public Tile tile;
-    public Player player;
-
-    public bool movedAtLeastOnce = false;
-
-    public List<Tile> PotentialMoves = new List<Tile>();
-
-
     static (int, int)[] forward = new (int, int)[] {
         (0, 1),
     };
@@ -67,8 +55,47 @@ public class Piece : MonoBehaviour
         (-1, -2)
     };
 
-    public void MoveTo(Tile tile)
+
+    public Type type;
+    //Sprite sprite;
+    public bool facingUp;
+    public Color color;
+    public Tile tile;
+    public Player player;
+
+    public bool movedAtLeastOnce = false;
+
+    public List<Tile> PotentialMoves = new List<Tile>();
+
+    
+    // https://answers.unity.com/questions/296347/move-transform-to-target-in-x-seconds.html
+    IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
     {
+        float elapsedTime = 0;
+        Vector3 startingPos = objectToMove.transform.position;
+        while (elapsedTime < seconds)
+        {
+            objectToMove.transform.position = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        objectToMove.transform.position = end;
+    }
+
+    public bool MoveTo(Tile tile)
+    {
+        // deselect current piece's tile
+        this.tile.Selected = false;
+
+        // if moving to its own tile, just reposition and deselect it
+        if (tile == this.tile || !this.CanMoveTo(tile))
+        {
+            Debug.Log("Cant move!");
+            this.transform.position = this.tile.transform.position;
+            return false;
+        }
+
+        // if can move, get going
         // destroy existing child piece
         var c = tile.CurrentPiece;
         if (c != null && c != this)
@@ -78,16 +105,26 @@ public class Piece : MonoBehaviour
         }
         tile.CurrentPiece = this;
 
+        this.tile.CurrentPiece = null; // remove ref from tile so piece doesn't show in two places at the same time
         this.tile = tile;
         this.movedAtLeastOnce = true;
         this.transform.parent = tile.transform;
-        this.transform.position = tile.transform.position; // TODO animate
+
+        // TODO is this efficient?
+        StartCoroutine(MoveOverSeconds(this.gameObject, this.tile.transform.position, 0.2f));
+
+        return true;
     }
 
     public void Kill()
     {
         Destroy(gameObject);
         player.Pieces.Remove(this);
+    }
+
+    public void Select()
+    {
+        this.tile.Selected = true;
     }
 
     public bool CanMoveTo(Tile tile)

@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
     public int x;
     public int y;
 
+    // TODO get rid of this circular reference
     public Piece CurrentPiece; // TODO using this bc GetComponent introduces bugs when updating states (eg if u change the current piece in a given turn, recomputing moves wont happen)
 
     // Update is called once per frame
