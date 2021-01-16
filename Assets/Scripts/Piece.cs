@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Piece : MonoBehaviour
 {
@@ -55,7 +56,6 @@ public class Piece : MonoBehaviour
         (-1, -2)
     };
 
-
     public Type type;
     //Sprite sprite;
     public bool facingUp;
@@ -64,11 +64,21 @@ public class Piece : MonoBehaviour
     public Player player;
 
     internal int value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
+
+
+    internal bool isKing;
+
     public bool movedAtLeastOnce = false;
 
-    public List<Tile> PotentialMoves = new List<Tile>();
+    // Set when a piece is now allowed to move (ie during a check situation)
+    public bool canMove = true;
 
+    public List<Play> PotentialMoves = new List<Play>();
+
+    internal void ResetMoves()
     {
+        this.canMove = true;
+        this.PotentialMoves.Clear();
     }
 
     public bool MoveTo(Tile tile)
@@ -79,7 +89,7 @@ public class Piece : MonoBehaviour
         // if moving to its own tile, just reposition and deselect it
         if (tile == this.tile || !this.CanMoveTo(tile))
         {
-            Debug.Log("Cant move!");
+            //Debug.Log("Cant move!");
             this.transform.position = this.tile.transform.position;
             return false;
         }
@@ -118,65 +128,67 @@ public class Piece : MonoBehaviour
 
     public bool CanMoveTo(Tile tile)
     {
-        if (tile.CurrentPiece?.facingUp == this.facingUp)
-        {
-            return false; // can't eat own pieces
-        }
-
-        return this.PotentialMoves.Contains(tile);
+        return this.PotentialMoves.Find(m => m.Tile == tile && !m.Blocked) != null;
     }
 
     internal void ComputeMoves(Tile[,] tiles)
     {
-        PotentialMoves.Clear();
+        // TODO if player is in check, only allow moves that will eliminate or block the pieces involved on the check
+
+        List<Play> potentialMoves;
 
         // TODO use inheritance?
         switch (type)
         {
             case Piece.Type.Bishop:
                 // verticals until hitting something
-                PotentialMoves = tryAll(diagonals, tile.x, tile.y, int.MaxValue, tiles);
+                potentialMoves = tryAll(diagonals, tile.x, tile.y, int.MaxValue, tiles);
                 break;
             case Piece.Type.King:
-                PotentialMoves = tryAll(adjacencies, tile.x, tile.y, 1, tiles);
+                potentialMoves = tryAll(adjacencies, tile.x, tile.y, 1, tiles);
                 break;
             case Piece.Type.Queen:
-                PotentialMoves = tryAll(adjacencies, tile.x, tile.y, int.MaxValue, tiles);
+                potentialMoves = tryAll(adjacencies, tile.x, tile.y, int.MaxValue, tiles);
                 break;
             case Piece.Type.Rook:
                 // straight lines until hitting an adversary
-                PotentialMoves = tryAll(linears, tile.x, tile.y, int.MaxValue, tiles);
+                potentialMoves = tryAll(linears, tile.x, tile.y, int.MaxValue, tiles);
                 break;
             case Piece.Type.Pawn:
                 // if first move, can move one or two squares
                 int maxSquares = movedAtLeastOnce ? 1 : 2;
 
-                PotentialMoves = tryAll(forward, tile.x, tile.y, maxSquares, tiles, false, true);
+                potentialMoves = tryAll(forward, tile.x, tile.y, maxSquares, tiles, false, true, false);
 
                 // eating diagonally
-                PotentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, 1, 1, 1, tiles, new List<Tile>(), true, false)
+                potentialMoves.AddRange(
+                    tryMove(tile.x, tile.y, 1, 1, 1, tiles, new List<Play>(), true, false, false)
                 );
-                PotentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, -1, 1, 1, tiles, new List<Tile>(), true, false)
+                potentialMoves.AddRange(
+                    tryMove(tile.x, tile.y, -1, 1, 1, tiles, new List<Play>(), true, false, false)
                 );
 
                 break;
             case Piece.Type.Knight:
-                PotentialMoves = tryAll(knightMoves, tile.x, tile.y, 1, tiles);
+                potentialMoves = tryAll(knightMoves, tile.x, tile.y, 1, tiles);
                 break;
             default:
                 return;
         }
+
+        this.PotentialMoves = potentialMoves
+            //.FindAll((m) => !m.Blocked)
+            .ToList(); 
+
     }
 
-    private List<Tile> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, bool onlyWhenCapturing = false, bool onlyMoveNoEat = false)
+    private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, bool onlyWhenCapturing = false, bool onlyMoveNoEat = false, bool blocked = false)
     {
-        var res = new List<Tile>();
+        var res = new List<Play>();
         foreach(var xy in directions)
         {
             res.AddRange(
-                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Tile>(), onlyWhenCapturing, onlyMoveNoEat)
+                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Play>(), onlyWhenCapturing, onlyMoveNoEat, blocked)
             );
         }
 
@@ -184,7 +196,7 @@ public class Piece : MonoBehaviour
     }
 
     // TODO simplify all the bools
-    private List<Tile> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Tile> validMoves, bool onlyWhenCapturing, bool onlyMoveNoEat)
+    private List<Play> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Play> validMoves, bool onlyWhenCapturing, bool onlyMoveNoEat, bool blocked)
     {
         // flip the y axis when piece is facing down
         int yFlip = facingUp ? 1 : -1;
@@ -201,19 +213,30 @@ public class Piece : MonoBehaviour
 
         var t = tiles[newX, newY];
         // can eat when target is empty or contains enemy OR when it contains an enemy if onlyWhenCapturing is true
-        if ((t.CurrentPiece == null || t.CurrentPiece?.facingUp != this.facingUp)
+        if ((t.CurrentPiece == null || t.CurrentPiece.player != this.player)
             && (!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece != null)) // can only move to that position if there's a capturable piece
             && (!onlyMoveNoEat || (onlyMoveNoEat && t.CurrentPiece == null))) // can only move when there's NOT a capturable piece
         {
-            validMoves.Add(tiles[newX, newY]);
+            validMoves.Add(
+                new Play(this, tiles[newX, newY], blocked)
+            );
         }
 
         // can't move further when hitting another piece
+        // but we compute the full motion anyway in case we get to a check
         if(t.CurrentPiece != null)
         {
-            return validMoves;
+            // already blocked by one piece OR by a piece the player owns, so no point on going further
+            if (blocked || t.CurrentPiece.player == this.player)
+            {
+                return validMoves;
+            }
+            else
+            {
+                blocked = true;
+            }
         }
 
-        return tryMove(newX, newY, deltaX, deltaY, maxMoves-1, tiles, validMoves, onlyWhenCapturing, onlyMoveNoEat);
+        return tryMove(newX, newY, deltaX, deltaY, maxMoves-1, tiles, validMoves, onlyWhenCapturing, onlyMoveNoEat, blocked);
     }
 }

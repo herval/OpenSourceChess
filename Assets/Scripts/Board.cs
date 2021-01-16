@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Board : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class Board : MonoBehaviour
     public Color clearTiles;
 
     Tile[,] tiles;
-    
 
     public void AddPiece(Piece.Type piece, int x, int y, Player player)
     {
@@ -27,17 +27,94 @@ public class Board : MonoBehaviour
         p.transform.position = tiles[x, y].transform.position;
     }
 
-    public void ComputePotentialMoves()
+    public void ComputePotentialMoves(Player currentPlayer, Player opponent)
     {
-        
+        Debug.Log("Computing moves for " + (currentPlayer.color == Color.white ? "white" : "black"));
+        // at the beginning of a player turn, we have to cross-check a bunch of stuff
 
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
+        // mark everything as movable to start
+        currentPlayer.Pieces.ForEach(p => p.ResetMoves());
+        opponent.Pieces.ForEach(p => p.ResetMoves());
+
+        // compute all movement vectors of the _opponent_ pieces
+        opponent.Pieces.ForEach((p) => {
+            p.ComputeMoves(tiles);
+
+            //  of those, when a piece's vector leads to the current player's king but is blocked by ONE piece, mark that piece as cannot-move
+            int kingKill = p.PotentialMoves.FindIndex((m) => m.Blocked && m.isCheck());
+            if (kingKill >= 0)
             {
-                tiles[x, y].CurrentPiece?.ComputeMoves(tiles);
+                Debug.Log("king kill for " + p);
+                // find the current player piece blocking a check and prevent it from moving
+                var blocker = p.PotentialMoves.GetRange(0, kingKill - 1).Find((m) => m.pieceOnTile?.player == currentPlayer);
+                if(blocker != null)
+                {
+                    Debug.Log("Marking piece as unable to move to prevent a check: " + blocker);
+                    blocker.pieceOnTile.canMove = false;
+                }
             }
+
+        });
+
+        // if there's any directly threatening the king, current player is in check and NOT blocked?
+        if (opponent.Pieces.Find(p => p.PotentialMoves.Find(m => m.isCheck() && !m.Blocked) != null))
+        {
+            Debug.Log("Player in check!");
+
+            var threatenedTiles = opponent.Pieces
+                .ConvertAll(p => p.PotentialMoves)
+                .SelectMany(c => c)
+                .ToList()
+                .FindAll(p => !p.Blocked)
+                .ConvertAll(p => p.Tile)
+                .ToList();
+
+            Debug.Log("Threatened tiles: " + threatenedTiles);
+
+            // enable the king's escape routes (if any)
+            // enable only movements that will either block or capture threatening pieces
+
+        } else
+        {
+            // compute all the movement vectors of current player's pieces
+            currentPlayer.Pieces.ForEach(p => p.ComputeMoves(tiles));
+
+            
         }
+
+
+        //for (int x = 0; x < width; x++)
+        //{
+        //    for (int y = 0; y < height; y++)
+        //    {
+        //        //tiles[x, y].CurrentPiece?.SetMovable();
+        //    }
+        //}
+
+
+        //for (int x = 0; x < width; x++)
+        //{
+        //    for (int y = 0; y < height; y++)
+        //    {
+        //        tiles[x, y].CurrentPiece?.ComputeMoves(tiles);
+        //    }
+        //}
+
+        //// pieces marked as !canMove should not be allowed to move
+        //for (int x = 0; x < width; x++)
+        //{
+        //    for (int y = 0; y < height; y++)
+        //    {
+        //        var p = tiles[x, y].CurrentPiece;
+        //        if(p != null && !p.canMove)
+        //        {
+        //            Debug.Log("Marking piece unmovable: " + p);
+        //            p.PotentialMoves.Clear();
+        //        }
+        //    }
+        //}
+
+        // TODO restrict piece movements during a check to only moves that protect the king
     }
 
     public void Reset()

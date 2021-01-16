@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     Player currentPlayer;
 
     Tile currentHighlightedTile;
-    List<Tile> currentPotentialMoves = new List<Tile>();
+    List<Play> currentPotentialMoves = new List<Play>();
     private Piece currentPiece;
 
 
@@ -88,15 +88,16 @@ public class GameManager : MonoBehaviour
 
     private void OnNextTurn()
     {
-        board.ComputePotentialMoves();
         if (currentPlayer == null)
         {
             currentPlayer = playerOne;
-        }
-        else
+        } else
         {
-            currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne; // alternate player
+            Player opponent = currentPlayer == playerOne ? playerTwo : playerOne;
+            currentPlayer = opponent; // alternate player
         }
+
+        board.ComputePotentialMoves(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne);
 
         PieceCommand c = currentPlayer.turnManager?.ActOn(currentPlayer, board);
         switch(c)
@@ -121,17 +122,19 @@ public class GameManager : MonoBehaviour
         // render potential moves
         if(currentPiece != null)
         {
-            foreach(Tile t in currentPiece.PotentialMoves)
+            currentPiece.PotentialMoves.ForEach(m =>
             {
-                t.PotentialMove = true;
-                currentPotentialMoves.Add(t);
-            }
-        } else
+                m.Tile.BlockedMove = m.Blocked;
+                m.Tile.PotentialMove = true;
+                currentPotentialMoves.Add(m);
+            });
+        } else // de-select all
         {
-            foreach(Tile movable in currentPotentialMoves)
+            currentPotentialMoves.ForEach(m =>
             {
-                movable.PotentialMove = false;
-            }
+                m.Tile.BlockedMove = false;
+                m.Tile.PotentialMove = false;
+            });
             currentPotentialMoves.Clear();
         }
     }
@@ -209,7 +212,7 @@ public class GameManager : MonoBehaviour
         if (CanSelect(piece))
         { 
             piece.Select();
-            Debug.Log("Selecting piece: " + piece);
+            //Debug.Log("Selecting piece: " + piece);
             currentPiece = piece;
             HighlightPotentialMoves();
         }

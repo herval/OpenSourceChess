@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     public bool Highlighted = false;
     public bool Selected = false;
     internal bool PotentialMove = false;
+    internal bool BlockedMove = false;
     public Color Color;
 
     public int x;
@@ -27,6 +28,11 @@ public class Tile : MonoBehaviour
         } else if (Highlighted)
         {
             GetComponent<SpriteRenderer>().color = Color.yellow;
+#if UNITY_EDITOR
+} else if (BlockedMove) // for debugging only
+        {
+            GetComponent<SpriteRenderer>().color = Color.cyan;
+#endif
         } else if (PotentialMove)
         {
             GetComponent<SpriteRenderer>().color = Color.green;

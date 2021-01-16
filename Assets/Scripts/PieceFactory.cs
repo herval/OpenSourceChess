@@ -41,7 +41,7 @@ public class PieceFactory : MonoBehaviour
         switch (type)
         {
             case Piece.Type.Bishop:
-                p.value = 3;
+                p.value = 30;
                 sm.sprite = faceUp ? LightBishop : DarkBishop;
                 break;
             case Piece.Type.King:
@@ -50,19 +50,19 @@ public class PieceFactory : MonoBehaviour
                 sm.sprite = faceUp ? LightKing : DarkKing;
                 break;
             case Piece.Type.Queen:
-                p.value = 9;
+                p.value = 90;
                 sm.sprite = faceUp ? LightQueen : DarkQueen;
                 break;
             case Piece.Type.Rook:
-                p.value =  5;
+                p.value =  50;
                 sm.sprite = faceUp ? LightRook : DarkRook;
                 break;
             case Piece.Type.Pawn:
-                p.value = 1;
+                p.value = 10;
                 sm.sprite = faceUp ? LightPawn : DarkPawn;
                 break;
             case Piece.Type.Knight:
-                p.value = 3;
+                p.value = 30;
                 sm.sprite = faceUp ? LightKnight : DarkKnight;
                 break;
             default:
@@ -73,7 +73,7 @@ public class PieceFactory : MonoBehaviour
         p.value = (p.color == Color.white ? 1 : -1) * p.value; // pieces have positive/negative value, depending on what side they're on
         p.name = (p.color == Color.white ? "white" : "black") + " " + type.ToString();
 
-        Debug.Log("piece created: " + type + ", "+ faceUp);
+        //Debug.Log("piece created: " + type + ", "+ faceUp);
         tile.CurrentPiece = p;
         return p;
     }

@@ -20,7 +20,7 @@ public class DumbAI : TurnManager
             {
                 return new MoveTo(
                     p,
-                    p.PotentialMoves[Random.Range(0, p.PotentialMoves.Count - 1)]
+                    p.PotentialMoves[Random.Range(0, p.PotentialMoves.Count - 1)].Tile
                 );
             }
         }
