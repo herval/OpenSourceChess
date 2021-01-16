@@ -19,6 +19,6 @@ public class Play
 
     public bool isCheck()
     {
-        return pieceOnTile != null && pieceOnTile.player != ownPiece.player && pieceOnTile.isKing && !Blocked;
+        return pieceOnTile != null && pieceOnTile.player != ownPiece.player && pieceOnTile.isKing;
     }
 }

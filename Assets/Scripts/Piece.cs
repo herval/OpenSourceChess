@@ -62,13 +62,11 @@ public class Piece : MonoBehaviour
     public Color color;
     public Tile tile;
     public Player player;
-
     internal int value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
 
+    internal bool isKing; // used to identify LE ROI
 
-    internal bool isKing;
-
-    public bool movedAtLeastOnce = false;
+    public bool movedAtLeastOnce = false; // used for pawns' first move
 
     // Set when a piece is now allowed to move (ie during a check situation)
     public bool canMove = true;
@@ -128,12 +126,16 @@ public class Piece : MonoBehaviour
 
     public bool CanMoveTo(Tile tile)
     {
-        return this.PotentialMoves.Find(m => m.Tile == tile && !m.Blocked) != null;
+        return this.canMove && this.PotentialMoves.Find(m => m.Tile == tile && !m.Blocked) != null;
     }
 
     internal void ComputeMoves(Tile[,] tiles)
     {
-        // TODO if player is in check, only allow moves that will eliminate or block the pieces involved on the check
+        if(!this.canMove)
+        {
+            Debug.Log("Piece pinned down: " + this.name);
+            return;
+        }
 
         List<Play> potentialMoves;
 

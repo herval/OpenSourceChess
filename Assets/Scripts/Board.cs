@@ -44,9 +44,9 @@ public class Board : MonoBehaviour
             int kingKill = p.PotentialMoves.FindIndex((m) => m.Blocked && m.isCheck());
             if (kingKill >= 0)
             {
-                Debug.Log("king kill for " + p);
+                //Debug.Log("king kill for " + p + " at " + kingKill);
                 // find the current player piece blocking a check and prevent it from moving
-                var blocker = p.PotentialMoves.GetRange(0, kingKill - 1).Find((m) => m.pieceOnTile?.player == currentPlayer);
+                var blocker = p.PotentialMoves.GetRange(0, kingKill).Find((m) => m.pieceOnTile?.player == currentPlayer);
                 if(blocker != null)
                 {
                     Debug.Log("Marking piece as unable to move to prevent a check: " + blocker);
