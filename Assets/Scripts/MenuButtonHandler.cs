@@ -35,7 +35,7 @@ public class MenuButtonHandler : MonoBehaviour
 
         buttonDefaultColor = pvpMode.colors.normalColor;
 
-        newGameSettings.active = false;
+        newGameSettings.SetActive(false);
 
         exit.onClick.AddListener(delegate() { Exit(); });
         newGame.onClick.AddListener(delegate () { ShowGameOptions(); });
@@ -53,7 +53,7 @@ public class MenuButtonHandler : MonoBehaviour
         {
             toggleSelection(pvpMode, pvcMode);
         }
-        newGameSettings.active = true;
+        newGameSettings.SetActive(true);
     }
 
     private void toggleSelection(Button selected, Button unselected)
