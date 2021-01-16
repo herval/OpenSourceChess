@@ -68,19 +68,7 @@ public class Piece : MonoBehaviour
 
     public List<Tile> PotentialMoves = new List<Tile>();
 
-    
-    // https://answers.unity.com/questions/296347/move-transform-to-target-in-x-seconds.html
-    IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
     {
-        float elapsedTime = 0;
-        Vector3 startingPos = objectToMove.transform.position;
-        while (elapsedTime < seconds)
-        {
-            objectToMove.transform.position = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
-            elapsedTime += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        objectToMove.transform.position = end;
     }
 
     public bool MoveTo(Tile tile)
@@ -112,7 +100,7 @@ public class Piece : MonoBehaviour
         this.transform.parent = tile.transform;
 
         // TODO is this efficient?
-        StartCoroutine(MoveOverSeconds(this.gameObject, this.tile.transform.position, 0.2f));
+        StartCoroutine(AnimationHelper.MoveOverSeconds(this.gameObject, this.tile.transform.position, 0.2f));
 
         return true;
     }
