@@ -7,6 +7,8 @@ using UnityEngine.UI;
 // keep game state and handle inputs
 public class GameManager : MonoBehaviour
 {
+    PlayerPreferences prefs;
+
     public Text TurnStatusDisplay;
     public Board board;
     public GameArrangement arrangementManager;
@@ -22,12 +24,17 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        prefs = PlayerPreferences.Instance;
+
         playerOne.color = Color.white; // TODO randomized option
         playerOne.facingUp = true;
 
         playerTwo.color = Color.black;
         playerTwo.facingUp = false;
-        playerTwo.turnManager = new DumbAI();
+        if (prefs.gameMode == GameMode.PlayerVersusComputer)
+        {
+            playerTwo.turnManager = new DumbAI();
+        }
 
         arrangementManager = new StandardGameArrangement();
         board.Reset();
