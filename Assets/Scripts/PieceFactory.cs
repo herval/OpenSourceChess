@@ -41,27 +41,37 @@ public class PieceFactory : MonoBehaviour
         switch (type)
         {
             case Piece.Type.Bishop:
+                p.value = 3;
                 sm.sprite = faceUp ? LightBishop : DarkBishop;
                 break;
             case Piece.Type.King:
+                p.value = 900;
+                p.isKing = true;
                 sm.sprite = faceUp ? LightKing : DarkKing;
                 break;
             case Piece.Type.Queen:
+                p.value = 9;
                 sm.sprite = faceUp ? LightQueen : DarkQueen;
                 break;
             case Piece.Type.Rook:
+                p.value =  5;
                 sm.sprite = faceUp ? LightRook : DarkRook;
                 break;
             case Piece.Type.Pawn:
+                p.value = 1;
                 sm.sprite = faceUp ? LightPawn : DarkPawn;
                 break;
             case Piece.Type.Knight:
+                p.value = 3;
                 sm.sprite = faceUp ? LightKnight : DarkKnight;
                 break;
             default:
                 Debug.Log("Unsupported type: " + type);
                 return null;
         }
+
+        p.value = (p.color == Color.white ? 1 : -1) * p.value; // pieces have positive/negative value, depending on what side they're on
+        p.name = (p.color == Color.white ? "white" : "black") + " " + type.ToString();
 
         Debug.Log("piece created: " + type + ", "+ faceUp);
         tile.CurrentPiece = p;

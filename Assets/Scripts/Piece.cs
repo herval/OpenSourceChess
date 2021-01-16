@@ -63,6 +63,7 @@ public class Piece : MonoBehaviour
     public Tile tile;
     public Player player;
 
+    internal int value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
     public bool movedAtLeastOnce = false;
 
     public List<Tile> PotentialMoves = new List<Tile>();
