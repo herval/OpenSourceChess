@@ -6,69 +6,73 @@ using UnityEngine;
 public class PieceFactory : MonoBehaviour
 {
 
-    public Sprite LightRook;
-    public Sprite LightKing;
-    public Sprite LightQueen;
-    public Sprite LightBishop;
-    public Sprite LightPawn;
-    public Sprite LightKnight;
+    public GameObject WhiteRook;
+    public GameObject WhiteKing;
+    public GameObject WhiteQueen;
+    public GameObject WhiteBishop;
+    public GameObject WhitePawn;
+    public GameObject WhiteKnight;
 
-    public Sprite DarkRook;
-    public Sprite DarkKing;
-    public Sprite DarkQueen;
-    public Sprite DarkBishop;
-    public Sprite DarkPawn;
-    public Sprite DarkKnight;
+    public GameObject BlackRook;
+    public GameObject BlackKing;
+    public GameObject BlackQueen;
+    public GameObject BlackBishop;
+    public GameObject BlackPawn;
+    public GameObject BlackKnight;
 
-
-    public GameObject piecePrefab;
-
-    //public GameObject[] piecePrefabs;
 
     public Piece Create(Tile tile, Piece.Type type, bool faceUp, Player player)
     {
-        var piece = Instantiate(piecePrefab, tile.transform);
-        var sm = piece.GetComponent<SpriteRenderer>();
+        GameObject prefab = null;
+        int value = 0;
+        bool isKing = false;
 
-        var p = piece.GetComponent<Piece>();
-        p.type = type;
-        p.facingUp = faceUp;
-        p.color = player.color;
-        p.tile = tile;
-        p.player = player;
 
         // TODO decouple facing from piece color
         switch (type)
         {
+            case Piece.Type.Rook:
+                value = 50;
+                prefab = faceUp ? WhiteRook : BlackRook;
+                break;
+
             case Piece.Type.Bishop:
-                p.value = 30;
-                sm.sprite = faceUp ? LightBishop : DarkBishop;
+                value = 30;
+                prefab = faceUp ? WhiteBishop : BlackBishop;
                 break;
             case Piece.Type.King:
-                p.value = 900;
-                p.isKing = true;
-                sm.sprite = faceUp ? LightKing : DarkKing;
+                value = 900;
+                isKing = true;
+                prefab = faceUp ? WhiteKing : BlackKing;
                 break;
             case Piece.Type.Queen:
-                p.value = 90;
-                sm.sprite = faceUp ? LightQueen : DarkQueen;
-                break;
-            case Piece.Type.Rook:
-                p.value =  50;
-                sm.sprite = faceUp ? LightRook : DarkRook;
+                value = 90;
+                prefab = faceUp ? WhiteQueen : BlackQueen;
                 break;
             case Piece.Type.Pawn:
-                p.value = 10;
-                sm.sprite = faceUp ? LightPawn : DarkPawn;
+                value = 10;
+                prefab = faceUp ? WhitePawn : BlackPawn;
                 break;
             case Piece.Type.Knight:
-                p.value = 30;
-                sm.sprite = faceUp ? LightKnight : DarkKnight;
+                value = 30;
+                prefab = faceUp ? WhiteKnight : BlackKnight;
                 break;
             default:
                 Debug.Log("Unsupported type: " + type);
                 return null;
         }
+
+        var piece = Instantiate(prefab, tile.transform);
+        var sm = piece.GetComponent<SpriteRenderer>();
+
+        var p = piece.GetComponent<Piece>();
+        p.isKing = isKing;
+        p.type = type;
+        p.value = value;
+        p.facingUp = faceUp;
+        p.color = player.color;
+        p.tile = tile;
+        p.player = player;
 
         p.value = (p.color == Color.white ? 1 : -1) * p.value; // pieces have positive/negative value, depending on what side they're on
         p.name = (p.color == Color.white ? "white" : "black") + " " + type.ToString();
