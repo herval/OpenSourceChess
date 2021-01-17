@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,10 +30,10 @@ public class GameManager : MonoBehaviour
 
         playerTwo.color = Color.black;
         playerTwo.facingUp = false;
-        if (prefs.gameMode == GameMode.PlayerVersusComputer)
-        {
-            playerTwo.turnManager = new DumbAI();
-        }
+        //if (prefs.gameMode == GameMode.PlayerVersusComputer)
+        //{
+        //    playerTwo.turnManager = new DumbAI();
+        //}
 
         arrangementManager = new StandardGameArrangement();
         board.Reset();
@@ -91,7 +90,8 @@ public class GameManager : MonoBehaviour
         if (currentPlayer == null)
         {
             currentPlayer = playerOne;
-        } else
+        }
+        else
         {
             Player opponent = currentPlayer == playerOne ? playerTwo : playerOne;
             currentPlayer = opponent; // alternate player
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
         board.ComputePotentialMoves(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne);
 
         PieceCommand c = currentPlayer.turnManager?.ActOn(currentPlayer, board);
-        switch(c)
+        switch (c)
         {
             case null:
                 return;
@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
     private void HighlightPotentialMoves()
     {
         // render potential moves
-        if(currentPiece != null)
+        if (currentPiece != null)
         {
             currentPiece.PotentialMoves.ForEach(m =>
             {
@@ -128,7 +128,8 @@ public class GameManager : MonoBehaviour
                 m.Tile.PotentialMove = true;
                 currentPotentialMoves.Add(m);
             });
-        } else // de-select all
+        }
+        else // de-select all
         {
             currentPotentialMoves.ForEach(m =>
             {
@@ -162,7 +163,7 @@ public class GameManager : MonoBehaviour
     private bool MoveToTile(Tile tile)
     {
         // no bueno
-        if(currentPiece == null)
+        if (currentPiece == null)
         {
             Debug.Log("Trying to move null piece? " + currentPiece);
             return false;
@@ -210,7 +211,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (CanSelect(piece))
-        { 
+        {
             piece.Select();
             //Debug.Log("Selecting piece: " + piece);
             currentPiece = piece;
@@ -220,7 +221,7 @@ public class GameManager : MonoBehaviour
 
     private void HighlightTile(Tile tile)
     {
-        if(tile == null)
+        if (tile == null)
         {
             if (currentHighlightedTile != null)
             {

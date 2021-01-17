@@ -205,14 +205,14 @@ public class Piece : MonoBehaviour
                 return;
         }
 
-        this.PotentialMoves = potentialMoves.ToList(); 
+        this.PotentialMoves = potentialMoves.ToList();
 
     }
 
     private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, bool onlyWhenCapturing, bool onlyMoveNoEat, Piece blocker)
     {
         var res = new List<Play>();
-        foreach(var xy in directions)
+        foreach (var xy in directions)
         {
             res.AddRange(
                 tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Play>(), onlyWhenCapturing, onlyMoveNoEat, blocker, null)
@@ -228,12 +228,12 @@ public class Piece : MonoBehaviour
         // flip the y axis when piece is facing down
         int yFlip = facingUp ? 1 : -1;
         int newX = x + deltaX;
-        int newY = y+(deltaY * yFlip);
+        int newY = y + (deltaY * yFlip);
 
         // we're done when hitting a corner or there's no more moves possible
         if (newX < 0 || newX >= tiles.GetLength(0)
               || newY < 0 || newY >= tiles.GetLength(1)
-              || (maxMoves <= 0) )
+              || (maxMoves <= 0))
         {
             return validMoves;
         }
@@ -251,7 +251,7 @@ public class Piece : MonoBehaviour
 
         // can't move further when hitting another piece
         // but we compute the full motion anyway in case we get to a check
-        if(t.CurrentPiece != null)
+        if (t.CurrentPiece != null)
         {
             // already blocked by one piece OR by a piece the player owns, so no point on going further
             if (blocker != null)// || t.CurrentPiece.player == this.player)
@@ -264,6 +264,6 @@ public class Piece : MonoBehaviour
             }
         }
 
-        return tryMove(newX, newY, deltaX, deltaY, maxMoves-1, tiles, validMoves, onlyWhenCapturing, onlyMoveNoEat, blocker, prev);
+        return tryMove(newX, newY, deltaX, deltaY, maxMoves - 1, tiles, validMoves, onlyWhenCapturing, onlyMoveNoEat, blocker, prev);
     }
 }
