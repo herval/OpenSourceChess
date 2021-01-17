@@ -16,3 +16,9 @@ The current version of the game is pretty bare-bones, but already covers some ba
 - Finish the check/check-mate rules and end-of-game
 - Introduce some basic AI for single player games
 - Better visuals! Animations! Sounds!
+
+## Acknowledgements
+
+- Basic Chess image assets from [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces)
+- Character art from [Free NPC Pack](https://superdark.itch.io/16x16-free-npc-pack) by [superdark](https://twitter.com/exel_art)
+- Board from [2D Pixel Art Dungeon Tileset](https://elthen.itch.io/2d-pixel-art-dungeon-tileset) by [Elthen](https://elthen.itch.io/)
