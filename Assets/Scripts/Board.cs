@@ -39,82 +39,70 @@ public class Board : MonoBehaviour
         // compute all movement vectors of the _opponent_ pieces
         opponent.Pieces.ForEach((p) => {
             p.ComputeMoves(tiles);
-
-            //  of those, when a piece's vector leads to the current player's king but is blocked by ONE piece, mark that piece as cannot-move
-            int kingKill = p.PotentialMoves.FindIndex((m) => m.Blocked && m.isCheck());
-            if (kingKill >= 0)
-            {
-                //Debug.Log("king kill for " + p + " at " + kingKill);
-                // find the current player piece blocking a check and prevent it from moving
-                var blocker = p.PotentialMoves.GetRange(0, kingKill).Find((m) => m.pieceOnTile?.player == currentPlayer);
-                if(blocker != null)
-                {
-                    Debug.Log("Marking piece as unable to move to prevent a check: " + blocker);
-                    blocker.pieceOnTile.canMove = false;
-                }
-            }
-
         });
 
-        // if there's any directly threatening the king, current player is in check and NOT blocked?
-        if (opponent.Pieces.Find(p => p.PotentialMoves.Find(m => m.isCheck() && !m.Blocked) != null))
-        {
-            Debug.Log("Player in check!");
 
-            var threatenedTiles = opponent.Pieces
-                .ConvertAll(p => p.PotentialMoves)
-                .SelectMany(c => c)
-                .ToList()
-                .FindAll(p => !p.Blocked)
-                .ConvertAll(p => p.Tile)
-                .ToList();
+        // find all the moves that threaten the king
+        List<Play> checkMoves = opponent.Pieces.ConvertAll(p => p.PotentialMoves.FindAll(m => m.isCheck() && m.Blocker == null)).SelectMany(c => c).ToList();
+        List<List<Tile>> attackVectors = checkMoves.ConvertAll(m => m.MovementVector());
 
-            Debug.Log("Threatened tiles: " + threatenedTiles);
-
-            // enable the king's escape routes (if any)
-            // enable only movements that will either block or capture threatening pieces
-
-        } else
-        {
-            // compute all the movement vectors of current player's pieces
-            currentPlayer.Pieces.ForEach(p => p.ComputeMoves(tiles));
-
-            
-        }
+        var blockedCheckAttempts = opponent.Pieces.ConvertAll(p =>
+            p.PotentialMoves.FindAll(m => m.isCheck() && m.Blocker != null)
+        ).SelectMany(x => x).ToList();
 
 
-        //for (int x = 0; x < width; x++)
-        //{
-        //    for (int y = 0; y < height; y++)
-        //    {
-        //        //tiles[x, y].CurrentPiece?.SetMovable();
-        //    }
-        //}
+        // compute all the movement vectors of current player's pieces
+        // the king CANNOT move to a threatened tile
+        currentPlayer.Pieces.ForEach(p => {
+        p.ComputeMoves(tiles);
+
+            // le roi is a little snowflake
+            if (p.isKing)
+            {
+                // the king cannot move into traps!
+                var threatenedTiles = opponent.Pieces
+                    .ConvertAll(p => p.PotentialMoves)
+                    .SelectMany(c => c)
+                    .ToList()
+                    .FindAll(p => p.Blocker == null)
+                    .ConvertAll(p => p.Tile)
+                    .ToList();
+                p.PotentialMoves = p.PotentialMoves.FindAll(m => !threatenedTiles.Contains(m.Tile));
+
+                // the king cannot capture a piece that would _unblock_ a check attempt
+                blockedCheckAttempts.ForEach(a =>
+                {
+                    Debug.Log("Evaluating blocked threat by " + a.ownPiece);
+                    p.PotentialMoves = p.PotentialMoves.FindAll(m =>
+                        m.pieceOnTile != a.Blocker
+                    ); ;
+                });
+            }
+            else
+            {
+                // if there's any directly threatening the king, current player is in check and can only defend
+                // enable only movements that will either block *all* attack vector or capture threatening pieces
+                attackVectors.ForEach(a =>
+                {
+                    p.PotentialMoves = p.PotentialMoves.FindAll(m => a.Contains(m.Tile));
+                });
+            }
+        });
 
 
-        //for (int x = 0; x < width; x++)
-        //{
-        //    for (int y = 0; y < height; y++)
-        //    {
-        //        tiles[x, y].CurrentPiece?.ComputeMoves(tiles);
-        //    }
-        //}
+        // pieces BLOCKING an opponent may only move as long as they remain in the blocking path or capture the attacker
+        blockedCheckAttempts.ForEach(checkAttempt =>
+            {
+                var vector = checkAttempt.MovementVector().Skip(1).ToList(); // skip the check position itself
+                var blockingPieces = vector
+                    .FindAll(t => t.CurrentPiece?.player == currentPlayer)
+                    .ConvertAll(t => t.CurrentPiece); // grab all player pieces blocking the move
 
-        //// pieces marked as !canMove should not be allowed to move
-        //for (int x = 0; x < width; x++)
-        //{
-        //    for (int y = 0; y < height; y++)
-        //    {
-        //        var p = tiles[x, y].CurrentPiece;
-        //        if(p != null && !p.canMove)
-        //        {
-        //            Debug.Log("Marking piece unmovable: " + p);
-        //            p.PotentialMoves.Clear();
-        //        }
-        //    }
-        //}
-
-        // TODO restrict piece movements during a check to only moves that protect the king
+                if(blockingPieces.Count == 1) // only restrict movement if there's only ONE piece defending the king
+                {
+                    blockingPieces[0].PotentialMoves = blockingPieces[0].PotentialMoves.FindAll(m => vector.Contains(m.Tile));
+                }
+            });
     }
 
     public void Reset()

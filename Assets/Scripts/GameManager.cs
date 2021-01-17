@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
         {
             currentPiece.PotentialMoves.ForEach(m =>
             {
-                m.Tile.BlockedMove = m.Blocked;
+                m.Tile.BlockedMove = m.Blocker != null;
                 m.Tile.PotentialMove = true;
                 currentPotentialMoves.Add(m);
             });
