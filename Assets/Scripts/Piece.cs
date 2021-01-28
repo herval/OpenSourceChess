@@ -57,10 +57,38 @@ public class Piece : MonoBehaviour
     };
 
     public Type type;
-    //Sprite sprite;
     public bool facingUp;
     public Color color;
-    public Tile tile;
+
+    private Tile _tile;
+    public Tile tile
+    {
+        get
+        {
+            return _tile;
+        }
+
+        set
+        {
+            _tile = value;
+            if (sprite == null)
+            {
+                sprite = this.GetComponent<SpriteRenderer>();
+                if (sprite == null)
+                {
+                    sprite = this.GetComponentInChildren<SpriteRenderer>();
+                }
+                if (sprite == null)
+                {
+                    throw new MissingReferenceException("A sprite is required!");
+                }
+            }
+
+            // set the order in layer for the sprite
+            sprite.sortingOrder = -value.y;
+        }
+    }
+
     public Player player;
 
     internal int value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
@@ -70,6 +98,9 @@ public class Piece : MonoBehaviour
     public bool movedAtLeastOnce = false; // used for pawns' first move
 
     public List<Play> PotentialMoves = new List<Play>();
+    private SpriteRenderer sprite;
+
+
 
     internal void ResetMoves()
     {
@@ -78,6 +109,8 @@ public class Piece : MonoBehaviour
 
     public bool MoveTo(Tile tile)
     {
+
+
         // deselect current piece's tile
         this.tile.Selected = false;
 

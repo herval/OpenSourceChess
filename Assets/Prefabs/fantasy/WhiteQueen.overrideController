@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WhiteQueen
+  m_Controller: {fileID: 9100000, guid: 532430a117542434db050b83c79f605c, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 5750b7e42f7764c1ebd0918da4014e35, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 83be3c2d68f804421a15cf6d1adeb8e6, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 245226e50d5b8413ebe393386c5adf3a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c91de28f40766413c9e412b063dd9c83, type: 2}

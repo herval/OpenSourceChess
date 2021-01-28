@@ -63,7 +63,6 @@ public class PieceFactory : MonoBehaviour
         }
 
         var piece = Instantiate(prefab, tile.transform);
-        var sm = piece.GetComponent<SpriteRenderer>();
 
         var p = piece.GetComponent<Piece>();
         p.isKing = isKing;
