@@ -98,9 +98,21 @@ public class Piece : MonoBehaviour
     public bool movedAtLeastOnce = false; // used for pawns' first move
 
     public List<Play> PotentialMoves = new List<Play>();
-    private SpriteRenderer sprite;
+    public SpriteRenderer sprite;
 
+    public void Freeze()
+    {
+        var animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
 
+        if (animator != null)
+        {
+            animator.enabled = false;
+        }
+    }
 
     internal void ResetMoves()
     {
@@ -109,8 +121,6 @@ public class Piece : MonoBehaviour
 
     public bool MoveTo(Tile tile)
     {
-
-
         // deselect current piece's tile
         this.tile.Selected = false;
 
@@ -128,6 +138,8 @@ public class Piece : MonoBehaviour
         if (c != null && c != this)
         {
             Debug.Log("Killing existing on " + this);
+            // TODO animate
+            this.player.Capture(tile.CurrentPiece);
             tile.CurrentPiece.Kill();
         }
         tile.CurrentPiece = this;
@@ -145,7 +157,7 @@ public class Piece : MonoBehaviour
 
     public void Kill()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
         player.Pieces.Remove(this);
     }
 

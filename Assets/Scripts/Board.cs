@@ -8,6 +8,7 @@ public class Board : MonoBehaviour
     public int width = 10;
     public int height = 10; // 10 as deault so a single tile has a scale of 0.1
 
+    // TODO make these a single thing
     public TileFactory tileFactory;
     public PieceFactory pieceFactory;
 

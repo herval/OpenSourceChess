@@ -150,7 +150,7 @@ PrefabInstance:
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: pieceFactory
       value: 
-      objectReference: {fileID: 1635185667}
+      objectReference: {fileID: 1824314225}
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: arrangementManager
       value: 
@@ -772,7 +772,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6035710897031506199, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -43.502464
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6035710897031506199, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_LocalRotation.w
@@ -801,6 +801,10 @@ PrefabInstance:
     - target: {fileID: 6035710897031506199, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404665689690273624, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.66
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
@@ -1003,12 +1007,12 @@ MonoBehaviour:
   WhiteBishop: {fileID: 8142466828272293925, guid: 575e6fa3659c84dcb810fb747b7f1c83, type: 3}
   WhitePawn: {fileID: 8142466828272293925, guid: 7c5a1fc4c1a25473ea5036500f61b995, type: 3}
   WhiteKnight: {fileID: 8142466828272293925, guid: 2755d2f16cfa141d2b3a1f5b6e312f87, type: 3}
-  BlackRook: {fileID: 8142466828272293925, guid: abc5f59c8d3c6474c8dd5a6c5cfddd96, type: 3}
-  BlackKing: {fileID: 8142466828272293925, guid: dd92e92f78d734b26b650ad69a55c07b, type: 3}
-  BlackQueen: {fileID: 8142466828272293925, guid: e12a0abb50cf042f9ba0bbc688b960e8, type: 3}
-  BlackBishop: {fileID: 8142466828272293925, guid: ff060c04bb3cd4d93a6cafa4c7d9976e, type: 3}
-  BlackPawn: {fileID: 8142466828272293925, guid: abbdc3cd19fdf49cb9463da2853a691e, type: 3}
-  BlackKnight: {fileID: 8142466828272293925, guid: 5c3d0a18645304086b2e9b084891fb0c, type: 3}
+  BlackRook: {fileID: 8142466828272293925, guid: 8d6164820c32b4039882920b179e6c75, type: 3}
+  BlackKing: {fileID: 8142466828272293925, guid: 120853f5d8f1e4576a81837107872341, type: 3}
+  BlackQueen: {fileID: 8142466828272293925, guid: 64fef48fb17bf4491b6ae14e64e3510c, type: 3}
+  BlackBishop: {fileID: 8142466828272293925, guid: 57fb37dc292d940208bc03e2cc953a3f, type: 3}
+  BlackPawn: {fileID: 8142466828272293925, guid: 42e873891b4414709847da52e36f389f, type: 3}
+  BlackKnight: {fileID: 8142466828272293925, guid: 0f10fdc11a0b64a50aca03fd7ffed66b, type: 3}
 --- !u!114 &1824314226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1137,7 +1141,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6035710897031506199, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -233.74654
+      value: -286.7
       objectReference: {fileID: 0}
     - target: {fileID: 6035710897031506199, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1145,7 +1149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6035710897031506199, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -43.502464
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6035710897031506199, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_LocalRotation.w
