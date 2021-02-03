@@ -146,7 +146,7 @@ PrefabInstance:
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: tileFactory
       value: 
-      objectReference: {fileID: 1635185669}
+      objectReference: {fileID: 1824314226}
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: pieceFactory
       value: 
