@@ -88,9 +88,10 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                if (currentPiece.CanMoveTo(tile))
+                var play = currentPiece.UnblockedMoveTo(tile);
+                if (play != null)
                 {
-                    Execute(new MoveTo(currentPiece, tile));
+                    Execute(new Movement(play));
                 }
                 else
                 {
@@ -122,8 +123,9 @@ public class GameManager : MonoBehaviour
             currentPlayer = opponent; // alternate player
         }
 
-        PieceCommand c = currentPlayer.turnManager.ActOn(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne, board);
-        Execute(c);
+        Execute(
+            currentPlayer.turnManager.ActOn(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne, board)
+        );
     }
 
     private void Execute(PieceCommand c)
@@ -133,15 +135,16 @@ public class GameManager : MonoBehaviour
             case null:
                 // wait for player to interact
                 return;
+            
             case LoseGame l:
                 // TODO implement end of game
                 Debug.Log("Game over!");
                 GameOverScreen.SetActive(true);
                 return;
-            case MoveTo m:
+            case Movement m:
                 waitingForAnimation = true;
 
-                m.piece.MoveTo(m.tile, (moved) =>
+                moveRecursively(m.play, m.play.ConnectedPlays, (moved) =>
                 {
                     // Debug.Log("animation done " + moved);
                     waitingForAnimation = false;
@@ -152,6 +155,27 @@ public class GameManager : MonoBehaviour
             default:
                 throw new Exception("Unhandled command: " + c);
         }
+    }
+
+    private void moveRecursively(Play play, List<Play> next, AfterAnimationCallback done)
+    {
+        if (play == null)
+        {
+            done.Invoke(true);
+            return;
+        }
+        
+        play.ownPiece.MoveTo(play.Tile, (moved) =>
+        {
+            if (next != null && next.Count() > 0)
+            {
+                moveRecursively(next[0], next.GetRange(1, next.Count-1), done);    
+            }
+            else
+            {
+                moveRecursively(null, null, done);
+            }
+        });
     }
 
     private void TogglePotentialMoves(Piece piece)
@@ -170,7 +194,6 @@ public class GameManager : MonoBehaviour
             {
                 m.Tile.BlockedMove = m.BlockedMove;
                 m.Tile.PotentialMove = true;
-                // currentPotentialMoves.Add(m);
             });
         }
         else // de-select all
@@ -180,13 +203,12 @@ public class GameManager : MonoBehaviour
                 m.Tile.BlockedMove = false;
                 m.Tile.PotentialMove = false;
             });
-            // currentPotentialMoves.Clear();
         }
     }
 
     private bool CanSelect(Piece piece)
     {
-        return piece?.color == currentPlayer.color;
+        return piece?.color == currentPlayer.color && (piece?.UnblockedMoves().Any() ?? false);
     }
 
     private void UpdateUI()
@@ -241,7 +263,7 @@ public class GameManager : MonoBehaviour
 
         // highlight only pieces you own - except when dragging one already
         if ((currentPiece == null && CanSelect(tile.CurrentPiece)) || // new piece selection
-            (currentPiece != null && currentPiece.CanMoveTo(tile))) // potential move 
+            (currentPiece != null && currentPiece.UnblockedMoveTo(tile) != null)) // potential move 
         {
             tile.Highlighted = true;
             currentHighlightedTile = tile;

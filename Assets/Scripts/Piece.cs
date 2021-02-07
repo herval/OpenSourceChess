@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
@@ -133,7 +131,7 @@ public class Piece : MonoBehaviour
         this.tile.Selected = false;
 
         // if moving to its own tile, just reposition and deselect it
-        if (tile == this.tile || !this.CanMoveTo(tile))
+        if (tile == this.tile)
         {
             //Debug.Log("Cant move!");
             this.transform.position = this.tile.transform.position;
@@ -161,9 +159,9 @@ public class Piece : MonoBehaviour
         StartCoroutine(AnimationHelper.MoveOverSeconds(this.gameObject, this.tile.transform.position, 0.2f, done));
     }
     
-    public bool CanMoveTo(Tile tile)
+    public Play UnblockedMoveTo(Tile tile)
     {
-        return this.PotentialMoves.Find(m => m.Tile == tile && !m.BlockedMove) != null;
+        return this.PotentialMoves.Find(m => m.Tile == tile && !m.BlockedMove);
     }
 
     internal void ComputeMoves(Tile[,] tiles)
@@ -172,7 +170,7 @@ public class Piece : MonoBehaviour
 
         switch (type)
         {
-            case Piece.Type.Bishop:
+            case Type.Bishop:
                 // verticals until hitting something
                 potentialMoves = tryAll(diagonals,
                     tile.x, tile.y,
@@ -180,20 +178,24 @@ public class Piece : MonoBehaviour
                     MovementType.MoveOrCapture,
                     null);
                 break;
-            case Piece.Type.King:
+            case Type.King:
                 potentialMoves = tryAll(adjacencies,
                     tile.x, tile.y, 1, tiles,
                     MovementType.MoveOrCapture,
                     null);
+
+                // find the rooks
+                potentialMoves.AddRange(CastelingMoves(this, tiles));
+                
                 break;
-            case Piece.Type.Queen:
+            case Type.Queen:
                 potentialMoves = tryAll(adjacencies,
                     tile.x, tile.y,
                     int.MaxValue, tiles,
                     MovementType.MoveOrCapture,
                     null);
                 break;
-            case Piece.Type.Rook:
+            case Type.Rook:
                 // straight lines until hitting an adversary
                 potentialMoves = tryAll(linears,
                     tile.x, tile.y,
@@ -201,7 +203,7 @@ public class Piece : MonoBehaviour
                     MovementType.MoveOrCapture,
                     null);
                 break;
-            case Piece.Type.Pawn:
+            case Type.Pawn:
                 // if first move, can move one or two squares
                 int maxSquares = movedAtLeastOnce ? 1 : 2;
 
@@ -226,7 +228,7 @@ public class Piece : MonoBehaviour
                 );
 
                 break;
-            case Piece.Type.Knight:
+            case Type.Knight:
                 potentialMoves = tryAll(knightMoves,
                     tile.x, tile.y,
                     1, tiles,
@@ -239,6 +241,66 @@ public class Piece : MonoBehaviour
 
         this.PotentialMoves = potentialMoves.ToList();
 
+    }
+
+    private List<Play> CastelingMoves(Piece king, Tile[,] tiles)
+    {
+        var moves = new List<Play>(); 
+        if (king.movedAtLeastOnce)
+        {
+            return moves;
+        }
+        
+        // TODO dedup this crap
+        
+        // 2 unblocked to the right
+        var x = king.tile.x;
+        var y = king.tile.y;
+        if (x + 3 < tiles.Length)
+        {
+            var rook = tiles[x + 3, y]?.CurrentPiece;
+
+            if (tiles[x + 1, y].CurrentPiece == null &&
+                tiles[x + 2, y].CurrentPiece == null &&
+                rook.type == Type.Rook && !rook.movedAtLeastOnce
+            )
+            {
+                moves.Add(
+                    new Play(
+                        king,  tiles[x + 2, y], null, null, false, false,
+                        new List<Play>()
+                        {
+                            new Play(rook, tiles[x + 1, y], null, null, false, false)
+                        })
+                );
+            }
+        }
+
+        // 3 unblocked to the left
+        x = king.tile.x;
+        y = king.tile.y;
+        if (x - 4 >= 0)
+        {
+            var rook = tiles[x - 4, y]?.CurrentPiece;
+
+            if (tiles[x - 1, y].CurrentPiece == null &&
+                tiles[x - 2, y].CurrentPiece == null &&
+                tiles[x - 3, y].CurrentPiece == null &&
+                rook.type == Type.Rook && !rook.movedAtLeastOnce
+            )
+            {
+                moves.Add(
+                    new Play(
+                        king,  tiles[x - 2, y], null, null, false, false,
+                        new List<Play>()
+                        {
+                            new Play(rook, tiles[x - 1, y], null, null, false, false)
+                        })
+                );
+            }
+        }
+
+        return moves;
     }
 
     private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, MovementType movementType, Piece blocker)

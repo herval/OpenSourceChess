@@ -23,9 +23,6 @@ public class RandomMoves : TurnManager
         }
 
         var m = allMoves[Random.Range(0, allMoves.Count - 1)];
-        return new MoveTo(
-            m.ownPiece,
-            m.Tile
-        );
+        return new Movement(m);
     }
 }

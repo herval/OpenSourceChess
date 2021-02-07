@@ -15,14 +15,12 @@ public class LoseGame : PieceCommand
     }
 }
 
-public class MoveTo : PieceCommand
+public class Movement : PieceCommand
 {
-    public readonly Piece piece;
-    public readonly Tile tile;
+    public readonly Play play;
 
-    public MoveTo(Piece p, Tile t)
+    public Movement(Play play)
     {
-        this.piece = p;
-        this.tile = t;
+        this.play = play;
     }
 }
