@@ -60,7 +60,7 @@ public class Board : MonoBehaviour
                 // the king cannot move into traps!
                 var threatenedTiles = opponent.Pieces
                         .ConvertAll(p => p.PotentialMoves)
-                        .SelectMany(c => c)
+                        .SelectMany(c => c.FindAll(m => m.canCaptureAtDestination))
                         .ToList()
                         .ConvertAll(p => p.Tile);
                 

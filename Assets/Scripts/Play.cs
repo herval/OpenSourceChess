@@ -9,14 +9,16 @@ public class Play
     public readonly Piece Blocker; // is there a piece blocking 'ownPiece' to move to this tile?
     public readonly Piece pieceOnTile;
     public readonly Play previousPlay; // reverse-linked list used to compute a movement vector
+    public bool canCaptureAtDestination; // is ownPiece able to CAPTURE an opponent piece at this Tile, or just walk there if it's empty?
 
-    public Play(Piece moving, Tile t, Piece blocker, Play previous)
+    public Play(Piece moving, Tile t, Piece blocker, Play previous, bool canCaptureAtDestination)
     {
         this.ownPiece = moving;
         this.Tile = t;
         this.Blocker = blocker;
         this.pieceOnTile = t.CurrentPiece;
         this.previousPlay = previous;
+        this.canCaptureAtDestination = canCaptureAtDestination;
     }
 
     public bool isCheck()

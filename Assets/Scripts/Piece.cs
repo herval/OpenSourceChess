@@ -17,6 +17,13 @@ public class Piece : MonoBehaviour
         Pawn,
     }
 
+    private enum MovementType
+    {
+        MoveOrCapture,
+        CaptureOnly,
+        MoveOnly,
+    }
+    
     static (int, int)[] forward = new (int, int)[] {
         (0, 1),
     };
@@ -170,23 +177,20 @@ public class Piece : MonoBehaviour
                 potentialMoves = tryAll(diagonals,
                     tile.x, tile.y,
                     int.MaxValue, tiles,
-                    onlyWhenCapturing: false,
-                    onlyMoveNoEat: false,
+                    MovementType.MoveOrCapture,
                     null);
                 break;
             case Piece.Type.King:
                 potentialMoves = tryAll(adjacencies,
                     tile.x, tile.y, 1, tiles,
-                    onlyWhenCapturing: false,
-                    onlyMoveNoEat: false,
+                    MovementType.MoveOrCapture,
                     null);
                 break;
             case Piece.Type.Queen:
                 potentialMoves = tryAll(adjacencies,
                     tile.x, tile.y,
                     int.MaxValue, tiles,
-                    onlyWhenCapturing: false,
-                    onlyMoveNoEat: false,
+                    MovementType.MoveOrCapture,
                     null);
                 break;
             case Piece.Type.Rook:
@@ -194,8 +198,7 @@ public class Piece : MonoBehaviour
                 potentialMoves = tryAll(linears,
                     tile.x, tile.y,
                     int.MaxValue, tiles,
-                    onlyWhenCapturing: false,
-                    onlyMoveNoEat: false,
+                    MovementType.MoveOrCapture,
                     null);
                 break;
             case Piece.Type.Pawn:
@@ -205,23 +208,20 @@ public class Piece : MonoBehaviour
                 potentialMoves = tryAll(forward,
                     tile.x, tile.y,
                     maxSquares, tiles,
-                    onlyWhenCapturing: false,
-                    onlyMoveNoEat: true,
+                    MovementType.MoveOnly,
                     null);
 
                 // eating diagonally
                 potentialMoves.AddRange(
                     tryMove(tile.x, tile.y, 1, 1,
                         1, tiles, new List<Play>(),
-                        onlyWhenCapturing: true,
-                        onlyMoveNoEat: false,
+                        MovementType.CaptureOnly,
                         null)
                 );
                 potentialMoves.AddRange(
                     tryMove(tile.x, tile.y, -1, 1,
                         1, tiles, new List<Play>(),
-                        onlyWhenCapturing: true,
-                        onlyMoveNoEat: false,
+                        MovementType.CaptureOnly,
                         null)
                 );
 
@@ -230,8 +230,7 @@ public class Piece : MonoBehaviour
                 potentialMoves = tryAll(knightMoves,
                     tile.x, tile.y,
                     1, tiles,
-                    onlyWhenCapturing: false,
-                    onlyMoveNoEat: false,
+                    MovementType.MoveOrCapture,
                     null);
                 break;
             default:
@@ -242,13 +241,13 @@ public class Piece : MonoBehaviour
 
     }
 
-    private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, bool onlyWhenCapturing, bool onlyMoveNoEat, Piece blocker)
+    private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, MovementType movementType, Piece blocker)
     {
         var res = new List<Play>();
         foreach (var xy in directions)
         {
             res.AddRange(
-                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Play>(), onlyWhenCapturing, onlyMoveNoEat, blocker, null)
+                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Play>(), movementType, blocker, null)
             );
         }
 
@@ -256,7 +255,7 @@ public class Piece : MonoBehaviour
     }
 
     // TODO simplify all the bools
-    private List<Play> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Play> validMoves, bool onlyWhenCapturing, bool onlyMoveNoEat, Piece blocker, Play prev = null)
+    private List<Play> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Play> validMoves, MovementType movementType, Piece blocker, Play prev = null)
     {
         // flip the y axis when piece is facing down
         int yFlip = facingUp ? 1 : -1;
@@ -272,16 +271,19 @@ public class Piece : MonoBehaviour
         }
 
         var t = tiles[newX, newY];
-        // can eat when target is empty or contains enemy OR when it contains an enemy if onlyWhenCapturing is true
-        if ((!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece != null)) && // can only move to that position if there's a capturable piece
-            (!onlyMoveNoEat || (onlyMoveNoEat && t.CurrentPiece == null))) // can only move when there's NOT a capturable piece
+        var canCapture = movementType == MovementType.CaptureOnly || movementType == MovementType.MoveOrCapture;
+
+        // some pieces can only move to a position if there's something capturable there (or vice-versa)
+        if ((movementType == MovementType.MoveOrCapture) || // can do whatever
+            (movementType == MovementType.CaptureOnly && t.CurrentPiece != null) || // can only move to that position if there's a capturable piece
+            (movementType == MovementType.MoveOnly && t.CurrentPiece == null)) // can only move when there's NOT a capturable piece
         {
             if (t.CurrentPiece != null && t.CurrentPiece.player == this.player)
             { // can't capture own pieces, but they can block the movement
                 blocker = t.CurrentPiece;
             }
-            
-            var newMove = new Play(this, tiles[newX, newY], blocker, prev);
+
+            var newMove = new Play(this, tiles[newX, newY], blocker, prev, canCapture);
             prev = newMove;
             validMoves.Add(newMove);
         }
@@ -301,7 +303,7 @@ public class Piece : MonoBehaviour
             }
         }
 
-        return tryMove(newX, newY, deltaX, deltaY, maxMoves - 1, tiles, validMoves, onlyWhenCapturing, onlyMoveNoEat, blocker, prev);
+        return tryMove(newX, newY, deltaX, deltaY, maxMoves - 1, tiles, validMoves, movementType, blocker, prev);
     }
 
     public List<Play> UnblockedMoves()

@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     public Player playerTwo;
     Player currentPlayer;
 
+
+    public GameObject GameOverScreen;
+    
     Tile currentHighlightedTile;
     private Piece currentPiece;
     
@@ -133,6 +136,7 @@ public class GameManager : MonoBehaviour
             case LoseGame l:
                 // TODO implement end of game
                 Debug.Log("Game over!");
+                GameOverScreen.SetActive(true);
                 return;
             case MoveTo m:
                 waitingForAnimation = true;
