@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9092899315985892895}
   - component: {fileID: 288308755902915176}
-  - component: {fileID: 4854767529371262418}
+  - component: {fileID: 2555319815266200080}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &4854767529371262418
+--- !u!95 &2555319815266200080
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -151,3 +151,4 @@ MonoBehaviour:
   color: {r: 1, g: 1, b: 1, a: 0}
   player: {fileID: 0}
   movedAtLeastOnce: 0
+  sprite: {fileID: 0}

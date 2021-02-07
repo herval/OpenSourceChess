@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 // keep game state and handle inputs
 public class GameManager : MonoBehaviour
@@ -27,13 +31,11 @@ public class GameManager : MonoBehaviour
 
         playerOne.color = Color.white; // TODO randomized option
         playerOne.facingUp = true;
+        playerOne.turnManager = prefs.PlayerOneManager;
 
         playerTwo.color = Color.black;
         playerTwo.facingUp = false;
-        //if (prefs.gameMode == GameMode.PlayerVersusComputer)
-        //{
-        //    playerTwo.turnManager = new DumbAI();
-        //}
+        playerTwo.turnManager = prefs.PlayerTwoManager;
 
         arrangementManager = new StandardGameArrangement();
         board.Reset();
@@ -52,14 +54,23 @@ public class GameManager : MonoBehaviour
         HandleClick();
     }
 
-    private void HandleClick()
+    [CanBeNull]
+    private Tile TileAt(Vector3 mousePosition)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit) && hit.collider != null && hit.collider.tag == "Tile") // hovering over a tile
         {
-            var tile = hit.collider.gameObject.GetComponent<Tile>();
+            return hit.collider.gameObject.GetComponent<Tile>();
+        }
 
+        return null;
+    }
+    
+    private void HandleClick()
+    {
+        var tile = TileAt(Input.mousePosition);
+        if(tile != null) {
             if (Input.GetMouseButtonDown(0)) // trying to select or move
             {
                 if (currentPiece != null)
@@ -97,12 +108,11 @@ public class GameManager : MonoBehaviour
             currentPlayer = opponent; // alternate player
         }
 
-        board.ComputePotentialMoves(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne);
-
-        PieceCommand c = currentPlayer.turnManager?.ActOn(currentPlayer, board);
+        PieceCommand c = currentPlayer.turnManager.ActOn(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne, board);
         switch (c)
         {
             case null:
+                // wait for player to interact
                 return;
             case LoseGame l:
                 // TODO implement end of game
@@ -150,6 +160,7 @@ public class GameManager : MonoBehaviour
         TurnStatusDisplay.text = (currentPlayer.color == Color.black ? "Dark" : "Light") + "'s turn";
     }
 
+    // TODO highlight tile instead
     private void DragPieceAround()
     {
         if (currentPiece != null)

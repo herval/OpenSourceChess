@@ -146,11 +146,11 @@ PrefabInstance:
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: tileFactory
       value: 
-      objectReference: {fileID: 1824314226}
+      objectReference: {fileID: 1635185669}
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: pieceFactory
       value: 
-      objectReference: {fileID: 1824314225}
+      objectReference: {fileID: 1635185667}
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: arrangementManager
       value: 
@@ -459,8 +459,8 @@ MonoBehaviour:
   newGame: {fileID: 0}
   newGameSettings: {fileID: 0}
   buttonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
-  pvpMode: {fileID: 0}
-  pvcMode: {fileID: 0}
+  playerOneMode: {fileID: 0}
+  playerTwoMode: {fileID: 0}
   start: {fileID: 0}
 --- !u!114 &1053450049
 MonoBehaviour:
@@ -741,6 +741,10 @@ PrefabInstance:
     - target: {fileID: 4079977344534792605, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: isLight
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079977344534792605, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
+      propertyPath: turnManager
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5522923867608369626, guid: 94c79fcabbf8d460e8ee5607ac83f201, type: 3}
       propertyPath: m_Name

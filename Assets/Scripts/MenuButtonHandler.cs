@@ -8,69 +8,73 @@ using System;
 
 public class MenuButtonHandler : MonoBehaviour
 {
-    PlayerPreferences prefs;
-
+    public static String PLAYER = "Human";
+    public static String COMPUTER = "Computer";
+    
     public Button exit;
     public Button newGame;
     public GameObject newGameSettings;
 
 
-    Color buttonDefaultColor;
     public Color buttonSelectedColor;
 
-    public Button pvpMode;
-    public Button pvcMode;
+    public Button playerOneMode;
+    public Button playerTwoMode;
+
+    private Type playerOneManager = typeof(TurnManager);
+    private Type playerTwoManager = typeof(TurnManager);
+    private Type aiType = typeof(RandomMoves);
 
     public Button start;
 
     private void Start()
     {
-        if(this.pvpMode == null)
+        if(newGameSettings == null)
         {
             Debug.Log("Why is this getting called?!?!?"); // TODO
             return; 
         }
 
-        prefs = PlayerPreferences.Instance;
-
-        buttonDefaultColor = pvpMode.colors.normalColor;
-
         newGameSettings.SetActive(false);
+        SetCaption(playerOneMode, playerOneManager);
+        SetCaption(playerTwoMode, playerTwoManager);
 
         exit.onClick.AddListener(delegate() { Exit(); });
         newGame.onClick.AddListener(delegate () { ShowGameOptions(); });
         start.onClick.AddListener(delegate () { StartGame(); });
-        pvcMode.onClick.AddListener(delegate () { toggleSelection(pvcMode, pvpMode); });
-        pvpMode.onClick.AddListener(delegate () { toggleSelection(pvpMode, pvcMode); });
+        playerOneMode.onClick.AddListener(delegate () { playerOneManager = toggleSelection(playerOneMode, playerOneManager); });
+        playerTwoMode.onClick.AddListener(delegate () { playerTwoManager = toggleSelection(playerTwoMode, playerTwoManager); });
+    }
+
+    private void SetCaption(Button bt, Type turnManager)
+    {
+        var kind = PLAYER;
+        if (turnManager != typeof(TurnManager)) // any non-vanilla is AI
+        {
+            kind = COMPUTER;
+        }
+        bt.GetComponentInChildren<Text>().text = kind;
     }
 
     private void ShowGameOptions()
     {
-        if(prefs.gameMode == GameMode.PlayerVersusComputer)
-        {
-            toggleSelection(pvcMode, pvpMode);
-        } else
-        {
-            toggleSelection(pvpMode, pvcMode);
-        }
         newGameSettings.SetActive(true);
     }
 
-    private void toggleSelection(Button selected, Button unselected)
+    private Type toggleSelection(Button btn, Type currentTurnManager)
     {
-        var colors = selected.colors;
-        colors.normalColor = buttonSelectedColor;
-        colors.selectedColor = buttonSelectedColor;
-        colors.pressedColor = buttonSelectedColor;
-        colors.highlightedColor = buttonSelectedColor;
-        selected.colors = colors;
-
-        colors = unselected.colors;
-        colors.normalColor = buttonDefaultColor;
-        colors.selectedColor = buttonDefaultColor;
-        colors.highlightedColor = buttonDefaultColor;
-        colors.pressedColor = buttonDefaultColor;
-        unselected.colors = colors;
+        Type newTurnManager;
+        if (currentTurnManager == typeof(TurnManager))
+        {
+            newTurnManager = aiType;
+        }
+        else
+        {
+            newTurnManager = typeof(TurnManager);
+        }
+        
+        SetCaption(btn, newTurnManager);
+        return newTurnManager;
     }
 
     public void Exit()
@@ -86,8 +90,9 @@ public class MenuButtonHandler : MonoBehaviour
 
     public void StartGame()
     {
-        // ew
-        prefs.gameMode = pvpMode.colors.normalColor == buttonSelectedColor ? GameMode.PlayerVersusPlayer : GameMode.PlayerVersusComputer;
+        var prefs = PlayerPreferences.Instance;
+        prefs.PlayerOneManager = (TurnManager) Activator.CreateInstance(playerOneManager);
+        prefs.PlayerTwoManager = (TurnManager) Activator.CreateInstance(playerTwoManager);
 
         SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }

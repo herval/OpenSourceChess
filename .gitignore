@@ -68,3 +68,8 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+.idea/.idea.Chess Armies/.idea/.gitignore
+.idea/.idea.Chess Armies/.idea/encodings.xml
+.idea/.idea.Chess Armies/.idea/indexLayout.xml
+.idea/.idea.Chess Armies/.idea/riderModule.iml
+.idea/.idea.Chess Armies/.idea/vcs.xml

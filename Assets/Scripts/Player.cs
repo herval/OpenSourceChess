@@ -15,6 +15,11 @@ public class Player : MonoBehaviour
 
     public PiecesStack CapturedPieces;
 
+    public List<Play> PotentialMoves()
+    {
+        return this.Pieces.ConvertAll(p => p.PotentialMoves).SelectMany(c => c).ToList();
+    }
+    
     public int TotalPoints()
     {
         return Pieces.ConvertAll(p => p.value).Sum();
@@ -30,9 +35,4 @@ public class Player : MonoBehaviour
         CapturedPieces.Add(p);
     }
 
-    // Called when a player's turn starts
-    void OnTurn(Board board)
-    {
-        turnManager?.ActOn(this, board);
-    }
 }
