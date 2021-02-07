@@ -14,7 +14,7 @@ public class RandomMoves : TurnManager
             return cmd;
         }
         
-        var allMoves = player.PotentialMoves();
+        var allMoves = player.UnblockedMoves();
 
         // if no piece can move, declare defeat
         if (allMoves.Count == 0)

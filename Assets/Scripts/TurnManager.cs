@@ -9,7 +9,7 @@ public class TurnManager {
     {
         board.ComputePotentialMoves(player, opponent);
 
-        var allMoves = player.PotentialMoves();
+        var allMoves = player.UnblockedMoves();
         if (allMoves.Count == 0)
         {
             return new LoseGame(player);

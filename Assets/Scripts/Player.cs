@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public PiecesStack CapturedPieces;
     public bool InCheck = false;
 
-    public List<Play> PotentialMoves()
+    public List<Play> UnblockedMoves()
     {
         return this.Pieces
             .ConvertAll(p => p.PotentialMoves)
