@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -22,7 +23,6 @@ public class GameManager : MonoBehaviour
     Player currentPlayer;
 
     Tile currentHighlightedTile;
-    List<Play> currentPotentialMoves = new List<Play>();
     private Piece currentPiece;
     
     private bool waitingForAnimation = false;
@@ -95,6 +95,16 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+#if UNITY_EDITOR        
+        if (tile != null && Input.GetMouseButtonDown(1)) // highlight for debugging
+        {
+            if (tile.CurrentPiece != null)
+            {
+                TogglePotentialMoves(tile.CurrentPiece);
+            }
+        }
+#endif
     }
 
     private void OnNextTurn()
@@ -122,13 +132,14 @@ public class GameManager : MonoBehaviour
                 return;
             case LoseGame l:
                 // TODO implement end of game
+                Debug.Log("Game over!");
                 return;
             case MoveTo m:
                 waitingForAnimation = true;
 
                 m.piece.MoveTo(m.tile, (moved) =>
                 {
-                    Debug.Log("animation done " + moved);
+                    // Debug.Log("animation done " + moved);
                     waitingForAnimation = false;
                     SelectPiece(null);
                     OnNextTurn();
@@ -139,26 +150,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void TogglePotentialMoves()
+    private void TogglePotentialMoves(Piece piece)
     {
-        // render potential moves
-        if (currentPiece != null)
+        if (piece != null && !piece.PotentialMoves.Any())
         {
-            currentPiece.PotentialMoves.ForEach(m =>
+            return;
+        }
+
+        bool alreadyShowing = piece.PotentialMoves[0].Tile.PotentialMove;
+
+        // render potential moves
+        if (!alreadyShowing) 
+        {
+            piece.PotentialMoves.ForEach(m =>
             {
                 m.Tile.BlockedMove = m.Blocker != null;
                 m.Tile.PotentialMove = true;
-                currentPotentialMoves.Add(m);
+                // currentPotentialMoves.Add(m);
             });
         }
         else // de-select all
         {
-            currentPotentialMoves.ForEach(m =>
+            piece.PotentialMoves.ForEach(m =>
             {
                 m.Tile.BlockedMove = false;
                 m.Tile.PotentialMove = false;
             });
-            currentPotentialMoves.Clear();
+            // currentPotentialMoves.Clear();
         }
     }
 
@@ -183,6 +201,7 @@ public class GameManager : MonoBehaviour
     {
         if (currentPiece != null)
         {
+            TogglePotentialMoves(currentPiece);
             currentPiece.tile.Selected = false;
         }
         
@@ -195,9 +214,8 @@ public class GameManager : MonoBehaviour
         {
             piece.tile.Selected = true;
             currentPiece = piece;
+            TogglePotentialMoves(piece);
         }
-        
-        TogglePotentialMoves();
     }
 
     private void HighlightTile(Tile tile, Piece currentPiece)
@@ -218,7 +236,7 @@ public class GameManager : MonoBehaviour
         }
 
         // highlight only pieces you own - except when dragging one already
-        if ((currentPiece == null && tile.CurrentPiece?.color == currentPlayer.color) || // new piece selection
+        if ((currentPiece == null && CanSelect(tile.CurrentPiece)) || // new piece selection
             (currentPiece != null && currentPiece.CanMoveTo(tile))) // potential move 
         {
             tile.Highlighted = true;
