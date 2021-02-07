@@ -259,20 +259,22 @@ public class Piece : MonoBehaviour
         if (x + 3 < tiles.Length)
         {
             var rook = tiles[x + 3, y]?.CurrentPiece;
-
-            if (tiles[x + 1, y].CurrentPiece == null &&
-                tiles[x + 2, y].CurrentPiece == null &&
-                rook.type == Type.Rook && !rook.movedAtLeastOnce
-            )
+            if (rook != null)
             {
-                moves.Add(
-                    new Play(
-                        king,  tiles[x + 2, y], null, null, false, false,
-                        new List<Play>()
-                        {
-                            new Play(rook, tiles[x + 1, y], null, null, false, false)
-                        })
-                );
+                if (tiles[x + 1, y].CurrentPiece == null &&
+                    tiles[x + 2, y].CurrentPiece == null &&
+                    rook.type == Type.Rook && !rook.movedAtLeastOnce
+                )
+                {
+                    moves.Add(
+                        new Play(
+                            king, tiles[x + 2, y], null, null, false, false,
+                            new List<Play>()
+                            {
+                                new Play(rook, tiles[x + 1, y], null, null, false, false)
+                            })
+                    );
+                }
             }
         }
 
@@ -282,21 +284,23 @@ public class Piece : MonoBehaviour
         if (x - 4 >= 0)
         {
             var rook = tiles[x - 4, y]?.CurrentPiece;
-
-            if (tiles[x - 1, y].CurrentPiece == null &&
-                tiles[x - 2, y].CurrentPiece == null &&
-                tiles[x - 3, y].CurrentPiece == null &&
-                rook.type == Type.Rook && !rook.movedAtLeastOnce
-            )
+            if (rook != null)
             {
-                moves.Add(
-                    new Play(
-                        king,  tiles[x - 2, y], null, null, false, false,
-                        new List<Play>()
-                        {
-                            new Play(rook, tiles[x - 1, y], null, null, false, false)
-                        })
-                );
+                if (tiles[x - 1, y].CurrentPiece == null &&
+                    tiles[x - 2, y].CurrentPiece == null &&
+                    tiles[x - 3, y].CurrentPiece == null &&
+                    rook.type == Type.Rook && !rook.movedAtLeastOnce
+                )
+                {
+                    moves.Add(
+                        new Play(
+                            king, tiles[x - 2, y], null, null, false, false,
+                            new List<Play>()
+                            {
+                                new Play(rook, tiles[x - 1, y], null, null, false, false)
+                            })
+                    );
+                }
             }
         }
 
