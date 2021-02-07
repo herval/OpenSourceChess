@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     {
         return this.Pieces
             .ConvertAll(p => p.PotentialMoves)
-            .SelectMany(c => c.FindAll(m => m.Blocker == null)) // only POSSIBLE moves please
+            .SelectMany(c => c.FindAll(m => !m.BlockedMove)) // only POSSIBLE moves please
             .ToList();
     }
     

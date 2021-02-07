@@ -163,7 +163,7 @@ public class Piece : MonoBehaviour
     
     public bool CanMoveTo(Tile tile)
     {
-        return this.PotentialMoves.Find(m => m.Tile == tile && m.Blocker == null) != null;
+        return this.PotentialMoves.Find(m => m.Tile == tile && !m.BlockedMove) != null;
     }
 
     internal void ComputeMoves(Tile[,] tiles)
@@ -274,16 +274,18 @@ public class Piece : MonoBehaviour
         var canCapture = movementType == MovementType.CaptureOnly || movementType == MovementType.MoveOrCapture;
 
         // some pieces can only move to a position if there's something capturable there (or vice-versa)
-        if ((movementType == MovementType.MoveOrCapture) || // can do whatever
-            (movementType == MovementType.CaptureOnly && t.CurrentPiece != null) || // can only move to that position if there's a capturable piece
-            (movementType == MovementType.MoveOnly && t.CurrentPiece == null)) // can only move when there's NOT a capturable piece
+        if ((movementType == MovementType.MoveOrCapture || movementType == MovementType.CaptureOnly) || // can do whatever or capture at destination (we'll check if the capture move is valid in a bit)
+            (movementType == MovementType.MoveOnly && t.CurrentPiece == null)) // can only move when there's NOT a capturable piece (we short-circuit this instead of making it a "blocked move" bc this is a "non threatening" potential move
         {
             if (t.CurrentPiece != null && t.CurrentPiece.player == this.player)
             { // can't capture own pieces, but they can block the movement
                 blocker = t.CurrentPiece;
             }
+            
+            // mark moves where the piece can only CAPTURE at the destination as blocked when there's nothing to capture there
+            var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t.CurrentPiece == null);
 
-            var newMove = new Play(this, tiles[newX, newY], blocker, prev, canCapture);
+            var newMove = new Play(this, tiles[newX, newY], blocker, prev, canCapture, blockedMove);
             prev = newMove;
             validMoves.Add(newMove);
         }
@@ -308,6 +310,6 @@ public class Piece : MonoBehaviour
 
     public List<Play> UnblockedMoves()
     {
-        return this.PotentialMoves.FindAll(m => m.Blocker == null);
+        return this.PotentialMoves.FindAll(m => !m.BlockedMove);
     }
 }

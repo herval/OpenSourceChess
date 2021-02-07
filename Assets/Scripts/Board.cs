@@ -39,11 +39,11 @@ public class Board : MonoBehaviour
 
 
         // find all the moves that threaten the king
-        List<Play> checkMoves = opponent.Pieces.ConvertAll(p => p.PotentialMoves.FindAll(m => m.isCheck() && m.Blocker == null)).SelectMany(c => c).ToList();
+        List<Play> checkMoves = opponent.Pieces.ConvertAll(p => p.PotentialMoves.FindAll(m => m.isCheck() && !m.BlockedMove)).SelectMany(c => c).ToList();
         List<List<Tile>> attackVectors = checkMoves.ConvertAll(m => m.MovementVector());
 
         var blockedCheckAttempts = opponent.Pieces.ConvertAll(p =>
-            p.PotentialMoves.FindAll(m => m.isCheck() && m.Blocker != null)
+            p.PotentialMoves.FindAll(m => m.isCheck() && m.BlockedMove)
         ).SelectMany(x => x).ToList();
 
         currentPlayer.InCheck = checkMoves.Count > 0;
