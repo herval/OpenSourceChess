@@ -273,10 +273,14 @@ public class Piece : MonoBehaviour
 
         var t = tiles[newX, newY];
         // can eat when target is empty or contains enemy OR when it contains an enemy if onlyWhenCapturing is true
-        if ((t.CurrentPiece == null || t.CurrentPiece.player != this.player)
-            && (!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece != null)) // can only move to that position if there's a capturable piece
-            && (!onlyMoveNoEat || (onlyMoveNoEat && t.CurrentPiece == null))) // can only move when there's NOT a capturable piece
+        if ((!onlyWhenCapturing || (onlyWhenCapturing && t.CurrentPiece != null)) && // can only move to that position if there's a capturable piece
+            (!onlyMoveNoEat || (onlyMoveNoEat && t.CurrentPiece == null))) // can only move when there's NOT a capturable piece
         {
+            if (t.CurrentPiece != null && t.CurrentPiece.player == this.player)
+            { // can't capture own pieces, but they can block the movement
+                blocker = t.CurrentPiece;
+            }
+            
             var newMove = new Play(this, tiles[newX, newY], blocker, prev);
             prev = newMove;
             validMoves.Add(newMove);
@@ -298,5 +302,10 @@ public class Piece : MonoBehaviour
         }
 
         return tryMove(newX, newY, deltaX, deltaY, maxMoves - 1, tiles, validMoves, onlyWhenCapturing, onlyMoveNoEat, blocker, prev);
+    }
+
+    public List<Play> UnblockedMoves()
+    {
+        return this.PotentialMoves.FindAll(m => m.Blocker == null);
     }
 }

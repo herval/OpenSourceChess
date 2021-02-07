@@ -24,7 +24,7 @@ public class Board : MonoBehaviour
 
     public void ComputePotentialMoves(Player currentPlayer, Player opponent)
     {
-        Debug.Log("Computing moves for " + (currentPlayer.color == Color.white ? "white" : "black"));
+        // Debug.Log("Computing moves for " + (currentPlayer.color == Color.white ? "white" : "black"));
         // at the beginning of a player turn, we have to cross-check a bunch of stuff
 
         // mark everything as movable to start
@@ -46,6 +46,7 @@ public class Board : MonoBehaviour
             p.PotentialMoves.FindAll(m => m.isCheck() && m.Blocker != null)
         ).SelectMany(x => x).ToList();
 
+        currentPlayer.InCheck = checkMoves.Count > 0;
 
         // compute all the movement vectors of current player's pieces
         // the king CANNOT move to a threatened tile
@@ -58,15 +59,15 @@ public class Board : MonoBehaviour
             {
                 // the king cannot move into traps!
                 var threatenedTiles = opponent.Pieces
-                    .ConvertAll(p => p.PotentialMoves)
-                    .SelectMany(c => c)
-                    .ToList()
-                    .FindAll(p => p.Blocker == null)
-                    .ConvertAll(p => p.Tile)
-                    .ToList();
+                        .ConvertAll(p => p.PotentialMoves)
+                        .SelectMany(c => c)
+                        .ToList()
+                        .ConvertAll(p => p.Tile);
+                
                 p.PotentialMoves = p.PotentialMoves.FindAll(m => !threatenedTiles.Contains(m.Tile));
 
                 // the king cannot capture a piece that would _unblock_ a check attempt
+                // TODO this is not needed I think
                 blockedCheckAttempts.ForEach(a =>
                 {
                     Debug.Log("Evaluating blocked threat by " + a.ownPiece);

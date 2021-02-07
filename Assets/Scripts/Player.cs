@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public List<Piece> Pieces = new List<Piece>();
 
     public PiecesStack CapturedPieces;
+    public bool InCheck = false;
 
     public List<Play> PotentialMoves()
     {
