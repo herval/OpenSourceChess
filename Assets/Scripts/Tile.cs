@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public bool Highlighted = false;
-    public bool Selected = false;
-    internal bool PotentialMove = false;
-    internal bool BlockedMove = false;
+    public bool Highlighted = false; // mouse over
+    public bool Selected = false; // tile where the piece about to move is
+    internal bool PotentialMove = false; // available tiles to move to
+    internal bool BlockedMove = false; // moves piece is not able to get to (shown only for debugging)
     public Color Color;
 
     public int x;
@@ -25,14 +25,14 @@ public class Tile : MonoBehaviour
         if (Selected)
         {
             GetComponent<SpriteRenderer>().color = Color.red;
-        } else if (Highlighted)
-        {
-            GetComponent<SpriteRenderer>().color = Color.yellow;
 #if UNITY_EDITOR
 } else if (BlockedMove) // for debugging only
         {
             GetComponent<SpriteRenderer>().color = Color.cyan;
 #endif
+        } else if (Highlighted)
+        {
+            GetComponent<SpriteRenderer>().color = Color.yellow;
         } else if (PotentialMove)
         {
             GetComponent<SpriteRenderer>().color = Color.green;

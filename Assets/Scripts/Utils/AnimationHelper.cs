@@ -3,11 +3,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+public delegate void AfterAnimationCallback(bool moved);
+
 public class AnimationHelper
 {
 
     // https://answers.unity.com/questions/296347/move-transform-to-target-in-x-seconds.html
-    public static IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
+    public static IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds, AfterAnimationCallback done)
     {
         float elapsedTime = 0;
         Vector3 startingPos = objectToMove.transform.position;
@@ -18,6 +20,7 @@ public class AnimationHelper
             yield return new WaitForEndOfFrame();
         }
         objectToMove.transform.position = end;
+        done?.Invoke(true);
     }
 
 }

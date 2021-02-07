@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Threading.Tasks;
 
 public class Piece : MonoBehaviour
 {
@@ -119,7 +120,7 @@ public class Piece : MonoBehaviour
         this.PotentialMoves.Clear();
     }
 
-    public bool MoveTo(Tile tile)
+    public void MoveTo(Tile tile, AfterAnimationCallback done)
     {
         // deselect current piece's tile
         this.tile.Selected = false;
@@ -129,7 +130,8 @@ public class Piece : MonoBehaviour
         {
             //Debug.Log("Cant move!");
             this.transform.position = this.tile.transform.position;
-            return false;
+
+            done.Invoke(false);
         }
 
         // if can move, get going
@@ -140,7 +142,6 @@ public class Piece : MonoBehaviour
             Debug.Log("Killing existing on " + this);
             // TODO animate
             this.player.Capture(tile.CurrentPiece);
-            tile.CurrentPiece.Kill();
         }
         tile.CurrentPiece = this;
 
@@ -150,22 +151,9 @@ public class Piece : MonoBehaviour
         this.transform.parent = tile.transform;
 
         // TODO is this efficient?
-        StartCoroutine(AnimationHelper.MoveOverSeconds(this.gameObject, this.tile.transform.position, 0.2f));
-
-        return true;
+        StartCoroutine(AnimationHelper.MoveOverSeconds(this.gameObject, this.tile.transform.position, 0.2f, done));
     }
-
-    public void Kill()
-    {
-        //Destroy(gameObject);
-        player.Pieces.Remove(this);
-    }
-
-    public void Select()
-    {
-        this.tile.Selected = true;
-    }
-
+    
     public bool CanMoveTo(Tile tile)
     {
         return this.PotentialMoves.Find(m => m.Tile == tile && m.Blocker == null) != null;

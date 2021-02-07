@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +24,8 @@ public class GameManager : MonoBehaviour
     Tile currentHighlightedTile;
     List<Play> currentPotentialMoves = new List<Play>();
     private Piece currentPiece;
-
+    
+    private bool waitingForAnimation = false;
 
     private void Start()
     {
@@ -49,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         UpdateUI();
 
-        DragPieceAround();
+        HighlightSelectedTile();
 
         HandleClick();
     }
@@ -66,33 +68,32 @@ public class GameManager : MonoBehaviour
 
         return null;
     }
-    
+
     private void HandleClick()
     {
+        if (waitingForAnimation)
+        {
+            return;
+        }
+
         var tile = TileAt(Input.mousePosition);
-        if(tile != null) {
-            if (Input.GetMouseButtonDown(0)) // trying to select or move
+        if (tile != null && Input.GetMouseButtonDown(0)) // trying to select or move
+        {
+            if (currentPiece == null)
             {
-                if (currentPiece != null)
-                {
-                    if (MoveToTile(tile))
-                    {
-                        OnNextTurn();
-                    }
-                }
-                else
-                {
-                    SelectPiece(tile?.CurrentPiece);
-                }
+                SelectPiece(tile?.CurrentPiece);
             }
             else
             {
-                HighlightTile(tile);
+                if (currentPiece.CanMoveTo(tile))
+                {
+                    Execute(new MoveTo(currentPiece, tile));
+                }
+                else
+                {
+                    SelectPiece(null);
+                }
             }
-        }
-        else
-        { // select nothing
-            HighlightTile(null); // TODO do we need to do this on update?
         }
     }
 
@@ -109,6 +110,11 @@ public class GameManager : MonoBehaviour
         }
 
         PieceCommand c = currentPlayer.turnManager.ActOn(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne, board);
+        Execute(c);
+    }
+
+    private void Execute(PieceCommand c)
+    {
         switch (c)
         {
             case null:
@@ -118,16 +124,22 @@ public class GameManager : MonoBehaviour
                 // TODO implement end of game
                 return;
             case MoveTo m:
-                SelectPiece(m.piece);
-                MoveToTile(m.tile);
-                OnNextTurn();
+                waitingForAnimation = true;
+
+                m.piece.MoveTo(m.tile, (moved) =>
+                {
+                    Debug.Log("animation done " + moved);
+                    waitingForAnimation = false;
+                    SelectPiece(null);
+                    OnNextTurn();
+                });
                 return;
             default:
                 throw new Exception("Unhandled command: " + c);
         }
     }
 
-    private void HighlightPotentialMoves()
+    private void TogglePotentialMoves()
     {
         // render potential moves
         if (currentPiece != null)
@@ -161,83 +173,41 @@ public class GameManager : MonoBehaviour
     }
 
     // TODO highlight tile instead
-    private void DragPieceAround()
+    private void HighlightSelectedTile()
+    {
+        Tile selected = TileAt(Input.mousePosition);
+        HighlightTile(selected, currentPiece);
+    }
+    
+    private void SelectPiece(Piece piece)
     {
         if (currentPiece != null)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            currentPiece.transform.position = mousePos;
+            currentPiece.tile.Selected = false;
         }
-    }
-
-    // return if the piece actually moved
-    private bool MoveToTile(Tile tile)
-    {
-        // no bueno
-        if (currentPiece == null)
-        {
-            Debug.Log("Trying to move null piece? " + currentPiece);
-            return false;
-        }
-
-        bool moved = currentPiece.MoveTo(tile);
-        SelectPiece(null);
-        return moved;
-
-        //// put piece back
-        //if (tile == currentPiece.tile)
-        //{
-        //    currentPiece.MoveTo(tile);
-        //    SelectPiece(null);
-        //    return false;
-        //}
-
-        //// move to new tile
-        //if (currentPiece?.CanMoveTo(tile) ?? false)
-        //{
-        //    currentPiece.MoveTo(tile);
-        //    SelectPiece(null);
-        //    return true;
-        //}
-
-        //return false;
-        //else // move back to home
-        //{
-        //    // TODO animate?
-        //    //currentSelectedTile.SetPiece(currentPiece);
-        //    //currentPiece = null;
-        //    return false;
-        //}
-    }
-
-
-
-    private void SelectPiece(Piece piece)
-    {
+        
         if (piece == null)
         {
             currentPiece = null;
-            HighlightPotentialMoves();
-            return;
         }
 
-        if (CanSelect(piece))
+        if (piece != null && CanSelect(piece))
         {
-            piece.Select();
-            //Debug.Log("Selecting piece: " + piece);
+            piece.tile.Selected = true;
             currentPiece = piece;
-            HighlightPotentialMoves();
         }
+        
+        TogglePotentialMoves();
     }
 
-    private void HighlightTile(Tile tile)
+    private void HighlightTile(Tile tile, Piece currentPiece)
     {
-        if (tile == null)
-        {
-            if (currentHighlightedTile != null)
-            {
-                currentHighlightedTile.Highlighted = false;
-            }
+        if (tile == null && currentHighlightedTile != null) {
+            currentHighlightedTile.Highlighted = false;
+            currentHighlightedTile = null;
+        }
+        
+        if(tile == null) {
             return;
         }
 
@@ -248,7 +218,8 @@ public class GameManager : MonoBehaviour
         }
 
         // highlight only pieces you own - except when dragging one already
-        if (tile.CurrentPiece?.color == currentPlayer.color && currentPiece == null)
+        if ((currentPiece == null && tile.CurrentPiece?.color == currentPlayer.color) || // new piece selection
+            (currentPiece != null && currentPiece.CanMoveTo(tile))) // potential move 
         {
             tile.Highlighted = true;
             currentHighlightedTile = tile;

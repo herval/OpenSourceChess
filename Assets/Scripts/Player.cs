@@ -17,7 +17,10 @@ public class Player : MonoBehaviour
 
     public List<Play> PotentialMoves()
     {
-        return this.Pieces.ConvertAll(p => p.PotentialMoves).SelectMany(c => c).ToList();
+        return this.Pieces
+            .ConvertAll(p => p.PotentialMoves)
+            .SelectMany(c => c.FindAll(m => m.Blocker == null)) // only POSSIBLE moves please
+            .ToList();
     }
     
     public int TotalPoints()
@@ -32,6 +35,7 @@ public class Player : MonoBehaviour
 
     public void Capture(Piece p)
     {
+        p.player.Pieces.Remove(p);
         CapturedPieces.Add(p);
     }
 
