@@ -62,9 +62,9 @@ public class Board : MonoBehaviour
                         .ConvertAll(p => p.PotentialMoves)
                         .SelectMany(c => c.FindAll(m => m.canCaptureAtDestination))
                         .ToList()
-                        .ConvertAll(p => p.Tile);
+                        .ConvertAll(p => p.TileTo);
                 
-                p.PotentialMoves = p.PotentialMoves.FindAll(m => !threatenedTiles.Contains(m.Tile));
+                p.PotentialMoves = p.PotentialMoves.FindAll(m => !threatenedTiles.Contains(m.TileTo));
 
                 // the king cannot capture a piece that would _unblock_ a check attempt
                 // TODO this is not needed I think
@@ -72,7 +72,7 @@ public class Board : MonoBehaviour
                 {
                     Debug.Log("Evaluating blocked threat by " + a.ownPiece);
                     p.PotentialMoves = p.PotentialMoves.FindAll(m =>
-                        m.pieceOnTile != a.Blocker
+                        m.PieceAtDestination != a.PieceAtDestination
                     ); ;
                 });
             }
@@ -82,7 +82,7 @@ public class Board : MonoBehaviour
                 // enable only movements that will either block *all* attack vector or capture threatening pieces
                 attackVectors.ForEach(a =>
                 {
-                    p.PotentialMoves = p.PotentialMoves.FindAll(m => a.Contains(m.Tile));
+                    p.PotentialMoves = p.PotentialMoves.FindAll(m => a.Contains(m.TileTo));
                 });
             }
         });
@@ -98,7 +98,7 @@ public class Board : MonoBehaviour
 
                 if (blockingPieces.Count == 1) // only restrict movement if there's only ONE piece defending the king
                 {
-                    blockingPieces[0].PotentialMoves = blockingPieces[0].PotentialMoves.FindAll(m => vector.Contains(m.Tile));
+                    blockingPieces[0].PotentialMoves = blockingPieces[0].PotentialMoves.FindAll(m => vector.Contains(m.TileTo));
                 }
             });
     }

@@ -108,6 +108,16 @@ public class Piece : MonoBehaviour
 
     public void Freeze()
     {
+        setAnimated(false);
+    }
+
+    public void Unfreeze()
+    {
+        setAnimated(true);
+    }
+
+    private void setAnimated(bool animated)
+    {
         var animator = GetComponent<Animator>();
         if (animator == null)
         {
@@ -116,7 +126,7 @@ public class Piece : MonoBehaviour
 
         if (animator != null)
         {
-            animator.enabled = false;
+            animator.enabled = animated;
         }
     }
 
@@ -125,43 +135,9 @@ public class Piece : MonoBehaviour
         this.PotentialMoves.Clear();
     }
 
-    public void MoveTo(Tile tile, AfterAnimationCallback done)
-    {
-        // deselect current piece's tile
-        this.tile.Selected = false;
-
-        // if moving to its own tile, just reposition and deselect it
-        if (tile == this.tile)
-        {
-            //Debug.Log("Cant move!");
-            this.transform.position = this.tile.transform.position;
-
-            done.Invoke(false);
-        }
-
-        // if can move, get going
-        // destroy existing child piece
-        var c = tile.CurrentPiece;
-        if (c != null && c != this)
-        {
-            Debug.Log("Killing existing on " + this);
-            // TODO animate
-            this.player.Capture(tile.CurrentPiece);
-        }
-        tile.CurrentPiece = this;
-
-        this.tile.CurrentPiece = null; // remove ref from tile so piece doesn't show in two places at the same time
-        this.tile = tile;
-        this.movedAtLeastOnce = true;
-        this.transform.parent = tile.transform;
-
-        // TODO is this efficient?
-        StartCoroutine(AnimationHelper.MoveOverSeconds(this.gameObject, this.tile.transform.position, 0.2f, done));
-    }
-    
     public Play UnblockedMoveTo(Tile tile)
     {
-        return this.PotentialMoves.Find(m => m.Tile == tile && !m.BlockedMove);
+        return this.PotentialMoves.Find(m => m.TileTo == tile && !m.BlockedMove);
     }
 
     internal void ComputeMoves(Tile[,] tiles)
@@ -268,10 +244,23 @@ public class Piece : MonoBehaviour
                 {
                     moves.Add(
                         new Play(
-                            king, tiles[x + 2, y], null, null, false, false,
+                            king,
+                            tiles[x + 2, y], 
+                            null, 
+                            null, 
+                            false, 
+                            false,
+                            !king.movedAtLeastOnce,
+                            false,
                             new List<Play>()
                             {
-                                new Play(rook, tiles[x + 1, y], null, null, false, false)
+                                new Play(rook, 
+                                    tiles[x + 1, y], 
+                                    null, 
+                                    null, 
+                                    false, 
+                                    false,
+                                    !rook.movedAtLeastOnce)
                             })
                     );
                 }
@@ -294,10 +283,24 @@ public class Piece : MonoBehaviour
                 {
                     moves.Add(
                         new Play(
-                            king, tiles[x - 2, y], null, null, false, false,
+                            king, 
+                            tiles[x - 2, y], 
+                            null, 
+                            null, 
+                            false,
+                            false,
+                            !king.movedAtLeastOnce,
+                            false,
                             new List<Play>()
                             {
-                                new Play(rook, tiles[x - 1, y], null, null, false, false)
+                                new Play(
+                                    rook, 
+                                    tiles[x - 1, y], 
+                                    null, 
+                                    null, 
+                                    false, 
+                                    false,
+                                    !rook.movedAtLeastOnce)
                             })
                     );
                 }
@@ -351,7 +354,14 @@ public class Piece : MonoBehaviour
             // mark moves where the piece can only CAPTURE at the destination as blocked when there's nothing to capture there
             var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t.CurrentPiece == null);
 
-            var newMove = new Play(this, tiles[newX, newY], blocker, prev, canCapture, blockedMove);
+            var newMove = new Play(
+                this, 
+                tiles[newX, newY], 
+                t.CurrentPiece, 
+                prev, 
+                canCapture, 
+                blockedMove,
+                !this.movedAtLeastOnce);
             prev = newMove;
             validMoves.Add(newMove);
         }
@@ -377,5 +387,31 @@ public class Piece : MonoBehaviour
     public List<Play> UnblockedMoves()
     {
         return this.PotentialMoves.FindAll(m => !m.BlockedMove);
+    }
+
+    public void SetTile(Tile tile, bool skipAnimation, AfterAnimationCallback done)
+    {
+        tile.CurrentPiece = this;
+
+        this.tile.CurrentPiece = null; // remove ref from tile so piece doesn't show in two places at the same time
+        this.tile = tile;
+        this.transform.parent = tile.transform;
+        if (skipAnimation)
+        {
+            this.transform.position = tile.transform.position;
+            done?.Invoke(true);
+        }
+        else
+        {
+            // TODO is this efficient?
+            StartCoroutine(
+                AnimationHelper.MoveOverSeconds(
+                    this.gameObject, 
+                    this.tile.transform.position, 
+                    0.2f,
+                    done)); 
+        }
+        
+        
     }
 }

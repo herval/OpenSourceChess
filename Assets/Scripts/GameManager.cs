@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
 // keep game state and handle inputs
 public class GameManager : MonoBehaviour
@@ -22,6 +18,9 @@ public class GameManager : MonoBehaviour
     public Player playerTwo;
     Player currentPlayer;
 
+    public MoveLog MoveLog;
+
+    public Button UndoButton;
 
     public GameObject GameOverScreen;
     
@@ -34,6 +33,7 @@ public class GameManager : MonoBehaviour
     {
         prefs = PlayerPreferences.Instance;
 
+        
         playerOne.color = Color.white; // TODO randomized option
         playerOne.facingUp = true;
         playerOne.turnManager = prefs.PlayerOneManager;
@@ -46,7 +46,20 @@ public class GameManager : MonoBehaviour
         board.Reset();
         arrangementManager.Initialize(board, playerOne, playerTwo);
 
+        UndoButton.onClick.AddListener(delegate { UndoMove(); });
+        
         OnNextTurn();
+    }
+
+    void UndoMove()
+    {
+        Debug.Log("Undoing...");
+        // if(currentPlayer != )
+        Play undo = MoveLog.Last();
+        if (undo != null)
+        {
+            Execute(new Movement(undo.Reverse()));
+        }
     }
 
     // Update is called once per frame
@@ -141,6 +154,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Game over!");
                 GameOverScreen.SetActive(true);
                 return;
+            
             case Movement m:
                 waitingForAnimation = true;
 
@@ -149,6 +163,7 @@ public class GameManager : MonoBehaviour
                     // Debug.Log("animation done " + moved);
                     waitingForAnimation = false;
                     SelectPiece(null);
+
                     OnNextTurn();
                 });
                 return;
@@ -164,8 +179,15 @@ public class GameManager : MonoBehaviour
             done.Invoke(true);
             return;
         }
-        
-        play.ownPiece.MoveTo(play.Tile, (moved) =>
+
+        if (play.isRewind)
+        {
+            MoveLog.Pop();
+        } else {
+            MoveLog.Push(play);
+        }
+
+        play.Move((moved) =>
         {
             if (next != null && next.Count() > 0)
             {
@@ -185,23 +207,23 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        bool alreadyShowing = piece.PotentialMoves[0].Tile.PotentialMove;
+        bool alreadyShowing = piece.PotentialMoves[0].TileTo.PotentialMove;
 
         // render potential moves
         if (!alreadyShowing) 
         {
             piece.PotentialMoves.ForEach(m =>
             {
-                m.Tile.BlockedMove = m.BlockedMove;
-                m.Tile.PotentialMove = true;
+                m.TileTo.BlockedMove = m.BlockedMove;
+                m.TileTo.PotentialMove = true;
             });
         }
         else // de-select all
         {
             piece.PotentialMoves.ForEach(m =>
             {
-                m.Tile.BlockedMove = false;
-                m.Tile.PotentialMove = false;
+                m.TileTo.BlockedMove = false;
+                m.TileTo.PotentialMove = false;
             });
         }
     }

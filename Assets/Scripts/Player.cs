@@ -40,4 +40,9 @@ public class Player : MonoBehaviour
         CapturedPieces.Add(p);
     }
 
+    public void PutBack(Piece p)
+    {
+        p.player.Pieces.Add(p);
+        CapturedPieces.Remove(p);
+    }
 }
