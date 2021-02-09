@@ -42,9 +42,9 @@ public class TileFactory : MonoBehaviour
                 float py = ((((float)y) + 1f) * tileSizeY) - offsetY + tileOffsetY; // this makes ZERO SENSE
 
                 // if the square is double odd or double even, it‘s Dark (diagonals)
-                var i = ((x + y) % 2 != 0) ? DarkTilePrefabs.Length : LightTilePrefabs.Length; // supports variety of tiles
+                var i = ((x + y) % 2 == 0) ? DarkTilePrefabs.Length : LightTilePrefabs.Length; // supports variety of tiles
                 i = Random.Range(0, i - 1);
-                var tilePrefab = ((x + y) % 2 != 0) ? DarkTilePrefabs[i] : LightTilePrefabs[i];
+                var tilePrefab = ((x + y) % 2 == 0) ? DarkTilePrefabs[i] : LightTilePrefabs[i];
 
                 // scale up tiles to fit
                 var tileObj = Instantiate(tilePrefab,

@@ -27,11 +27,6 @@ public class Board : MonoBehaviour
         this.Tiles = TileFactory.Reset(this);
     }
 
-    internal Tile TileAt(int x, int y)
-    {
-        return Tiles[x, y];
-    }
-
     private void OnDrawGizmos()
     {
         //Gizmos.DrawWireCube(
