@@ -7,7 +7,7 @@ public class TurnManager {
 
     public virtual PieceCommand ActOn(Player player, Player opponent, Board board)
     {
-        board.ComputePotentialMoves(player, opponent);
+        Piece.ComputePotentialMoves(board.Tiles, player, opponent);
 
         var allMoves = player.UnblockedMoves();
         if (allMoves.Count == 0)
