@@ -8,11 +8,10 @@ using UnityEngine.UI;
 public class MoveLog : MonoBehaviour
 {
     public Text Text;
-    private List<Play> MoveHistory;
+    private List<Play> MoveHistory = new List<Play>();
 
     void Start()
     {
-        MoveHistory = new List<Play>();
         Text.text = "";
     }
 

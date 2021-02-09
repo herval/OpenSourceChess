@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     public MoveLog MoveLog;
 
     public Button UndoButton;
+    public Button QuitButton;
 
     public GameObject GameOverScreen;
     
@@ -48,8 +50,13 @@ public class GameManager : MonoBehaviour
         ArrangementManager.Initialize(Board, PlayerOne, PlayerTwo);
 
         UndoButton.onClick.AddListener(delegate { UndoMove(); });
+        QuitButton.onClick.AddListener(delegate { Quit(); });
         
         OnNextTurn();
+    }
+
+    private void Quit() {
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 
     void UndoMove()
