@@ -256,13 +256,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8ad735c95194aa5bc3ce2f7e40bbf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exit: {fileID: 0}
-  newGame: {fileID: 0}
-  newGameSettings: {fileID: 0}
-  buttonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
-  playerOneMode: {fileID: 0}
-  playerTwoMode: {fileID: 0}
-  start: {fileID: 0}
+  ExitButton: {fileID: 0}
+  NewGame: {fileID: 0}
+  NewGameSettings: {fileID: 0}
+  ButtonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  PlayerOneMode: {fileID: 0}
+  PlayerTwoMode: {fileID: 0}
+  StartButton: {fileID: 0}
 --- !u!114 &311385038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -517,12 +517,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TurnStatusDisplay: {fileID: 1154935159}
-  board: {fileID: 324793190}
-  arrangementManager: {fileID: 0}
+  Board: {fileID: 324793190}
+  ArrangementManager: {fileID: 0}
   PlayerOne: {fileID: 6458338314478211238}
   PlayerTwo: {fileID: 1578980133}
   MoveLog: {fileID: 1372083631}
   UndoButton: {fileID: 311385038}
+  QuitButton: {fileID: 1053450049}
   GameOverScreen: {fileID: 26209466}
 --- !u!1 &519420028
 GameObject:
@@ -691,13 +692,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8ad735c95194aa5bc3ce2f7e40bbf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exit: {fileID: 0}
-  newGame: {fileID: 0}
-  newGameSettings: {fileID: 0}
-  buttonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
-  playerOneMode: {fileID: 0}
-  playerTwoMode: {fileID: 0}
-  start: {fileID: 0}
+  ExitButton: {fileID: 0}
+  NewGame: {fileID: 0}
+  NewGameSettings: {fileID: 0}
+  ButtonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  PlayerOneMode: {fileID: 0}
+  PlayerTwoMode: {fileID: 0}
+  StartButton: {fileID: 0}
 --- !u!114 &1053450049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1302,9 +1303,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d190b1878847040d1abf55d3551ea5c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  darkTilePrefabs:
+  DarkTilePrefabs:
   - {fileID: 8276782945852006390, guid: 4a22ef064836c4da6ab77c8b4f5ddd95, type: 3}
-  lightTilePrefabs:
+  LightTilePrefabs:
   - {fileID: 8276782945852006390, guid: 313ac77a9405b4b0381d0d32d2599df8, type: 3}
 --- !u!1 &1741056458
 GameObject:
@@ -1440,10 +1441,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d190b1878847040d1abf55d3551ea5c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  darkTilePrefabs:
+  DarkTilePrefabs:
   - {fileID: 8276782945852006390, guid: 786881d52b440456fb02a0d613200886, type: 3}
   - {fileID: 8276782945852006390, guid: 678ddc11f25784059a56875a6ef8dee0, type: 3}
-  lightTilePrefabs:
+  LightTilePrefabs:
   - {fileID: 8276782945852006390, guid: cdc8d717356564b5ca403109b252d62d, type: 3}
   - {fileID: 8276782945852006390, guid: 2eaebd0d49ffb4ee08dc7d7725460de2, type: 3}
 --- !u!1 &1950072360
