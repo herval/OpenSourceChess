@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Serialization;
 
 
 public class PiecesStack : MonoBehaviour
 {
-    public GameObject container;
+    [FormerlySerializedAs("container")] public GameObject Container;
 
     public void Remove(Piece p)
     {
@@ -18,12 +19,12 @@ public class PiecesStack : MonoBehaviour
     {
         p.Freeze();
 
-        var newPos = this.container.transform.position;
+        var newPos = this.Container.transform.position;
 
-        var existing = this.container.GetComponentsInChildren<Piece>();
+        var existing = this.Container.GetComponentsInChildren<Piece>();
         if (existing != null && existing.Length > 0) // add after last one
         {
-            var sprite = existing.Last().sprite;
+            var sprite = existing.Last().Sprite;
 
             // TODO this smells wrong
             // newPos = existing.Last().transform.position + new Vector3(sprite.bounds.size.x / 3, 0);
@@ -41,7 +42,7 @@ public class PiecesStack : MonoBehaviour
 
 
 
-        p.transform.parent = this.container.transform;
+        p.transform.parent = this.Container.transform;
         p.transform.position = newPos;
 
     }

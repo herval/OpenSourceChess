@@ -21,7 +21,7 @@ public class PieceFactory : MonoBehaviour
     public GameObject BlackKnight;
 
 
-    public Piece Create(Tile tile, Piece.Type type, bool faceUp, Player player)
+    public Piece Create(Tile tile, Piece.PieceType pieceType, bool faceUp, Player player)
     {
         GameObject prefab = null;
         int value = 0;
@@ -29,52 +29,52 @@ public class PieceFactory : MonoBehaviour
 
 
         // TODO decouple facing from piece color
-        switch (type)
+        switch (pieceType)
         {
-            case Piece.Type.Rook:
+            case Piece.PieceType.Rook:
                 value = 50;
                 prefab = faceUp ? WhiteRook : BlackRook;
                 break;
 
-            case Piece.Type.Bishop:
+            case Piece.PieceType.Bishop:
                 value = 30;
                 prefab = faceUp ? WhiteBishop : BlackBishop;
                 break;
-            case Piece.Type.King:
+            case Piece.PieceType.King:
                 value = 900;
                 isKing = true;
                 prefab = faceUp ? WhiteKing : BlackKing;
                 break;
-            case Piece.Type.Queen:
+            case Piece.PieceType.Queen:
                 value = 90;
                 prefab = faceUp ? WhiteQueen : BlackQueen;
                 break;
-            case Piece.Type.Pawn:
+            case Piece.PieceType.Pawn:
                 value = 10;
                 prefab = faceUp ? WhitePawn : BlackPawn;
                 break;
-            case Piece.Type.Knight:
+            case Piece.PieceType.Knight:
                 value = 30;
                 prefab = faceUp ? WhiteKnight : BlackKnight;
                 break;
             default:
-                Debug.Log("Unsupported type: " + type);
+                Debug.Log("Unsupported type: " + pieceType);
                 return null;
         }
 
         var piece = Instantiate(prefab, tile.transform);
 
         var p = piece.GetComponent<Piece>();
-        p.isKing = isKing;
-        p.type = type;
-        p.value = value;
-        p.facingUp = faceUp;
-        p.color = player.color;
-        p.tile = tile;
-        p.player = player;
+        p.IsKing = isKing;
+        p.Type = pieceType;
+        p.Value = value;
+        p.FacingUp = faceUp;
+        p.Color = player.Color;
+        p.Tile = tile;
+        p.Player = player;
 
-        p.value = (p.color == Color.white ? 1 : -1) * p.value; // pieces have positive/negative value, depending on what side they're on
-        p.name = (p.color == Color.white ? "white" : "black") + " " + type.ToString();
+        p.Value = (p.Color == Color.white ? 1 : -1) * p.Value; // pieces have positive/negative value, depending on what side they're on
+        p.name = (p.Color == Color.white ? "white" : "black") + " " + pieceType.ToString();
 
         //Debug.Log("piece created: " + type + ", "+ faceUp);
         tile.CurrentPiece = p;

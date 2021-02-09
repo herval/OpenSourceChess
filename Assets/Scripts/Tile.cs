@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Tile : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class Tile : MonoBehaviour
     internal bool BlockedMove = false; // moves piece is not able to get to (shown only for debugging)
     public Color Color;
 
-    public int x;
-    public int y;
+    [FormerlySerializedAs("x")] public int X;
+    [FormerlySerializedAs("y")] public int Y;
 
     // TODO get rid of this circular reference
     public Piece CurrentPiece; // TODO using this bc GetComponent introduces bugs when updating states (eg if u change the current piece in a given turn, recomputing moves wont happen)

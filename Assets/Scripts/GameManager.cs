@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 // keep game state and handle inputs
 public class GameManager : MonoBehaviour
 {
-    PlayerPreferences prefs;
+    PlayerPreferences Prefs;
 
     public Text TurnStatusDisplay;
-    public Board board;
-    public GameArrangement arrangementManager;
+    [FormerlySerializedAs("board")] public Board Board;
+    [FormerlySerializedAs("arrangementManager")] public GameArrangement ArrangementManager;
 
-    public Player playerOne;
-    public Player playerTwo;
-    Player currentPlayer;
+    [FormerlySerializedAs("playerOne")] public Player PlayerOne;
+    [FormerlySerializedAs("playerTwo")] public Player PlayerTwo;
+    Player CurrentPlayer;
 
     public MoveLog MoveLog;
 
@@ -24,27 +25,27 @@ public class GameManager : MonoBehaviour
 
     public GameObject GameOverScreen;
     
-    Tile currentHighlightedTile;
-    private Piece currentPiece;
+    Tile CurrentHighlightedTile;
+    private Piece CurrentPiece;
     
-    private bool waitingForAnimation = false;
+    private bool WaitingForAnimation = false;
 
     private void Start()
     {
-        prefs = PlayerPreferences.Instance;
+        Prefs = PlayerPreferences.Instance;
 
         
-        playerOne.color = Color.white; // TODO randomized option
-        playerOne.facingUp = true;
-        playerOne.turnManager = prefs.PlayerOneManager;
+        PlayerOne.Color = Color.white; // TODO randomized option
+        PlayerOne.FacingUp = true;
+        PlayerOne.TurnManager = Prefs.PlayerOneManager;
 
-        playerTwo.color = Color.black;
-        playerTwo.facingUp = false;
-        playerTwo.turnManager = prefs.PlayerTwoManager;
+        PlayerTwo.Color = Color.black;
+        PlayerTwo.FacingUp = false;
+        PlayerTwo.TurnManager = Prefs.PlayerTwoManager;
 
-        arrangementManager = new StandardGameArrangement();
-        board.Reset();
-        arrangementManager.Initialize(board, playerOne, playerTwo);
+        ArrangementManager = new StandardGameArrangement();
+        Board.Reset();
+        ArrangementManager.Initialize(Board, PlayerOne, PlayerTwo);
 
         UndoButton.onClick.AddListener(delegate { UndoMove(); });
         
@@ -87,7 +88,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleClick()
     {
-        if (waitingForAnimation)
+        if (WaitingForAnimation)
         {
             return;
         }
@@ -95,13 +96,13 @@ public class GameManager : MonoBehaviour
         var tile = TileAt(Input.mousePosition);
         if (tile != null && Input.GetMouseButtonDown(0)) // trying to select or move
         {
-            if (currentPiece == null)
+            if (CurrentPiece == null)
             {
                 SelectPiece(tile?.CurrentPiece);
             }
             else
             {
-                var play = currentPiece.UnblockedMoveTo(tile);
+                var play = CurrentPiece.UnblockedMoveTo(tile);
                 if (play != null)
                 {
                     Execute(new Movement(play));
@@ -126,18 +127,18 @@ public class GameManager : MonoBehaviour
 
     private void OnNextTurn()
     {
-        if (currentPlayer == null)
+        if (CurrentPlayer == null)
         {
-            currentPlayer = playerOne;
+            CurrentPlayer = PlayerOne;
         }
         else
         {
-            Player opponent = currentPlayer == playerOne ? playerTwo : playerOne;
-            currentPlayer = opponent; // alternate player
+            Player opponent = CurrentPlayer == PlayerOne ? PlayerTwo : PlayerOne;
+            CurrentPlayer = opponent; // alternate player
         }
 
         Execute(
-            currentPlayer.turnManager.ActOn(currentPlayer, currentPlayer == playerOne ? playerTwo : playerOne, board)
+            CurrentPlayer.TurnManager.ActOn(CurrentPlayer, CurrentPlayer == PlayerOne ? PlayerTwo : PlayerOne, Board)
         );
     }
 
@@ -156,12 +157,12 @@ public class GameManager : MonoBehaviour
                 return;
             
             case Movement m:
-                waitingForAnimation = true;
+                WaitingForAnimation = true;
 
-                moveRecursively(m.play, m.play.ConnectedPlays, (moved) =>
+                moveRecursively(m.Play, m.Play.ConnectedPlays, (moved) =>
                 {
                     // Debug.Log("animation done " + moved);
-                    waitingForAnimation = false;
+                    WaitingForAnimation = false;
                     SelectPiece(null);
 
                     OnNextTurn();
@@ -230,47 +231,47 @@ public class GameManager : MonoBehaviour
 
     private bool CanSelect(Piece piece)
     {
-        return piece?.color == currentPlayer.color && (piece?.UnblockedMoves().Any() ?? false);
+        return piece?.Color == CurrentPlayer.Color && (piece?.UnblockedMoves().Any() ?? false);
     }
 
     private void UpdateUI()
     {
-        TurnStatusDisplay.text = (currentPlayer.color == Color.black ? "Dark" : "Light") + "'s turn";
+        TurnStatusDisplay.text = (CurrentPlayer.Color == Color.black ? "Dark" : "Light") + "'s turn";
     }
 
     // TODO highlight tile instead
     private void HighlightSelectedTile()
     {
         Tile selected = TileAt(Input.mousePosition);
-        HighlightTile(selected, currentPiece);
+        HighlightTile(selected, CurrentPiece);
     }
     
     private void SelectPiece(Piece piece)
     {
-        if (currentPiece != null)
+        if (CurrentPiece != null)
         {
-            TogglePotentialMoves(currentPiece);
-            currentPiece.tile.Selected = false;
+            TogglePotentialMoves(CurrentPiece);
+            CurrentPiece.Tile.Selected = false;
         }
         
         if (piece == null)
         {
-            currentPiece = null;
+            CurrentPiece = null;
         }
 
         if (piece != null && CanSelect(piece))
         {
-            piece.tile.Selected = true;
-            currentPiece = piece;
+            piece.Tile.Selected = true;
+            CurrentPiece = piece;
             TogglePotentialMoves(piece);
         }
     }
 
     private void HighlightTile(Tile tile, Piece currentPiece)
     {
-        if (tile == null && currentHighlightedTile != null) {
-            currentHighlightedTile.Highlighted = false;
-            currentHighlightedTile = null;
+        if (tile == null && CurrentHighlightedTile != null) {
+            CurrentHighlightedTile.Highlighted = false;
+            CurrentHighlightedTile = null;
         }
         
         if(tile == null) {
@@ -278,9 +279,9 @@ public class GameManager : MonoBehaviour
         }
 
         // unhighlight previous tile
-        if (currentHighlightedTile != null && tile != currentHighlightedTile)
+        if (CurrentHighlightedTile != null && tile != CurrentHighlightedTile)
         {
-            currentHighlightedTile.Highlighted = false;
+            CurrentHighlightedTile.Highlighted = false;
         }
 
         // highlight only pieces you own - except when dragging one already
@@ -288,7 +289,7 @@ public class GameManager : MonoBehaviour
             (currentPiece != null && currentPiece.UnblockedMoveTo(tile) != null)) // potential move 
         {
             tile.Highlighted = true;
-            currentHighlightedTile = tile;
+            CurrentHighlightedTile = tile;
         }
     }
 }

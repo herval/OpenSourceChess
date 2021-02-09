@@ -353,7 +353,15 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
+      propertyPath: Width
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: width
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
+      propertyPath: Height
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
@@ -361,9 +369,17 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
+      propertyPath: TileFactory
+      value: 
+      objectReference: {fileID: 1635185669}
+    - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: tileFactory
       value: 
       objectReference: {fileID: 1635185669}
+    - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
+      propertyPath: PieceFactory
+      value: 
+      objectReference: {fileID: 1635185667}
     - target: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: pieceFactory
       value: 
@@ -394,7 +410,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5479272889975325801, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 130
+      value: 57.1
       objectReference: {fileID: 0}
     - target: {fileID: 5479272889975325801, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -503,8 +519,8 @@ MonoBehaviour:
   TurnStatusDisplay: {fileID: 1154935159}
   board: {fileID: 324793190}
   arrangementManager: {fileID: 0}
-  playerOne: {fileID: 6458338314478211238}
-  playerTwo: {fileID: 1578980133}
+  PlayerOne: {fileID: 6458338314478211238}
+  PlayerTwo: {fileID: 1578980133}
   MoveLog: {fileID: 1372083631}
   UndoButton: {fileID: 311385038}
   GameOverScreen: {fileID: 26209466}
@@ -883,8 +899,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -35.9425, y: -184.64}
-  m_SizeDelta: {x: 623.3511, y: 82.005}
+  m_AnchoredPosition: {x: -37.249508, y: -210.048}
+  m_SizeDelta: {x: 625.965, y: 52.098}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1372083631
 MonoBehaviour:

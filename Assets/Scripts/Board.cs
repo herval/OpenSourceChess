@@ -1,25 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Serialization;
 
 public class Board : MonoBehaviour
 {
-
-    public int width = 10;
-    public int height = 10; // 10 as deault so a single tile has a scale of 0.1
+    [FormerlySerializedAs("width")] public int Width = 10;
+    [FormerlySerializedAs("height")] public int Height = 10; // 10 as deault so a single tile has a scale of 0.1
 
     // TODO make these a single thing
-    public TileFactory tileFactory;
-    public PieceFactory pieceFactory;
+    [FormerlySerializedAs("tileFactory")] public TileFactory TileFactory;
+    [FormerlySerializedAs("pieceFactory")] public PieceFactory PieceFactory;
 
-    Tile[,] tiles;
+    public Tile[,] Tiles;
 
-    public void AddPiece(Piece.Type piece, int x, int y, Player player)
+    public void AddPiece(Piece.PieceType piece, int x, int y, Player player)
     {
-        Piece p = pieceFactory.Create(tiles[x, y], piece, player.facingUp, player);
+        Piece p = PieceFactory.Create(Tiles[x, y], piece, player.FacingUp, player);
         player.Pieces.Add(p);
 
-        p.transform.position = tiles[x, y].transform.position;
+        p.transform.position = Tiles[x, y].transform.position;
     }
 
     public void ComputePotentialMoves(Player currentPlayer, Player opponent)
@@ -34,16 +34,16 @@ public class Board : MonoBehaviour
         // compute all movement vectors of the _opponent_ pieces
         opponent.Pieces.ForEach((p) =>
         {
-            p.ComputeMoves(tiles);
+            p.ComputeMoves(Tiles);
         });
 
 
         // find all the moves that threaten the king
-        List<Play> checkMoves = opponent.Pieces.ConvertAll(p => p.PotentialMoves.FindAll(m => m.isCheck() && !m.BlockedMove)).SelectMany(c => c).ToList();
+        List<Play> checkMoves = opponent.Pieces.ConvertAll(p => p.PotentialMoves.FindAll(m => m.IsCheck() && !m.BlockedMove)).SelectMany(c => c).ToList();
         List<List<Tile>> attackVectors = checkMoves.ConvertAll(m => m.MovementVector());
 
         var blockedCheckAttempts = opponent.Pieces.ConvertAll(p =>
-            p.PotentialMoves.FindAll(m => m.isCheck() && m.BlockedMove)
+            p.PotentialMoves.FindAll(m => m.IsCheck() && m.BlockedMove)
         ).SelectMany(x => x).ToList();
 
         currentPlayer.InCheck = checkMoves.Count > 0;
@@ -52,15 +52,15 @@ public class Board : MonoBehaviour
         // the king CANNOT move to a threatened tile
         currentPlayer.Pieces.ForEach(p =>
         {
-            p.ComputeMoves(tiles);
+            p.ComputeMoves(Tiles);
 
             // le roi is a little snowflake
-            if (p.isKing)
+            if (p.IsKing)
             {
                 // the king cannot move into traps!
                 var threatenedTiles = opponent.Pieces
                         .ConvertAll(p => p.PotentialMoves)
-                        .SelectMany(c => c.FindAll(m => m.canCaptureAtDestination))
+                        .SelectMany(c => c.FindAll(m => m.CanCaptureAtDestination))
                         .ToList()
                         .ConvertAll(p => p.TileTo);
                 
@@ -70,7 +70,7 @@ public class Board : MonoBehaviour
                 // TODO this is not needed I think
                 blockedCheckAttempts.ForEach(a =>
                 {
-                    Debug.Log("Evaluating blocked threat by " + a.ownPiece);
+                    Debug.Log("Evaluating blocked threat by " + a.OwnPiece);
                     p.PotentialMoves = p.PotentialMoves.FindAll(m =>
                         m.PieceAtDestination != a.PieceAtDestination
                     ); ;
@@ -93,7 +93,7 @@ public class Board : MonoBehaviour
             {
                 var vector = checkAttempt.MovementVector().Skip(1).ToList(); // skip the check position itself
                 var blockingPieces = vector
-                    .FindAll(t => t.CurrentPiece?.player == currentPlayer)
+                    .FindAll(t => t.CurrentPiece?.Player == currentPlayer)
                     .ConvertAll(t => t.CurrentPiece); // grab all player pieces blocking the move
 
                 if (blockingPieces.Count == 1) // only restrict movement if there's only ONE piece defending the king
@@ -105,17 +105,12 @@ public class Board : MonoBehaviour
 
     public void Reset()
     {
-        this.tiles = tileFactory.Reset(this);
-    }
-
-    internal Tile[,] Tiles()
-    {
-        return tiles;
+        this.Tiles = TileFactory.Reset(this);
     }
 
     internal Tile TileAt(int x, int y)
     {
-        return tiles[x, y];
+        return Tiles[x, y];
     }
 
     private void OnDrawGizmos()

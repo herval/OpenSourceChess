@@ -5,45 +5,45 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.Serialization;
 
 public class MenuButtonHandler : MonoBehaviour
 {
     public static String PLAYER = "Human";
     public static String COMPUTER = "Computer";
     
-    public Button exit;
-    public Button newGame;
-    public GameObject newGameSettings;
+    [FormerlySerializedAs("exit")] public Button ExitButton;
+    [FormerlySerializedAs("newGame")] public Button NewGame;
+    [FormerlySerializedAs("newGameSettings")] public GameObject NewGameSettings;
 
+    [FormerlySerializedAs("buttonSelectedColor")] public Color ButtonSelectedColor;
 
-    public Color buttonSelectedColor;
+    [FormerlySerializedAs("playerOneMode")] public Button PlayerOneMode;
+    [FormerlySerializedAs("playerTwoMode")] public Button PlayerTwoMode;
 
-    public Button playerOneMode;
-    public Button playerTwoMode;
+    private Type PlayerOneManager = typeof(TurnManager);
+    private Type PlayerTwoManager = typeof(TurnManager);
+    private Type AiType = typeof(RandomMoves);
 
-    private Type playerOneManager = typeof(TurnManager);
-    private Type playerTwoManager = typeof(TurnManager);
-    private Type aiType = typeof(RandomMoves);
-
-    public Button start;
+    [FormerlySerializedAs("start")] public Button StartButton;
 
     private void Start()
     {
-        if(newGameSettings == null)
+        if(NewGameSettings == null)
         {
             Debug.Log("Why is this getting called?!?!?"); // TODO
             return; 
         }
 
-        newGameSettings.SetActive(false);
-        SetCaption(playerOneMode, playerOneManager);
-        SetCaption(playerTwoMode, playerTwoManager);
+        NewGameSettings.SetActive(false);
+        SetCaption(PlayerOneMode, PlayerOneManager);
+        SetCaption(PlayerTwoMode, PlayerTwoManager);
 
-        exit.onClick.AddListener(delegate() { Exit(); });
-        newGame.onClick.AddListener(delegate () { ShowGameOptions(); });
-        start.onClick.AddListener(delegate () { StartGame(); });
-        playerOneMode.onClick.AddListener(delegate () { playerOneManager = toggleSelection(playerOneMode, playerOneManager); });
-        playerTwoMode.onClick.AddListener(delegate () { playerTwoManager = toggleSelection(playerTwoMode, playerTwoManager); });
+        ExitButton.onClick.AddListener(delegate() { Exit(); });
+        NewGame.onClick.AddListener(delegate () { ShowGameOptions(); });
+        StartButton.onClick.AddListener(delegate () { StartGame(); });
+        PlayerOneMode.onClick.AddListener(delegate () { PlayerOneManager = toggleSelection(PlayerOneMode, PlayerOneManager); });
+        PlayerTwoMode.onClick.AddListener(delegate () { PlayerTwoManager = toggleSelection(PlayerTwoMode, PlayerTwoManager); });
     }
 
     private void SetCaption(Button bt, Type turnManager)
@@ -58,7 +58,7 @@ public class MenuButtonHandler : MonoBehaviour
 
     private void ShowGameOptions()
     {
-        newGameSettings.SetActive(true);
+        NewGameSettings.SetActive(true);
     }
 
     private Type toggleSelection(Button btn, Type currentTurnManager)
@@ -66,7 +66,7 @@ public class MenuButtonHandler : MonoBehaviour
         Type newTurnManager;
         if (currentTurnManager == typeof(TurnManager))
         {
-            newTurnManager = aiType;
+            newTurnManager = AiType;
         }
         else
         {
@@ -91,8 +91,8 @@ public class MenuButtonHandler : MonoBehaviour
     public void StartGame()
     {
         var prefs = PlayerPreferences.Instance;
-        prefs.PlayerOneManager = (TurnManager) Activator.CreateInstance(playerOneManager);
-        prefs.PlayerTwoManager = (TurnManager) Activator.CreateInstance(playerTwoManager);
+        prefs.PlayerOneManager = (TurnManager) Activator.CreateInstance(PlayerOneManager);
+        prefs.PlayerTwoManager = (TurnManager) Activator.CreateInstance(PlayerTwoManager);
 
         SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }

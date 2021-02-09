@@ -1,38 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TileFactory : MonoBehaviour
 {
-    public GameObject[] darkTilePrefabs;
-    public GameObject[] lightTilePrefabs;
+    [FormerlySerializedAs("darkTilePrefabs")] public GameObject[] DarkTilePrefabs;
+    [FormerlySerializedAs("lightTilePrefabs")] public GameObject[] LightTilePrefabs;
 
 
     public Tile[,] Reset(Board board)
     {
-        var tiles = new Tile[board.width, board.height];
+        var tiles = new Tile[board.Width, board.Height];
 
         var totalSize = board.transform.GetComponent<SpriteRenderer>().bounds.size;
-        float tileSizeX = totalSize.x / ((float)board.width);
-        float tileSizeY = totalSize.y / ((float)board.height);
+        float tileSizeX = totalSize.x / ((float)board.Width);
+        float tileSizeY = totalSize.y / ((float)board.Height);
 
         // half a board offset since coords are in the center
         float offsetX = totalSize.x / 2f;
         float offsetY = totalSize.y / 2f;
 
         // offset the tiles half a tile to the right, taking the new scale in consideration, based on the actual width x height of the board
-        var tileScale = darkTilePrefabs[0].transform.localScale;
-        var tileSize = darkTilePrefabs[0].GetComponent<SpriteRenderer>().bounds.size;
-        float newTileScaleX = 1f / board.width;
-        float newTileScaleY = 1f / board.height;
+        var tileScale = DarkTilePrefabs[0].transform.localScale;
+        var tileSize = DarkTilePrefabs[0].GetComponent<SpriteRenderer>().bounds.size;
+        float newTileScaleX = 1f / board.Width;
+        float newTileScaleY = 1f / board.Height;
 
         // if the board was always 8x8, we wouldn't need to rescale - this computes the new size so we can render in the right place
         float tileOffsetX = ((tileSize.x / tileScale.x) * newTileScaleX) / 2f;
         float tileOffsetY = ((tileSize.y / tileScale.y) * newTileScaleY) / 2f;
 
-        for (int x = 0; x < board.width; x++)
+        for (int x = 0; x < board.Width; x++)
         {
-            for (int y = 0; y < board.height; y++)
+            for (int y = 0; y < board.Height; y++)
             {
                 // render locations relative to the scale of the tiles
                 // TODO use the size of the board as bounds instead
@@ -41,9 +42,9 @@ public class TileFactory : MonoBehaviour
                 float py = ((((float)y) + 1f) * tileSizeY) - offsetY + tileOffsetY; // this makes ZERO SENSE
 
                 // if the square is double odd or double even, it‘s Dark (diagonals)
-                var i = ((x + y) % 2 != 0) ? darkTilePrefabs.Length : lightTilePrefabs.Length; // supports variety of tiles
+                var i = ((x + y) % 2 != 0) ? DarkTilePrefabs.Length : LightTilePrefabs.Length; // supports variety of tiles
                 i = Random.Range(0, i - 1);
-                var tilePrefab = ((x + y) % 2 != 0) ? darkTilePrefabs[i] : lightTilePrefabs[i];
+                var tilePrefab = ((x + y) % 2 != 0) ? DarkTilePrefabs[i] : LightTilePrefabs[i];
 
                 // scale up tiles to fit
                 var tileObj = Instantiate(tilePrefab,
@@ -53,10 +54,10 @@ public class TileFactory : MonoBehaviour
 
                 // alternate colors
                 tiles[x, y] = tileObj.GetComponent<Tile>();
-                tiles[x, y].Color = tilePrefab == darkTilePrefabs[0] ? darkTilePrefabs[i].GetComponent<Tile>().Color : lightTilePrefabs[i].GetComponent<Tile>().Color;
+                tiles[x, y].Color = tilePrefab == DarkTilePrefabs[0] ? DarkTilePrefabs[i].GetComponent<Tile>().Color : LightTilePrefabs[i].GetComponent<Tile>().Color;
 
-                tiles[x, y].x = x;
-                tiles[x, y].y = y;
+                tiles[x, y].X = x;
+                tiles[x, y].Y = y;
             }
         }
 

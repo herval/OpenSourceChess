@@ -7,20 +7,20 @@ public interface PieceCommand { }
 
 public class LoseGame : PieceCommand
 {
-    public readonly Player player;
+    public readonly Player Player;
 
     public LoseGame(Player p)
     {
-        this.player = p;
+        this.Player = p;
     }
 }
 
 public class Movement : PieceCommand
 {
-    public readonly Play play;
+    public readonly Play Play;
 
     public Movement(Play play)
     {
-        this.play = play;
+        this.Play = play;
     }
 }

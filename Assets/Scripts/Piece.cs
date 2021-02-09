@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Piece : MonoBehaviour
 {
 
-    public enum Type
+    public enum PieceType
     {
         Rook,
         King,
@@ -22,25 +23,25 @@ public class Piece : MonoBehaviour
         MoveOnly,
     }
     
-    static (int, int)[] forward = new (int, int)[] {
+    static (int, int)[] FORWARD = new (int, int)[] {
         (0, 1),
     };
 
-    static (int, int)[] diagonals = new (int, int)[] {
+    static (int, int)[] DIAGONALS = new (int, int)[] {
         (1, 1),
         (-1, -1),
         (-1, 1),
         (1, -1)
     };
 
-    static (int, int)[] linears = new (int, int)[] {
+    static (int, int)[] LINEARS = new (int, int)[] {
         (1, 0),
         (0, 1),
         (-1, 0),
         (0, -1)
     };
 
-    static (int, int)[] adjacencies = new (int, int)[] {
+    static (int, int)[] ADJACENCIES = new (int, int)[] {
         (1, 0),
         (0, 1),
         (-1, 0),
@@ -51,7 +52,7 @@ public class Piece : MonoBehaviour
         (1, -1)
     };
 
-    static (int, int)[] knightMoves = new (int, int)[] {
+    static (int, int)[] KNIGHT_MOVES = new (int, int)[] {
         (2, 1),
         (2, -1),
         (-2, 1),
@@ -62,12 +63,12 @@ public class Piece : MonoBehaviour
         (-1, -2)
     };
 
-    public Type type;
-    public bool facingUp;
-    public Color color;
+    [FormerlySerializedAs("pieceType")] [FormerlySerializedAs("type")] public PieceType Type;
+    [FormerlySerializedAs("facingUp")] public bool FacingUp;
+    [FormerlySerializedAs("color")] public Color Color;
 
     private Tile _tile;
-    public Tile tile
+    public Tile Tile
     {
         get
         {
@@ -77,34 +78,34 @@ public class Piece : MonoBehaviour
         set
         {
             _tile = value;
-            if (sprite == null)
+            if (Sprite == null)
             {
-                sprite = this.GetComponent<SpriteRenderer>();
-                if (sprite == null)
+                Sprite = this.GetComponent<SpriteRenderer>();
+                if (Sprite == null)
                 {
-                    sprite = this.GetComponentInChildren<SpriteRenderer>();
+                    Sprite = this.GetComponentInChildren<SpriteRenderer>();
                 }
-                if (sprite == null)
+                if (Sprite == null)
                 {
                     throw new MissingReferenceException("A sprite is required!");
                 }
             }
 
             // set the order in layer for the sprite
-            sprite.sortingOrder = -value.y;
+            Sprite.sortingOrder = -value.Y;
         }
     }
 
-    public Player player;
+    [FormerlySerializedAs("player")] public Player Player;
 
-    internal int value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
+    internal int Value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
 
-    internal bool isKing; // used to identify LE ROI
+    internal bool IsKing; // used to identify LE ROI
 
-    public bool movedAtLeastOnce = false; // used for pawns' first move
+    [FormerlySerializedAs("movedAtLeastOnce")] public bool MovedAtLeastOnce = false; // used for pawns' first move
 
     public List<Play> PotentialMoves = new List<Play>();
-    public SpriteRenderer sprite;
+    [FormerlySerializedAs("sprite")] public SpriteRenderer Sprite;
 
     public void Freeze()
     {
@@ -144,19 +145,19 @@ public class Piece : MonoBehaviour
     {
         List<Play> potentialMoves;
 
-        switch (type)
+        switch (Type)
         {
-            case Type.Bishop:
+            case PieceType.Bishop:
                 // verticals until hitting something
-                potentialMoves = tryAll(diagonals,
-                    tile.x, tile.y,
+                potentialMoves = tryAll(DIAGONALS,
+                    Tile.X, Tile.Y,
                     int.MaxValue, tiles,
                     MovementType.MoveOrCapture,
                     null);
                 break;
-            case Type.King:
-                potentialMoves = tryAll(adjacencies,
-                    tile.x, tile.y, 1, tiles,
+            case PieceType.King:
+                potentialMoves = tryAll(ADJACENCIES,
+                    Tile.X, Tile.Y, 1, tiles,
                     MovementType.MoveOrCapture,
                     null);
 
@@ -164,49 +165,49 @@ public class Piece : MonoBehaviour
                 potentialMoves.AddRange(CastelingMoves(this, tiles));
                 
                 break;
-            case Type.Queen:
-                potentialMoves = tryAll(adjacencies,
-                    tile.x, tile.y,
+            case PieceType.Queen:
+                potentialMoves = tryAll(ADJACENCIES,
+                    Tile.X, Tile.Y,
                     int.MaxValue, tiles,
                     MovementType.MoveOrCapture,
                     null);
                 break;
-            case Type.Rook:
+            case PieceType.Rook:
                 // straight lines until hitting an adversary
-                potentialMoves = tryAll(linears,
-                    tile.x, tile.y,
+                potentialMoves = tryAll(LINEARS,
+                    Tile.X, Tile.Y,
                     int.MaxValue, tiles,
                     MovementType.MoveOrCapture,
                     null);
                 break;
-            case Type.Pawn:
+            case PieceType.Pawn:
                 // if first move, can move one or two squares
-                int maxSquares = movedAtLeastOnce ? 1 : 2;
+                int maxSquares = MovedAtLeastOnce ? 1 : 2;
 
-                potentialMoves = tryAll(forward,
-                    tile.x, tile.y,
+                potentialMoves = tryAll(FORWARD,
+                    Tile.X, Tile.Y,
                     maxSquares, tiles,
                     MovementType.MoveOnly,
                     null);
 
                 // eating diagonally
                 potentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, 1, 1,
+                    tryMove(Tile.X, Tile.Y, 1, 1,
                         1, tiles, new List<Play>(),
                         MovementType.CaptureOnly,
                         null)
                 );
                 potentialMoves.AddRange(
-                    tryMove(tile.x, tile.y, -1, 1,
+                    tryMove(Tile.X, Tile.Y, -1, 1,
                         1, tiles, new List<Play>(),
                         MovementType.CaptureOnly,
                         null)
                 );
 
                 break;
-            case Type.Knight:
-                potentialMoves = tryAll(knightMoves,
-                    tile.x, tile.y,
+            case PieceType.Knight:
+                potentialMoves = tryAll(KNIGHT_MOVES,
+                    Tile.X, Tile.Y,
                     1, tiles,
                     MovementType.MoveOrCapture,
                     null);
@@ -222,7 +223,7 @@ public class Piece : MonoBehaviour
     private List<Play> CastelingMoves(Piece king, Tile[,] tiles)
     {
         var moves = new List<Play>(); 
-        if (king.movedAtLeastOnce)
+        if (king.MovedAtLeastOnce)
         {
             return moves;
         }
@@ -230,8 +231,8 @@ public class Piece : MonoBehaviour
         // TODO dedup this crap
         
         // 2 unblocked to the right
-        var x = king.tile.x;
-        var y = king.tile.y;
+        var x = king.Tile.X;
+        var y = king.Tile.Y;
         if (x + 3 < tiles.Length)
         {
             var rook = tiles[x + 3, y]?.CurrentPiece;
@@ -239,7 +240,7 @@ public class Piece : MonoBehaviour
             {
                 if (tiles[x + 1, y].CurrentPiece == null &&
                     tiles[x + 2, y].CurrentPiece == null &&
-                    rook.type == Type.Rook && !rook.movedAtLeastOnce
+                    rook.Type == PieceType.Rook && !rook.MovedAtLeastOnce
                 )
                 {
                     moves.Add(
@@ -250,7 +251,7 @@ public class Piece : MonoBehaviour
                             null, 
                             false, 
                             false,
-                            !king.movedAtLeastOnce,
+                            !king.MovedAtLeastOnce,
                             false,
                             new List<Play>()
                             {
@@ -260,7 +261,7 @@ public class Piece : MonoBehaviour
                                     null, 
                                     false, 
                                     false,
-                                    !rook.movedAtLeastOnce)
+                                    !rook.MovedAtLeastOnce)
                             })
                     );
                 }
@@ -268,8 +269,8 @@ public class Piece : MonoBehaviour
         }
 
         // 3 unblocked to the left
-        x = king.tile.x;
-        y = king.tile.y;
+        x = king.Tile.X;
+        y = king.Tile.Y;
         if (x - 4 >= 0)
         {
             var rook = tiles[x - 4, y]?.CurrentPiece;
@@ -278,7 +279,7 @@ public class Piece : MonoBehaviour
                 if (tiles[x - 1, y].CurrentPiece == null &&
                     tiles[x - 2, y].CurrentPiece == null &&
                     tiles[x - 3, y].CurrentPiece == null &&
-                    rook.type == Type.Rook && !rook.movedAtLeastOnce
+                    rook.Type == PieceType.Rook && !rook.MovedAtLeastOnce
                 )
                 {
                     moves.Add(
@@ -289,7 +290,7 @@ public class Piece : MonoBehaviour
                             null, 
                             false,
                             false,
-                            !king.movedAtLeastOnce,
+                            !king.MovedAtLeastOnce,
                             false,
                             new List<Play>()
                             {
@@ -300,7 +301,7 @@ public class Piece : MonoBehaviour
                                     null, 
                                     false, 
                                     false,
-                                    !rook.movedAtLeastOnce)
+                                    !rook.MovedAtLeastOnce)
                             })
                     );
                 }
@@ -327,7 +328,7 @@ public class Piece : MonoBehaviour
     private List<Play> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Play> validMoves, MovementType movementType, Piece blocker, Play prev = null)
     {
         // flip the y axis when piece is facing down
-        int yFlip = facingUp ? 1 : -1;
+        int yFlip = FacingUp ? 1 : -1;
         int newX = x + deltaX;
         int newY = y + (deltaY * yFlip);
 
@@ -346,7 +347,7 @@ public class Piece : MonoBehaviour
         if ((movementType == MovementType.MoveOrCapture || movementType == MovementType.CaptureOnly) || // can do whatever or capture at destination (we'll check if the capture move is valid in a bit)
             (movementType == MovementType.MoveOnly && t.CurrentPiece == null)) // can only move when there's NOT a capturable piece (we short-circuit this instead of making it a "blocked move" bc this is a "non threatening" potential move
         {
-            if (t.CurrentPiece != null && t.CurrentPiece.player == this.player)
+            if (t.CurrentPiece != null && t.CurrentPiece.Player == this.Player)
             { // can't capture own pieces, but they can block the movement
                 blocker = t.CurrentPiece;
             }
@@ -361,7 +362,7 @@ public class Piece : MonoBehaviour
                 prev, 
                 canCapture, 
                 blockedMove,
-                !this.movedAtLeastOnce);
+                !this.MovedAtLeastOnce);
             prev = newMove;
             validMoves.Add(newMove);
         }
@@ -393,8 +394,8 @@ public class Piece : MonoBehaviour
     {
         tile.CurrentPiece = this;
 
-        this.tile.CurrentPiece = null; // remove ref from tile so piece doesn't show in two places at the same time
-        this.tile = tile;
+        this.Tile.CurrentPiece = null; // remove ref from tile so piece doesn't show in two places at the same time
+        this.Tile = tile;
         this.transform.parent = tile.transform;
         if (skipAnimation)
         {
@@ -407,7 +408,7 @@ public class Piece : MonoBehaviour
             StartCoroutine(
                 AnimationHelper.MoveOverSeconds(
                     this.gameObject, 
-                    this.tile.transform.position, 
+                    this.Tile.transform.position, 
                     0.2f,
                     done)); 
         }
