@@ -9,19 +9,19 @@ public class PiecesStack : MonoBehaviour
 {
     [FormerlySerializedAs("container")] public GameObject Container;
 
-    public void Remove(Piece p)
+    public void Remove(PieceView p)
     {
         p.Unfreeze();
         // TODO remove from stack    
     }
     
-    public void Add(Piece p)
+    public void Add(PieceView p)
     {
         p.Freeze();
 
         var newPos = this.Container.transform.position;
 
-        var existing = this.Container.GetComponentsInChildren<Piece>();
+        var existing = this.Container.GetComponentsInChildren<PieceView>();
         if (existing != null && existing.Length > 0) // add after last one
         {
             var sprite = existing.Last().Sprite;

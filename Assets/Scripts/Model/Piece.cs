@@ -1,21 +1,19 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class Piece : MonoBehaviour
-{
-
-    public enum PieceType
-    {
-        Rook,
-        King,
-        Queen,
-        Bishop,
-        Knight,
-        Pawn,
-    }
-
+// lightweight representation of a piece, dettached from ui behaviors
+public class Piece {
+    public PieceType Type;
+    public bool FacingUp;
+    public Player Player;
+    public bool MovedAtLeastOnce;  // used for pawns' first move
+    public Tile Tile;
+    public int Value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
+    public bool IsKing; // used to identify LE ROI
+    public List<Play> PotentialMoves = new List<Play>();
+    
     private enum MovementType
     {
         MoveOrCapture,
@@ -63,52 +61,110 @@ public class Piece : MonoBehaviour
         (-1, -2)
     };
 
-    [FormerlySerializedAs("pieceType")] [FormerlySerializedAs("type")] public PieceType Type;
-    [FormerlySerializedAs("facingUp")] public bool FacingUp;
-    [FormerlySerializedAs("color")] public Color Color;
 
-    private Tile _tile;
-    public Tile Tile
+    private List<Play> CastelingMoves(Piece king, Board board)
     {
-        get
+        var moves = new List<Play>(); 
+        if (king.MovedAtLeastOnce)
         {
-            return _tile;
+            return moves;
         }
-
-        set
+        
+        // TODO dedup this crap
+        
+        // 2 unblocked to the right
+        var x = king.Tile.X;
+        var y = king.Tile.Y;
+        if (x + 3 < board.Pieces.Length)
         {
-            _tile = value;
-            if (Sprite == null)
+            var rook = board.Pieces[x + 3, y];
+            if (rook != null)
             {
-                Sprite = this.GetComponent<SpriteRenderer>();
-                if (Sprite == null)
+                if (board.Pieces[x + 1, y] == null &&
+                    board.Pieces[x + 2, y] == null &&
+                    rook?.Type == PieceType.Rook && !rook.MovedAtLeastOnce
+                )
                 {
-                    Sprite = this.GetComponentInChildren<SpriteRenderer>();
-                }
-                if (Sprite == null)
-                {
-                    throw new MissingReferenceException("A sprite is required!");
+                    moves.Add(
+                        new Play(
+                            board,
+                            king,
+                            new Tile(x + 2, y), 
+                            null, 
+                            null, 
+                            false, 
+                            false,
+                            !king.MovedAtLeastOnce,
+                            false,
+                            new List<Play>()
+                            {
+                                new Play(
+                                    board,
+                                    rook, 
+                                    new Tile(x + 1, y), 
+                                    null, 
+                                    null, 
+                                    false, 
+                                    false,
+                                    !rook.MovedAtLeastOnce)
+                            })
+                    );
                 }
             }
-
-            // set the order in layer for the sprite
-            Sprite.sortingOrder = -value.Y;
         }
+
+        // 3 unblocked to the left
+        x = king.Tile.X;
+        y = king.Tile.Y;
+        if (x - 4 >= 0)
+        {
+            var rook = board.Pieces[x - 4, y];
+            if (rook != null)
+            {
+                if (board.Pieces[x - 1, y] == null &&
+                    board.Pieces[x - 2, y] == null &&
+                    board.Pieces[x - 3, y] == null &&
+                    rook.Type == PieceType.Rook && !rook.MovedAtLeastOnce
+                )
+                {
+                    moves.Add(
+                        new Play(
+                            board,
+                            king, 
+                            board.Tiles[x - 2, y], 
+                            null, 
+                            null, 
+                            false,
+                            false,
+                            !king.MovedAtLeastOnce,
+                            false,
+                            new List<Play>()
+                            {
+                                new Play(
+                                    board,
+                                    rook, 
+                                    board.Tiles[x - 1, y], 
+                                    null, 
+                                    null, 
+                                    false, 
+                                    false,
+                                    !rook.MovedAtLeastOnce)
+                            })
+                    );
+                }
+            }
+        }
+
+        return moves;
     }
-
-    [FormerlySerializedAs("player")] public Player Player;
-
-    internal int Value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
-
-    internal bool IsKing; // used to identify LE ROI
-
-    [FormerlySerializedAs("movedAtLeastOnce")] public bool MovedAtLeastOnce = false; // used for pawns' first move
-
-    public List<Play> PotentialMoves = new List<Play>();
-    [FormerlySerializedAs("sprite")] public SpriteRenderer Sprite;
-
-    public static void ComputePotentialMoves(Tile[,] tiles, Player currentPlayer, Player opponent)
+    
+    internal void ResetMoves()
     {
+        this.PotentialMoves.Clear();
+    }
+    
+    public static void ComputePotentialMoves(Board board, Player currentPlayer, Player opponent) {
+        var pieces = board.Pieces;
         // Debug.Log("Computing moves for " + (currentPlayer.color == Color.white ? "white" : "black"));
         // at the beginning of a player turn, we have to cross-check a bunch of stuff
 
@@ -119,7 +175,7 @@ public class Piece : MonoBehaviour
         // compute all movement vectors of the _opponent_ pieces
         opponent.Pieces.ForEach((p) =>
         {
-            p.ComputeMoves(tiles);
+            p.ComputeMoves(board);
         });
 
 
@@ -137,7 +193,7 @@ public class Piece : MonoBehaviour
         // the king CANNOT move to a threatened tile
         currentPlayer.Pieces.ForEach(p =>
         {
-            p.ComputeMoves(tiles);
+            p.ComputeMoves(board);
 
             // le roi is a little snowflake
             if (p.IsKing)
@@ -178,8 +234,8 @@ public class Piece : MonoBehaviour
             {
                 var vector = checkAttempt.MovementVector().Skip(1).ToList(); // skip the check position itself
                 var blockingPieces = vector
-                    .FindAll(t => t.CurrentPiece?.Player == currentPlayer)
-                    .ConvertAll(t => t.CurrentPiece); // grab all player pieces blocking the move
+                    .FindAll(t => pieces[t.X, t.Y]?.Player == currentPlayer)
+                    .ConvertAll(t => pieces[t.X, t.Y]); // grab all player pieces blocking the move
 
                 if (blockingPieces.Count == 1) // only restrict movement if there's only ONE piece defending the king
                 {
@@ -187,42 +243,8 @@ public class Piece : MonoBehaviour
                 }
             });
     }
-    
-    public void Freeze()
-    {
-        setAnimated(false);
-    }
 
-    public void Unfreeze()
-    {
-        setAnimated(true);
-    }
-
-    private void setAnimated(bool animated)
-    {
-        var animator = GetComponent<Animator>();
-        if (animator == null)
-        {
-            animator = GetComponentInChildren<Animator>();
-        }
-
-        if (animator != null)
-        {
-            animator.enabled = animated;
-        }
-    }
-
-    internal void ResetMoves()
-    {
-        this.PotentialMoves.Clear();
-    }
-
-    public Play UnblockedMoveTo(Tile tile)
-    {
-        return this.PotentialMoves.Find(m => m.TileTo == tile && !m.BlockedMove);
-    }
-
-    internal void ComputeMoves(Tile[,] tiles)
+        internal void ComputeMoves(Board board)
     {
         List<Play> potentialMoves;
 
@@ -232,24 +254,24 @@ public class Piece : MonoBehaviour
                 // verticals until hitting something
                 potentialMoves = tryAll(DIAGONALS,
                     Tile.X, Tile.Y,
-                    int.MaxValue, tiles,
+                    int.MaxValue, board,
                     MovementType.MoveOrCapture,
                     null);
                 break;
             case PieceType.King:
                 potentialMoves = tryAll(ADJACENCIES,
-                    Tile.X, Tile.Y, 1, tiles,
+                    Tile.X, Tile.Y, 1, board,
                     MovementType.MoveOrCapture,
                     null);
 
                 // find the rooks
-                potentialMoves.AddRange(CastelingMoves(this, tiles));
+                potentialMoves.AddRange(CastelingMoves(this, board));
                 
                 break;
             case PieceType.Queen:
                 potentialMoves = tryAll(ADJACENCIES,
                     Tile.X, Tile.Y,
-                    int.MaxValue, tiles,
+                    int.MaxValue, board,
                     MovementType.MoveOrCapture,
                     null);
                 break;
@@ -257,7 +279,7 @@ public class Piece : MonoBehaviour
                 // straight lines until hitting an adversary
                 potentialMoves = tryAll(LINEARS,
                     Tile.X, Tile.Y,
-                    int.MaxValue, tiles,
+                    int.MaxValue, board,
                     MovementType.MoveOrCapture,
                     null);
                 break;
@@ -267,20 +289,20 @@ public class Piece : MonoBehaviour
 
                 potentialMoves = tryAll(FORWARD,
                     Tile.X, Tile.Y,
-                    maxSquares, tiles,
+                    maxSquares, board,
                     MovementType.MoveOnly,
                     null);
 
                 // eating diagonally
                 potentialMoves.AddRange(
                     tryMove(Tile.X, Tile.Y, 1, 1,
-                        1, tiles, new List<Play>(),
+                        1, board,new List<Play>(),
                         MovementType.CaptureOnly,
                         null)
                 );
                 potentialMoves.AddRange(
                     tryMove(Tile.X, Tile.Y, -1, 1,
-                        1, tiles, new List<Play>(),
+                        1, board,new List<Play>(),
                         MovementType.CaptureOnly,
                         null)
                 );
@@ -289,7 +311,7 @@ public class Piece : MonoBehaviour
             case PieceType.Knight:
                 potentialMoves = tryAll(KNIGHT_MOVES,
                     Tile.X, Tile.Y,
-                    1, tiles,
+                    1, board,
                     MovementType.MoveOrCapture,
                     null);
                 break;
@@ -300,105 +322,14 @@ public class Piece : MonoBehaviour
         this.PotentialMoves = potentialMoves.ToList();
 
     }
-
-    private List<Play> CastelingMoves(Piece king, Tile[,] tiles)
-    {
-        var moves = new List<Play>(); 
-        if (king.MovedAtLeastOnce)
-        {
-            return moves;
-        }
         
-        // TODO dedup this crap
-        
-        // 2 unblocked to the right
-        var x = king.Tile.X;
-        var y = king.Tile.Y;
-        if (x + 3 < tiles.Length)
-        {
-            var rook = tiles[x + 3, y]?.CurrentPiece;
-            if (rook != null)
-            {
-                if (tiles[x + 1, y].CurrentPiece == null &&
-                    tiles[x + 2, y].CurrentPiece == null &&
-                    rook.Type == PieceType.Rook && !rook.MovedAtLeastOnce
-                )
-                {
-                    moves.Add(
-                        new Play(
-                            king,
-                            tiles[x + 2, y], 
-                            null, 
-                            null, 
-                            false, 
-                            false,
-                            !king.MovedAtLeastOnce,
-                            false,
-                            new List<Play>()
-                            {
-                                new Play(rook, 
-                                    tiles[x + 1, y], 
-                                    null, 
-                                    null, 
-                                    false, 
-                                    false,
-                                    !rook.MovedAtLeastOnce)
-                            })
-                    );
-                }
-            }
-        }
-
-        // 3 unblocked to the left
-        x = king.Tile.X;
-        y = king.Tile.Y;
-        if (x - 4 >= 0)
-        {
-            var rook = tiles[x - 4, y]?.CurrentPiece;
-            if (rook != null)
-            {
-                if (tiles[x - 1, y].CurrentPiece == null &&
-                    tiles[x - 2, y].CurrentPiece == null &&
-                    tiles[x - 3, y].CurrentPiece == null &&
-                    rook.Type == PieceType.Rook && !rook.MovedAtLeastOnce
-                )
-                {
-                    moves.Add(
-                        new Play(
-                            king, 
-                            tiles[x - 2, y], 
-                            null, 
-                            null, 
-                            false,
-                            false,
-                            !king.MovedAtLeastOnce,
-                            false,
-                            new List<Play>()
-                            {
-                                new Play(
-                                    rook, 
-                                    tiles[x - 1, y], 
-                                    null, 
-                                    null, 
-                                    false, 
-                                    false,
-                                    !rook.MovedAtLeastOnce)
-                            })
-                    );
-                }
-            }
-        }
-
-        return moves;
-    }
-
-    private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Tile[,] tiles, MovementType movementType, Piece blocker)
+            private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Board board, MovementType movementType, Piece blocker)
     {
         var res = new List<Play>();
         foreach (var xy in directions)
         {
             res.AddRange(
-                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, tiles, new List<Play>(), movementType, blocker, null)
+                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, board, new List<Play>(), movementType, blocker, null)
             );
         }
 
@@ -406,7 +337,7 @@ public class Piece : MonoBehaviour
     }
 
     // TODO simplify all the bools
-    private List<Play> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Tile[,] tiles, List<Play> validMoves, MovementType movementType, Piece blocker, Play prev = null)
+    private List<Play> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Board board, List<Play> validMoves, MovementType movementType, Piece blocker, Play prev = null)
     {
         // flip the y axis when piece is facing down
         int yFlip = FacingUp ? 1 : -1;
@@ -414,43 +345,44 @@ public class Piece : MonoBehaviour
         int newY = y + (deltaY * yFlip);
 
         // we're done when hitting a corner or there's no more moves possible
-        if (newX < 0 || newX >= tiles.GetLength(0)
-              || newY < 0 || newY >= tiles.GetLength(1)
+        if (newX < 0 || newX >= board.Pieces.GetLength(0)
+              || newY < 0 || newY >= board.Pieces.GetLength(1)
               || (maxMoves <= 0))
         {
             return validMoves;
         }
 
-        var t = tiles[newX, newY];
+        var t = board.Pieces[newX, newY];
         var canCapture = movementType == MovementType.CaptureOnly || movementType == MovementType.MoveOrCapture;
 
         // some pieces can only move to a position if there's something capturable there (or vice-versa)
         if ((movementType == MovementType.MoveOrCapture || movementType == MovementType.CaptureOnly) || // can do whatever or capture at destination (we'll check if the capture move is valid in a bit)
-            (movementType == MovementType.MoveOnly && t.CurrentPiece == null)) // can only move when there's NOT a capturable piece (we short-circuit this instead of making it a "blocked move" bc this is a "non threatening" potential move
+            (movementType == MovementType.MoveOnly && t == null)) // can only move when there's NOT a capturable piece (we short-circuit this instead of making it a "blocked move" bc this is a "non threatening" potential move
         {
-            if (t.CurrentPiece != null && t.CurrentPiece.Player == this.Player)
+            if (t != null && t.Player == this.Player)
             { // can't capture own pieces, but they can block the movement
-                blocker = t.CurrentPiece;
+                blocker = t;
             }
             
             // mark moves where the piece can only CAPTURE at the destination as blocked when there's nothing to capture there
-            var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t.CurrentPiece == null);
+            var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t == null);
 
             var newMove = new Play(
+                board,
                 this, 
-                tiles[newX, newY], 
-                t.CurrentPiece, 
+                new Tile(newX, newY), 
+                t, 
                 prev, 
-                canCapture, 
-                blockedMove,
-                !this.MovedAtLeastOnce);
+                canCaptureAtDestination: canCapture, 
+                blocked: blockedMove,
+                isFirstMove: !this.MovedAtLeastOnce);
             prev = newMove;
             validMoves.Add(newMove);
         }
 
         // can't move further when hitting another piece
         // but we compute the full motion anyway in case we get to a check
-        if (t.CurrentPiece != null)
+        if (t != null)
         {
             // already blocked by one piece OR by a piece the player owns, so no point on going further
             if (blocker != null)// || t.CurrentPiece.player == this.player)
@@ -459,41 +391,21 @@ public class Piece : MonoBehaviour
             }
             else
             {
-                blocker = t.CurrentPiece;
+                blocker = t;
             }
         }
 
-        return tryMove(newX, newY, deltaX, deltaY, maxMoves - 1, tiles, validMoves, movementType, blocker, prev);
+        return tryMove(newX, newY, deltaX, deltaY, maxMoves - 1, board, validMoves, movementType, blocker, prev);
     }
+}
 
-    public List<Play> UnblockedMoves()
-    {
-        return this.PotentialMoves.FindAll(m => !m.BlockedMove);
-    }
 
-    public void SetTile(Tile tile, bool skipAnimation, AfterAnimationCallback done)
-    {
-        tile.CurrentPiece = this;
-
-        this.Tile.CurrentPiece = null; // remove ref from tile so piece doesn't show in two places at the same time
-        this.Tile = tile;
-        this.transform.parent = tile.transform;
-        if (skipAnimation)
-        {
-            this.transform.position = tile.transform.position;
-            done?.Invoke(true);
-        }
-        else
-        {
-            // TODO is this efficient?
-            StartCoroutine(
-                AnimationHelper.MoveOverSeconds(
-                    this.gameObject, 
-                    this.Tile.transform.position, 
-                    0.2f,
-                    done)); 
-        }
-        
-        
-    }
+public enum PieceType
+{
+    Rook,
+    King,
+    Queen,
+    Bishop,
+    Knight,
+    Pawn,
 }

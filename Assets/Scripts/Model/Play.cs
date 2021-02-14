@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
-public class Play
-{
+public class Play {
+    public readonly Board Board;
     public readonly Piece OwnPiece;
     public readonly Piece PieceAtDestination; // is there a piece blocking 'ownPiece' to move to this tile?
     public bool CanCaptureAtDestination; // is ownPiece able to CAPTURE an opponent piece at this Tile, or just walk there if it's empty?
@@ -15,8 +16,8 @@ public class Play
     public readonly List<Play> ConnectedPlays; // for plays involving multiple pieces (eg casteling)
     public readonly bool isRewind;
 
-    public Play(Piece moving, Tile destinationTile, Piece pieceAtDestination, Play previous, bool canCaptureAtDestination, bool blocked, bool isFirstMove, bool isRewind = false, List<Play> connectedPlays = null)
-    {
+    public Play(Board board, Piece moving, Tile destinationTile, Piece pieceAtDestination, Play previous, bool canCaptureAtDestination, bool blocked, bool isFirstMove, bool isRewind = false, List<Play> connectedPlays = null) {
+        this.Board = board;
         this.ConnectedPlays = connectedPlays;
         this.TileFrom = moving.Tile;
         this.TileTo = destinationTile;
@@ -31,7 +32,7 @@ public class Play
 
     public bool IsCheck()
     {
-        return PieceAtDestination != null && PieceAtDestination.Player != OwnPiece.Player && PieceAtDestination.IsKing;
+        return PieceAtDestination != null && PieceAtDestination.Player.Number != OwnPiece.Player.Number && PieceAtDestination.IsKing;
     }
 
     // a list of all the tiles that led to the the current play position
@@ -50,44 +51,46 @@ public class Play
         return res;
     }
 
-    public void Move(AfterAnimationCallback done)
-    {
-        // deselect current piece's tile
-        OwnPiece.Tile.Selected = false;
-
+    public Piece[,] Execute() {
+        Piece[,] res = (Piece[,]) Board.Pieces.Clone();
+        
         // if can move, get going
         // destroy existing child piece
-        if (!isRewind && TileTo.CurrentPiece != null)
+        if (!isRewind && PieceAtDestination != null)
         {
             Debug.Log("Killing existing on " + this);
-            // TODO animate
-            OwnPiece.Player.Capture(TileTo.CurrentPiece); 
-            // TODO uncapture?
+            PieceAtDestination.Tile = null;
         }
 
         if (isRewind && PieceAtDestination != null)
         {
-            PieceAtDestination.SetTile(TileFrom, true, null);
-            PieceAtDestination.Player.PutBack(PieceAtDestination);
+            PieceAtDestination.Tile = TileFrom;
+
+            res[TileFrom.X, TileFrom.Y] = PieceAtDestination;
         }
 
         OwnPiece.MovedAtLeastOnce = !isRewind || !IsFirstMove; // put back to unmoved
-        OwnPiece.SetTile(TileTo, false, done);
+        OwnPiece.Tile = TileTo;
+
+        res[TileTo.X, TileTo.Y] = OwnPiece;
+        res[TileFrom.X, TileFrom.Y] = null;
+        return res;
     }
 
     // build a "rewind" move
     public Play Reverse()
     {
         return new Play(
-            OwnPiece,
-            TileFrom,
-            this.PieceAtDestination,
-            null,
-            true,
-            false,
-            this.IsFirstMove,
-            true,
-            this.ConnectedPlays?.ConvertAll(m => m.Reverse()));
+            board: Board,
+            moving: OwnPiece,
+            destinationTile: TileFrom,
+            pieceAtDestination: this.PieceAtDestination,
+            previous: null,
+            canCaptureAtDestination: true,
+            blocked: false,
+            isFirstMove: this.IsFirstMove,
+            isRewind: true,
+            connectedPlays: this.ConnectedPlays?.ConvertAll(m => m.Reverse()));
     }
 
     public string ToOfficialNotation()

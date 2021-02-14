@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class Tile : MonoBehaviour
+
+public class TileView : MonoBehaviour
 {
     public bool Highlighted = false; // mouse over
     public bool Selected = false; // tile where the piece about to move is
@@ -12,11 +13,31 @@ public class Tile : MonoBehaviour
     internal bool BlockedMove = false; // moves piece is not able to get to (shown only for debugging)
     public Color Color;
 
-    [FormerlySerializedAs("x")] public int X;
-    [FormerlySerializedAs("y")] public int Y;
+    public PieceView CurrentPiece;
+    
+    public Tile State = new Tile(0, 0);
+
+    public int X {
+        get {
+            return State.X;
+        }
+        set {
+            State.X = value;  
+        } 
+    }
+
+    public int Y {
+        get {
+            return State.Y;
+        }
+
+        set {
+            State.Y = value;
+        }
+    }
 
     // TODO get rid of this circular reference
-    public Piece CurrentPiece; // TODO using this bc GetComponent introduces bugs when updating states (eg if u change the current piece in a given turn, recomputing moves wont happen)
+    // [FormerlySerializedAs("CurrentPiece")] public PieceView currentPieceView; // TODO using this bc GetComponent introduces bugs when updating states (eg if u change the current piece in a given turn, recomputing moves wont happen)
 
     // Update is called once per frame
     void Update()
