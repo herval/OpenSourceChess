@@ -12,7 +12,7 @@ public class TurnManager {
         var allMoves = player.UnblockedMoves();
         if (allMoves.Count == 0)
         {
-            return null;
+            return new Lose(player);
         }
 
         return null;

@@ -11,7 +11,7 @@ public class Player
     public List<Piece> Pieces = new List<Piece>();
     public List<Piece> CapturedPieces = new List<Piece>();
 
-    public List<Play> UnblockedMoves()
+    public List<Move> UnblockedMoves()
     {
         return this.Pieces
             .ConvertAll(p => p.PotentialMoves)

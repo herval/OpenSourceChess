@@ -44,7 +44,7 @@ public class PieceView : MonoBehaviour
     [FormerlySerializedAs("player")] public PlayerView Player;
     [FormerlySerializedAs("sprite")] public SpriteRenderer Sprite;
 
-    public List<Play> PotentialMoves {
+    public List<Move> PotentialMoves {
         get {
             return State.PotentialMoves;
         }
@@ -127,7 +127,7 @@ public class PieceView : MonoBehaviour
         }
     }
 
-    public List<Play> UnblockedMoves()
+    public List<Move> UnblockedMoves()
     {
         return this.PotentialMoves.FindAll(m => !m.BlockedMove);
     }

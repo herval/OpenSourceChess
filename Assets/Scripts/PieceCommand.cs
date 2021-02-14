@@ -15,7 +15,7 @@ public class LoseGame : PieceCommand {
 }
 
 public class Movement : PieceCommand {
-    public readonly Play Play;
+    public readonly Move Play;
     private PieceView OwnPiece;
     private PieceView PieceAtDestination;
     public TileView TileTo;
@@ -23,7 +23,7 @@ public class Movement : PieceCommand {
 
     public List<Movement> ConnectedMovements = new List<Movement>();
 
-    public Movement(Play play, PieceView ownPiece, PieceView pieceAtDestination, TileView tileTo, TileView tileFrom) {
+    public Movement(Move play, PieceView ownPiece, PieceView pieceAtDestination, TileView tileTo, TileView tileFrom) {
         this.OwnPiece = ownPiece;
         this.PieceAtDestination = pieceAtDestination;
         this.TileFrom = tileFrom;

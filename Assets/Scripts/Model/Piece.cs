@@ -12,7 +12,7 @@ public class Piece {
     public Tile Tile;
     public int Value; // used for min/max computations https://en.wikipedia.org/wiki/Chess_piece_relative_value
     public bool IsKing; // used to identify LE ROI
-    public List<Play> PotentialMoves = new List<Play>();
+    public List<Move> PotentialMoves = new List<Move>();
     
     private enum MovementType
     {
@@ -62,9 +62,9 @@ public class Piece {
     };
 
 
-    private List<Play> CastelingMoves(Piece king, Board board)
+    private List<Move> CastelingMoves(Piece king, Board board)
     {
-        var moves = new List<Play>(); 
+        var moves = new List<Move>(); 
         if (king.MovedAtLeastOnce)
         {
             return moves;
@@ -86,7 +86,7 @@ public class Piece {
                 )
                 {
                     moves.Add(
-                        new Play(
+                        new Move(
                             board,
                             king,
                             new Tile(x + 2, y), 
@@ -96,9 +96,9 @@ public class Piece {
                             false,
                             !king.MovedAtLeastOnce,
                             false,
-                            new List<Play>()
+                            new List<Move>()
                             {
-                                new Play(
+                                new Move(
                                     board,
                                     rook, 
                                     new Tile(x + 1, y), 
@@ -128,7 +128,7 @@ public class Piece {
                 )
                 {
                     moves.Add(
-                        new Play(
+                        new Move(
                             board,
                             king, 
                             board.Tiles[x - 2, y], 
@@ -138,9 +138,9 @@ public class Piece {
                             false,
                             !king.MovedAtLeastOnce,
                             false,
-                            new List<Play>()
+                            new List<Move>()
                             {
-                                new Play(
+                                new Move(
                                     board,
                                     rook, 
                                     board.Tiles[x - 1, y], 
@@ -180,7 +180,7 @@ public class Piece {
 
 
         // find all the moves that threaten the king
-        List<Play> checkMoves = opponent.Pieces.ConvertAll(p => p.PotentialMoves.FindAll(m => m.IsCheck() && !m.BlockedMove)).SelectMany(c => c).ToList();
+        List<Move> checkMoves = opponent.Pieces.ConvertAll(p => p.PotentialMoves.FindAll(m => m.IsCheck() && !m.BlockedMove)).SelectMany(c => c).ToList();
         List<List<Tile>> attackVectors = checkMoves.ConvertAll(m => m.MovementVector());
 
         var blockedCheckAttempts = opponent.Pieces.ConvertAll(p =>
@@ -246,7 +246,7 @@ public class Piece {
 
         internal void ComputeMoves(Board board)
     {
-        List<Play> potentialMoves;
+        List<Move> potentialMoves;
 
         switch (Type)
         {
@@ -296,13 +296,13 @@ public class Piece {
                 // eating diagonally
                 potentialMoves.AddRange(
                     tryMove(Tile.X, Tile.Y, 1, 1,
-                        1, board,new List<Play>(),
+                        1, board,new List<Move>(),
                         MovementType.CaptureOnly,
                         null)
                 );
                 potentialMoves.AddRange(
                     tryMove(Tile.X, Tile.Y, -1, 1,
-                        1, board,new List<Play>(),
+                        1, board,new List<Move>(),
                         MovementType.CaptureOnly,
                         null)
                 );
@@ -323,13 +323,13 @@ public class Piece {
 
     }
         
-            private List<Play> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Board board, MovementType movementType, Piece blocker)
+            private List<Move> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Board board, MovementType movementType, Piece blocker)
     {
-        var res = new List<Play>();
+        var res = new List<Move>();
         foreach (var xy in directions)
         {
             res.AddRange(
-                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, board, new List<Play>(), movementType, blocker, null)
+                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, board, new List<Move>(), movementType, blocker, null)
             );
         }
 
@@ -337,7 +337,7 @@ public class Piece {
     }
 
     // TODO simplify all the bools
-    private List<Play> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Board board, List<Play> validMoves, MovementType movementType, Piece blocker, Play prev = null)
+    private List<Move> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Board board, List<Move> validMoves, MovementType movementType, Piece blocker, Move prev = null)
     {
         // flip the y axis when piece is facing down
         int yFlip = FacingUp ? 1 : -1;
@@ -367,7 +367,7 @@ public class Piece {
             // mark moves where the piece can only CAPTURE at the destination as blocked when there's nothing to capture there
             var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t == null);
 
-            var newMove = new Play(
+            var newMove = new Move(
                 board,
                 this, 
                 new Tile(newX, newY), 
