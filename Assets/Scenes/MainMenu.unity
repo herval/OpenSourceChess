@@ -876,13 +876,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8ad735c95194aa5bc3ce2f7e40bbf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exit: {fileID: 2103650422}
-  newGame: {fileID: 954829112}
-  newGameSettings: {fileID: 1468217185}
-  buttonSelectedColor: {r: 0.33241364, g: 0.8490566, b: 0.33531842, a: 1}
-  playerOneMode: {fileID: 1779513964}
-  playerTwoMode: {fileID: 75493947}
-  start: {fileID: 1385540539}
+  ExitButton: {fileID: 2103650422}
+  NewGame: {fileID: 954829112}
+  NewGameSettings: {fileID: 1468217185}
+  ButtonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  PlayerOneMode: {fileID: 1779513964}
+  PlayerTwoMode: {fileID: 75493947}
+  StartButton: {fileID: 1385540539}
 --- !u!1 &1123023391
 GameObject:
   m_ObjectHideFlags: 0

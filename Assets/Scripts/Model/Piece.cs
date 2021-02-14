@@ -89,7 +89,7 @@ public class Piece {
                         new Move(
                             board,
                             king,
-                            new Tile(x + 2, y), 
+                            board.Tiles[x + 2, y], 
                             null, 
                             null, 
                             false, 
@@ -101,7 +101,7 @@ public class Piece {
                                 new Move(
                                     board,
                                     rook, 
-                                    new Tile(x + 1, y), 
+                                    board.Tiles[x + 1, y], 
                                     null, 
                                     null, 
                                     false, 
@@ -370,7 +370,7 @@ public class Piece {
             var newMove = new Move(
                 board,
                 this, 
-                new Tile(newX, newY), 
+                board.Tiles[newX, newY], 
                 t, 
                 prev, 
                 canCaptureAtDestination: canCapture, 

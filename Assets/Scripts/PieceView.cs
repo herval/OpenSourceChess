@@ -41,8 +41,8 @@ public class PieceView : MonoBehaviour
         }
     }
 
-    [FormerlySerializedAs("player")] public PlayerView Player;
-    [FormerlySerializedAs("sprite")] public SpriteRenderer Sprite;
+    public PlayerView Player;
+    public SpriteRenderer Sprite;
 
     public List<Move> PotentialMoves {
         get {
@@ -99,11 +99,7 @@ public class PieceView : MonoBehaviour
             this.TileView);
     }
 
-    public String name {
-        get {
-            return (Player.Color == Color.white ? "white" : "black") + " " + State.Type.ToString();
-        }
-}
+    public String name => (Player.Color == Color.white ? "white" : "black") + " " + State.Type.ToString();
 
     public bool MovedAtLeastOnce {
         get {

@@ -12,20 +12,18 @@ public class MenuButtonHandler : MonoBehaviour
     public static String PLAYER = "Human";
     public static String COMPUTER = "Computer";
     
-    [FormerlySerializedAs("exit")] public Button ExitButton;
-    [FormerlySerializedAs("newGame")] public Button NewGame;
-    [FormerlySerializedAs("newGameSettings")] public GameObject NewGameSettings;
+    public Button ExitButton;
+    public Button NewGame;
+    public GameObject NewGameSettings;
 
-    [FormerlySerializedAs("buttonSelectedColor")] public Color ButtonSelectedColor;
-
-    [FormerlySerializedAs("playerOneMode")] public Button PlayerOneMode;
-    [FormerlySerializedAs("playerTwoMode")] public Button PlayerTwoMode;
+    public Button PlayerOneMode;
+    public Button PlayerTwoMode;
 
     private Type PlayerOneManager = typeof(TurnManager);
     private Type PlayerTwoManager = typeof(TurnManager);
     private Type AiType = typeof(RandomMoves);
 
-    [FormerlySerializedAs("start")] public Button StartButton;
+    public Button StartButton;
 
     private void Start()
     {

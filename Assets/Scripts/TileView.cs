@@ -36,8 +36,6 @@ public class TileView : MonoBehaviour
         }
     }
 
-    // TODO get rid of this circular reference
-    // [FormerlySerializedAs("CurrentPiece")] public PieceView currentPieceView; // TODO using this bc GetComponent introduces bugs when updating states (eg if u change the current piece in a given turn, recomputing moves wont happen)
 
     // Update is called once per frame
     void Update()

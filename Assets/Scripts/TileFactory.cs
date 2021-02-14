@@ -5,15 +5,17 @@ using UnityEngine.Serialization;
 
 public class TileFactory : MonoBehaviour
 {
-    [FormerlySerializedAs("darkTilePrefabs")] public GameObject[] DarkTilePrefabs;
-    [FormerlySerializedAs("lightTilePrefabs")] public GameObject[] LightTilePrefabs;
+    public GameObject[] DarkTilePrefabs;
+    public GameObject[] LightTilePrefabs;
 
 
-    public TileView[,] Reset(int width, int height, GameObject boardView)
+    public TileView[,] Reset(int width, int height, BoardView board)
     {
         var tiles = new TileView[width, height];
 
-        var totalSize = boardView.transform.GetComponent<SpriteRenderer>().bounds.size;
+        var tilesParent = board.TileSpace;
+
+        var totalSize = tilesParent.transform.GetComponent<SpriteRenderer>().bounds.size;
         float tileSizeX = totalSize.x / ((float)width);
         float tileSizeY = totalSize.y / ((float)height);
 
@@ -49,9 +51,9 @@ public class TileFactory : MonoBehaviour
                 // scale up tiles to fit
                 var tileObj = Instantiate(tilePrefab,
                     new Vector3(px, py, 0f), 
-                    Quaternion.identity, boardView.transform);
+                    Quaternion.identity, tilesParent.transform);
                 tileObj.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(newTileScaleX, newTileScaleY, 0f); // reescale for reals
-
+                
                 // alternate colors
                 tiles[x, y] = tileObj.GetComponent<TileView>();
                 tiles[x, y].Color = tilePrefab == DarkTilePrefabs[0] ? DarkTilePrefabs[i].GetComponent<TileView>().Color : LightTilePrefabs[i].GetComponent<TileView>().Color;

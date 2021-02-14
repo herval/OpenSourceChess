@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 public class PiecesStack : MonoBehaviour
 {
-    [FormerlySerializedAs("container")] public GameObject Container;
+    public GameObject Container;
 
     public void Remove(PieceView p)
     {

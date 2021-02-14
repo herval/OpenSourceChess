@@ -27,15 +27,16 @@ public class BoardView : MonoBehaviour
     public void Initialize(PlayerView playerOne, PlayerView playerTwo)
     {
         ArrangementManager = new StandardGameArrangement();
-        
-        TileViews = TileFactory.Reset(Width, Height, this.TileSpace);
+
+        TileViews = TileFactory.Reset(Width, Height, this);
         this.Board = new Board(
             GetTiles(this.TileViews),
             ArrangementManager.Initialize(
                 PieceFactory, 
                 TileViews, 
                 playerOne.FacingUp ? playerOne : playerTwo, 
-                playerTwo.FacingUp ? playerOne : playerTwo)
+                playerTwo.FacingUp ? playerOne : playerTwo),
+            playerOne.FacingUp
         );
 
         RenderCoords(TileViews);
@@ -43,7 +44,11 @@ public class BoardView : MonoBehaviour
     }
 
     private void RenderCoords(TileView[,] tiles) {
-        
+        for (int x = 0; x < tiles.GetLength(0); x++) {
+            for (int y = 0; y < tiles.GetLength(1); y++) {
+                tiles[x, y].name = tiles[x, y].State.ToFigurineAlgebraicNotation(this.Board);
+            }
+        }
     }
 
     private TileView TileAtPosition(Tile pos) {
