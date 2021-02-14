@@ -37,7 +37,7 @@ public class Movement : PieceCommand {
         // deselect current piece's tile
         OwnPiece.TileView.Selected = false;
 
-        if (Play.isRewind && Play.PieceAtDestination != null) {
+        if (Play.IsRewind && Play.PieceAtDestination != null) {
             PieceAtDestination.SetTile(TileFrom, true, null);
             PieceAtDestination.Player.PutBack(PieceAtDestination);
         }

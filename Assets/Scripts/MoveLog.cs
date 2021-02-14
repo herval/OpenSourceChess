@@ -32,7 +32,7 @@ public class MoveLog : MonoBehaviour
     {
         Text.text = String.Join(
                 " ",
-                MoveHistory.ConvertAll(m => m.Play.ToOfficialNotation())
+                MoveHistory.ConvertAll(m => m.Play.ToFigurineAlgebraicNotation())
         );
     }
 

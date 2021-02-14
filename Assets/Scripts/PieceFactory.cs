@@ -28,34 +28,41 @@ public class PieceFactory : MonoBehaviour
         bool isKing = false;
         bool faceUp = player.FacingUp;
         bool isWhite = player.Color == Color.white;
+        char name;
 
         switch (pieceType)
         {
             case PieceType.Rook:
                 value = 50;
                 prefab = isWhite ? WhiteRook : BlackRook;
+                name = 'R';
                 break;
 
             case PieceType.Bishop:
                 value = 30;
                 prefab = isWhite ? WhiteBishop : BlackBishop;
+                name = 'B';
                 break;
             case PieceType.King:
                 value = 900;
                 isKing = true;
                 prefab = isWhite ? WhiteKing : BlackKing;
-                break;
+                name = 'K';
+;                break;
             case PieceType.Queen:
                 value = 90;
                 prefab = isWhite ? WhiteQueen : BlackQueen;
+                name = 'Q';
                 break;
             case PieceType.Pawn:
                 value = 10;
                 prefab = isWhite ? WhitePawn : BlackPawn;
+                name = ' '; // pawns are nameless poor things
                 break;
             case PieceType.Knight:
                 value = 30;
                 prefab = isWhite ? WhiteKnight : BlackKnight;
+                name = 'N';
                 break;
             default:
                 Debug.Log("Unsupported type: " + pieceType);
@@ -70,6 +77,7 @@ public class PieceFactory : MonoBehaviour
         p.State.Value = value;
         p.State.FacingUp = faceUp;
         p.State.Player = player.State;
+        p.State.FigurineAlgebraicNotation = name;
         p.SetTile(tileView, true, null);
         p.Player = player;
 

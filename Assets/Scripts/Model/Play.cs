@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -17,15 +18,17 @@ public class Move : Play {
     public readonly Board Board;
     public readonly Piece OwnPiece;
     public readonly Piece PieceAtDestination; // is there a piece blocking 'ownPiece' to move to this tile?
-    public bool CanCaptureAtDestination; // is ownPiece able to CAPTURE an opponent piece at this Tile, or just walk there if it's empty?
+    public readonly bool CanCaptureAtDestination; // is ownPiece able to CAPTURE an opponent piece at this Tile, or just walk there if it's empty?
     public readonly Move PreviousPlay; // reverse-linked list used to compute a movement vector
     public readonly Tile TileFrom;
     public readonly Tile TileTo;
     public readonly bool BlockedMove; // is the piece unable to move to this tile?
     public readonly bool IsFirstMove; // is this the first move of a given piece?
 
+    public readonly bool IsCasteling; // casteling has a special notation
+
     public readonly List<Move> ConnectedPlays; // for plays involving multiple pieces (eg casteling)
-    public readonly bool isRewind;
+    public readonly bool IsRewind;
 
     public Move(
         Board board,
@@ -36,6 +39,7 @@ public class Move : Play {
         bool canCaptureAtDestination,
         bool blocked, bool isFirstMove,
         bool isRewind = false,
+        bool isCasteling = false,
         List<Move> connectedPlays = null
     ) {
         this.Board = board;
@@ -47,9 +51,10 @@ public class Move : Play {
         this.OwnPiece = moving;
         this.PieceAtDestination = pieceAtDestination;
         this.IsFirstMove = isFirstMove;
-        this.isRewind = isRewind;
+        this.IsRewind = isRewind;
         this.CanCaptureAtDestination = canCaptureAtDestination;
-    }
+        this.IsCasteling = isCasteling;
+        }
 
     public bool IsCheck() {
         return PieceAtDestination != null && PieceAtDestination.Player.Number != OwnPiece.Player.Number &&
@@ -75,18 +80,18 @@ public class Move : Play {
 
         // if can move, get going
         // destroy existing child piece
-        if (!isRewind && PieceAtDestination != null) {
+        if (!IsRewind && PieceAtDestination != null) {
             Debug.Log("Killing existing on " + this);
             PieceAtDestination.Tile = null;
         }
 
-        if (isRewind && PieceAtDestination != null) {
+        if (IsRewind && PieceAtDestination != null) {
             PieceAtDestination.Tile = TileFrom;
 
             res[TileFrom.X, TileFrom.Y] = PieceAtDestination;
         }
 
-        OwnPiece.MovedAtLeastOnce = !isRewind || !IsFirstMove; // put back to unmoved
+        OwnPiece.MovedAtLeastOnce = !IsRewind || !IsFirstMove; // put back to unmoved
         OwnPiece.Tile = TileTo;
 
         res[TileTo.X, TileTo.Y] = OwnPiece;
@@ -109,7 +114,27 @@ public class Move : Play {
             connectedPlays: this.ConnectedPlays?.ConvertAll(m => m.Reverse()));
     }
 
-    public string ToOfficialNotation() {
-        return "duh";
+    // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
+    public string ToFigurineAlgebraicNotation() {
+        if (IsCasteling) {
+            return "0-0 or 0-0-0"; // TODO represent this properly
+        }
+        
+        String res = "";
+        res += OwnPiece.FigurineAlgebraicNotation;
+
+        if (PieceAtDestination != null) {
+            res += "x";
+        }
+
+        res += TileTo.ToFigurineAlgebraicNotation(this.Board);
+
+        if (this.IsCheck() && !this.BlockedMove) {
+            res += "+";
+        }
+        
+        // TODO represent checkmate?
+        
+        return res;
     }
 }

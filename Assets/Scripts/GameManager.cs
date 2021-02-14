@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        if (play.Play.isRewind) {
+        if (play.Play.IsRewind) {
             MoveLog.Pop();
         }
         else {
