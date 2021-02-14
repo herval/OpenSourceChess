@@ -8,14 +8,14 @@ using UnityEngine.UI;
 public class MoveLog : MonoBehaviour
 {
     public Text Text;
-    private List<Play> MoveHistory = new List<Play>();
+    private List<Movement> MoveHistory = new List<Movement>();
 
     void Start()
     {
         Text.text = "";
     }
 
-    public void Push(Play play)
+    public void Push(Movement play)
     {
         MoveHistory.Add(play);
     }
@@ -32,11 +32,11 @@ public class MoveLog : MonoBehaviour
     {
         Text.text = String.Join(
                 " ",
-                MoveHistory.ConvertAll(m => m.ToOfficialNotation())
+                MoveHistory.ConvertAll(m => m.Play.ToOfficialNotation())
         );
     }
 
-    public Play Last()
+    public Movement Last()
     {
         return MoveHistory.Count() == 0 ? null : MoveHistory.Last();
     }

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38df897e4de174d1c934c071369f47c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 408084782410062378}
+  Container: {fileID: 408084782410062378}
 --- !u!1 &5522923867608369626
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,11 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 277ad9b3b201e4abba5bc0214b5458b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatar: {fileID: 6478019334736865834}
-  turnManager: {fileID: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
-  facingUp: 0
-  Pieces: []
+  Avatar: {fileID: 6478019334736865834}
   CapturedPieces: {fileID: 5401224006952097003}
 --- !u!1 &8514209390403819346
 GameObject:

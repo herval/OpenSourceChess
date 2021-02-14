@@ -2,43 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class GameArrangement : MonoBehaviour
+public abstract class GameArrangement
 {
-    public abstract void Initialize(Board board, Player playerOne, Player playerTwo);
+    public abstract Piece[,] Initialize(PieceFactory factory, TileView[,] boardView, PlayerView playerOne, PlayerView playerTwo);
 }
 
 // a classic game of chess
 public class StandardGameArrangement : GameArrangement
 {
 
-    Piece.PieceType[,] Arrangement = {
-        { Piece.PieceType.Rook, Piece.PieceType.Knight, Piece.PieceType.Bishop, Piece.PieceType.Queen, Piece.PieceType.King, Piece.PieceType.Bishop, Piece.PieceType.Knight, Piece.PieceType.Rook },
-        { Piece.PieceType.Pawn, Piece.PieceType.Pawn, Piece.PieceType.Pawn, Piece.PieceType.Pawn, Piece.PieceType.Pawn, Piece.PieceType.Pawn, Piece.PieceType.Pawn, Piece.PieceType.Pawn },
+    PieceType[,] Arrangement = {
+        { PieceType.Rook, PieceType.Knight, PieceType.Bishop, PieceType.Queen, PieceType.King, PieceType.Bishop, PieceType.Knight, PieceType.Rook },
+        { PieceType.Pawn, PieceType.Pawn, PieceType.Pawn, PieceType.Pawn, PieceType.Pawn, PieceType.Pawn, PieceType.Pawn, PieceType.Pawn },
     };
 
 
     // Start is called before the first frame update
-    public override void Initialize(Board board, Player playerOne, Player playerTwo)
-    {
+    public override Piece[,] Initialize(PieceFactory factory, TileView[,] boardView, PlayerView playerOne, PlayerView playerTwo) {
+        Piece[,] pieces = new Piece[boardView.GetLength(0), boardView.GetLength(1)];
+        
         // render top pieces, they always belong to player two
-        for (int x = 0; x < Arrangement.GetLength(0); x++)
+        for (int y = 0; y < Arrangement.GetLength(0); y++)
         {
-            for (int y = 0; y < Arrangement.GetLength(1); y++)
+            for (int x = 0; x < Arrangement.GetLength(1); x++)
             {
-                board.AddPiece(Arrangement[x, y], y, board.Height-x-1, playerTwo);
+                pieces[x, boardView.GetLength(1)-y-1] = AddPiece(factory, Arrangement[y, x], boardView[x, boardView.GetLength(1)-y-1], playerTwo);
             }
         }
 
 
         // render bottom pieces
-        for (int x = 0; x < Arrangement.GetLength(0); x++)
+        for (int y = 0; y < Arrangement.GetLength(0); y++)
         {
-            for (int y = 0; y < Arrangement.GetLength(1); y++)
+            for (int x = 0; x < Arrangement.GetLength(1); x++)
             {
-                board.AddPiece(Arrangement[x, y], y, x, playerOne);
+                pieces[x, y] = AddPiece(factory, Arrangement[y, x], boardView[x, y], playerOne);
             }
         }
 
+        return pieces;
     }
 
+
+    private Piece AddPiece(PieceFactory factory, PieceType piece, TileView tile, PlayerView player)
+    {
+        PieceView p = factory.Create(tile, piece, player);
+        player.Pieces.Add(p.State);
+
+        p.transform.position = tile.transform.position;
+
+        return p.State;
+    }
 }
