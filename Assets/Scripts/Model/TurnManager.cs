@@ -17,4 +17,8 @@ public class TurnManager {
 
         return null;
     }
+
+    public virtual bool IsHuman() {
+        return true;
+    }
 }

@@ -13,6 +13,7 @@ public class PlayerView : MonoBehaviour {
         set {
             _color = value;
             State.Number = value == Color.white ? 1 : 2;
+            Avatar.color = value;
         }
     }
 
@@ -35,10 +36,6 @@ public class PlayerView : MonoBehaviour {
     public List<Piece> Pieces {
         get { return State.Pieces; }
         set { State.Pieces = value; }
-    }
-
-    private void Update() {
-        Avatar.color = Color;
     }
 
     public void Capture(PieceView p) {

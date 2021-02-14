@@ -45,12 +45,19 @@ public class GameManager : MonoBehaviour {
     private void Start() {
         Prefs = PlayerPreferences.Instance;
 
-        PlayerOne.Color = Color.white; // TODO randomized option
-        PlayerOne.FacingUp = true;
-        PlayerOne.TurnManager = Prefs.PlayerOneManager;
+        // when p2 is human, black is on bottom
+        if (Prefs.PlayerTwoManager.IsHuman() && !Prefs.PlayerOneManager.IsHuman()) {
+            PlayerOne.FacingUp = false;
+        }
+        else {
+            PlayerOne.FacingUp = true;
+        }
 
-        PlayerTwo.Color = Color.black;
-        PlayerTwo.FacingUp = false;
+        PlayerOne.Color = Color.white;
+        PlayerTwo.FacingUp = !PlayerOne.FacingUp;
+        PlayerTwo.Color = PlayerOne.Color == Color.white ? Color.black : Color.white;
+        
+        PlayerOne.TurnManager = Prefs.PlayerOneManager;
         PlayerTwo.TurnManager = Prefs.PlayerTwoManager;
 
         ArrangementManager = new StandardGameArrangement();
@@ -58,7 +65,11 @@ public class GameManager : MonoBehaviour {
         TileViews = TileFactory.Reset(Width, Height, BoardView);
         this.Board = new Board(
             GetTiles(this.TileViews),
-            ArrangementManager.Initialize(PieceFactory, TileViews, PlayerOne, PlayerTwo)
+            ArrangementManager.Initialize(
+                PieceFactory, 
+                TileViews, 
+                PlayerOne.FacingUp ? PlayerOne : PlayerTwo, 
+                PlayerTwo.FacingUp ? PlayerOne : PlayerTwo)
         );
 
         UndoButton.onClick.AddListener(delegate { UndoMove(); });

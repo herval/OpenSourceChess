@@ -27,35 +27,35 @@ public class PieceFactory : MonoBehaviour
         int value = 0;
         bool isKing = false;
         bool faceUp = player.FacingUp;
+        bool isWhite = player.Color == Color.white;
 
-        // TODO decouple facing from piece color
         switch (pieceType)
         {
             case PieceType.Rook:
                 value = 50;
-                prefab = faceUp ? WhiteRook : BlackRook;
+                prefab = isWhite ? WhiteRook : BlackRook;
                 break;
 
             case PieceType.Bishop:
                 value = 30;
-                prefab = faceUp ? WhiteBishop : BlackBishop;
+                prefab = isWhite ? WhiteBishop : BlackBishop;
                 break;
             case PieceType.King:
                 value = 900;
                 isKing = true;
-                prefab = faceUp ? WhiteKing : BlackKing;
+                prefab = isWhite ? WhiteKing : BlackKing;
                 break;
             case PieceType.Queen:
                 value = 90;
-                prefab = faceUp ? WhiteQueen : BlackQueen;
+                prefab = isWhite ? WhiteQueen : BlackQueen;
                 break;
             case PieceType.Pawn:
                 value = 10;
-                prefab = faceUp ? WhitePawn : BlackPawn;
+                prefab = isWhite ? WhitePawn : BlackPawn;
                 break;
             case PieceType.Knight:
                 value = 30;
-                prefab = faceUp ? WhiteKnight : BlackKnight;
+                prefab = isWhite ? WhiteKnight : BlackKnight;
                 break;
             default:
                 Debug.Log("Unsupported type: " + pieceType);
@@ -69,7 +69,7 @@ public class PieceFactory : MonoBehaviour
         p.State.Type = pieceType;
         p.State.Value = value;
         p.State.FacingUp = faceUp;
-        p.State.Player = player.State;//.Color == Color.white ? 1 : 2;
+        p.State.Player = player.State;
         p.SetTile(tileView, true, null);
         p.Player = player;
 

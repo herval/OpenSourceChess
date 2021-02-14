@@ -24,4 +24,8 @@ public class RandomMoves : TurnManager
         var m = allMoves[Random.Range(0, allMoves.Count - 1)];
         return m;
     }
+
+    public override bool IsHuman() {
+        return false;
+    }
 }
