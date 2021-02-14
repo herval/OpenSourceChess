@@ -11,10 +11,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
     PlayerPreferences Prefs;
 
-    public GameObject BoardView;
-
     public Text TurnStatusDisplay;
-    public GameArrangement ArrangementManager;
 
     public PlayerView PlayerOne;
     public PlayerView PlayerTwo;
@@ -27,20 +24,9 @@ public class GameManager : MonoBehaviour {
 
     public GameObject GameOverScreen;
 
-    TileView CurrentHighlightedTileView;
-    private PieceView CurrentPieceView;
-
     private bool WaitingForAnimation = false;
 
-    public TileView[,] TileViews;
-    public Board Board;
-
-    // TODO make these a single thing
-    public TileFactory TileFactory;
-    public PieceFactory PieceFactory;
-
-    public int Width = 10;
-    public int Height = 10; // 10 as default so a single tile has a scale of 0.1
+    public BoardView BoardView; 
 
     private void Start() {
         Prefs = PlayerPreferences.Instance;
@@ -60,33 +46,12 @@ public class GameManager : MonoBehaviour {
         PlayerOne.TurnManager = Prefs.PlayerOneManager;
         PlayerTwo.TurnManager = Prefs.PlayerTwoManager;
 
-        ArrangementManager = new StandardGameArrangement();
-
-        TileViews = TileFactory.Reset(Width, Height, BoardView);
-        this.Board = new Board(
-            GetTiles(this.TileViews),
-            ArrangementManager.Initialize(
-                PieceFactory, 
-                TileViews, 
-                PlayerOne.FacingUp ? PlayerOne : PlayerTwo, 
-                PlayerTwo.FacingUp ? PlayerOne : PlayerTwo)
-        );
+        BoardView.Initialize(PlayerOne, PlayerTwo);
 
         UndoButton.onClick.AddListener(delegate { UndoMove(); });
         QuitButton.onClick.AddListener(delegate { Quit(); });
 
         OnNextTurn();
-    }
-
-    private Tile[,] GetTiles(TileView[,] tileView) {
-        Tile[,] tiles = new Tile[tileView.GetLength(0), tileView.GetLength(1)];
-        for (int x = 0; x < tileView.GetLength(0); x++) {
-            for (int y = 0; y < tileView.GetLength(1); y++) {
-                tiles[x, y] = tileView[x, y].State;
-            }
-        }
-
-        return tiles;
     }
 
     private void Quit() {
@@ -105,41 +70,31 @@ public class GameManager : MonoBehaviour {
     void Update() {
         UpdateUI();
 
-        HighlightSelectedTile();
+        BoardView.HighlightSelectedTile(CurrentPlayer);
 
         HandleClick();
     }
 
-    [CanBeNull]
-    private TileView TileAt(Vector3 mousePosition) {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit) && hit.collider != null && hit.collider.tag == "Tile") // hovering over a tile
-        {
-            return hit.collider.gameObject.GetComponent<TileView>();
-        }
-
-        return null;
-    }
 
     private void HandleClick() {
         if (WaitingForAnimation) {
             return;
         }
 
-        var tile = TileAt(Input.mousePosition);
+        // TODO untangle this mess between game manager and board
+        var tile = BoardView.TileAt(Input.mousePosition);
         if (tile != null && Input.GetMouseButtonDown(0)) // trying to select or move
         {
-            if (CurrentPieceView == null) {
-                SelectPiece(PieceAt(tile));
+            if (BoardView.CurrentPieceView == null) {
+                BoardView.SelectPiece(BoardView.PieceAt(tile), CurrentPlayer);
             }
             else {
-                var play = CurrentPieceView.UnblockedMoveTo(tile);
+                var play = BoardView.CurrentPieceView.UnblockedMoveTo(tile);
                 if (play != null) {
                     Execute(play);
                 }
                 else {
-                    SelectPiece(null);
+                    BoardView.SelectPiece(null, CurrentPlayer);
                 }
             }
         }
@@ -147,17 +102,9 @@ public class GameManager : MonoBehaviour {
 #if UNITY_EDITOR
         if (tile != null && Input.GetMouseButtonDown(1)) // highlight for debugging
         {
-            TogglePotentialMoves(PieceAt(tile));
+            BoardView.TogglePotentialMoves(BoardView.PieceAt(tile));
         }
 #endif
-    }
-
-    private PieceView PieceAt(TileView tile) {
-        if (tile == null) {
-            return null;
-        }
-
-        return tile.CurrentPiece;
     }
 
     private void OnNextTurn() {
@@ -172,8 +119,8 @@ public class GameManager : MonoBehaviour {
         Execute(
             CurrentPlayer.ActOn(
                 CurrentPlayer == PlayerOne ? PlayerTwo : PlayerOne, 
-                Board,
-                TileViews)
+                BoardView.Board,
+                BoardView.TileViews)
         );
     }
 
@@ -195,7 +142,7 @@ public class GameManager : MonoBehaviour {
                 moveRecursively(m, m.ConnectedMovements, (moved) => {
                     // Debug.Log("animation done " + moved);
                     WaitingForAnimation = false;
-                    SelectPiece(null);
+                    BoardView.SelectPiece(null, CurrentPlayer);
 
                     OnNextTurn();
                 });
@@ -218,7 +165,7 @@ public class GameManager : MonoBehaviour {
             MoveLog.Push(play);
         }
 
-        this.Board = play.Move(this.Board, (moved) => {
+        BoardView.Board = play.Move(BoardView.Board, (moved) => {
             if (next != null && next.Count() > 0) {
                 moveRecursively(next[0], next.GetRange(1, next.Count - 1), done);
             }
@@ -228,85 +175,8 @@ public class GameManager : MonoBehaviour {
         });
     }
 
-    private void TogglePotentialMoves(PieceView pieceView) {
-        if (pieceView != null && !pieceView.PotentialMoves.Any()) {
-            return;
-        }
-
-        bool alreadyShowing = TileAtPosition(pieceView.PotentialMoves[0].TileTo).PotentialMove;
-
-        // render potential moves
-        if (!alreadyShowing) {
-            pieceView.PotentialMoves.ForEach(m => {
-                TileAtPosition(m.TileTo).BlockedMove = m.BlockedMove;
-                TileAtPosition(m.TileTo).PotentialMove = true;
-            });
-        }
-        else // de-select all
-        {
-            pieceView.PotentialMoves.ForEach(m => {
-                TileAtPosition(m.TileTo).BlockedMove = false;
-                TileAtPosition(m.TileTo).PotentialMove = false;
-            });
-        }
-    }
-
-    private TileView TileAtPosition(Tile pos) {
-        return TileViews[pos.X, pos.Y];
-    }
-
-    private bool CanSelect(PieceView pieceView) {
-        return pieceView?.Player == CurrentPlayer && (pieceView?.UnblockedMoves().Any() ?? false);
-    }
-
     private void UpdateUI() {
         TurnStatusDisplay.text = (CurrentPlayer.Color == Color.black ? "Dark" : "Light") + "'s turn";
     }
 
-    // TODO highlight tile instead
-    private void HighlightSelectedTile() {
-        TileView selected = TileAt(Input.mousePosition);
-        HighlightTile(selected, CurrentPieceView);
-    }
-
-    private void SelectPiece(PieceView pieceView) {
-        if (CurrentPieceView != null) {
-            TogglePotentialMoves(CurrentPieceView);
-            CurrentPieceView.TileView.Selected = false;
-        }
-
-        if (pieceView == null) {
-            CurrentPieceView = null;
-        }
-
-        if (pieceView != null && CanSelect(pieceView)) {
-            pieceView.TileView.Selected = true;
-            CurrentPieceView = pieceView;
-            TogglePotentialMoves(pieceView);
-        }
-    }
-
-    private void HighlightTile(TileView tileView, PieceView currentPieceView) {
-        if (tileView == null && CurrentHighlightedTileView != null) {
-            CurrentHighlightedTileView.Highlighted = false;
-            CurrentHighlightedTileView = null;
-        }
-
-        if (tileView == null) {
-            return;
-        }
-
-        // unhighlight previous tile
-        if (CurrentHighlightedTileView != null && tileView != CurrentHighlightedTileView) {
-            CurrentHighlightedTileView.Highlighted = false;
-        }
-
-        // highlight only pieces you own - except when dragging one already
-        if ((currentPieceView == null && CanSelect(PieceAt(tileView))) || // new piece selection
-            (currentPieceView != null && currentPieceView.UnblockedMoveTo(tileView) != null)) // potential move 
-        {
-            tileView.Highlighted = true;
-            CurrentHighlightedTileView = tileView;
-        }
-    }
 }
