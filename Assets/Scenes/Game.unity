@@ -462,11 +462,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
---- !u!1 &324793190 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5479272889975325807, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
+--- !u!114 &324793191 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3725860946721559540, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
   m_PrefabInstance: {fileID: 324793189}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8d78f5e10644317badab410001966f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &457989835
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,19 +516,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 202b4d0570eb94582a59ab6ea36511da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoardView: {fileID: 324793190}
   TurnStatusDisplay: {fileID: 1154935159}
-  ArrangementManager: {fileID: 0}
   PlayerOne: {fileID: 6458338314478211238}
   PlayerTwo: {fileID: 1578980133}
   MoveLog: {fileID: 1372083631}
   UndoButton: {fileID: 311385038}
   QuitButton: {fileID: 1053450049}
   GameOverScreen: {fileID: 26209466}
-  TileFactory: {fileID: 1635185669}
-  PieceFactory: {fileID: 1635185667}
-  Width: 8
-  Height: 8
+  BoardView: {fileID: 324793191}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

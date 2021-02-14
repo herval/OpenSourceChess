@@ -11,6 +11,8 @@ public class BoardView : MonoBehaviour
     private TileView CurrentHighlightedTileView;
     public PieceView CurrentPieceView;
 
+    public GameObject TileSpace;
+
     public TileView[,] TileViews;
     public Board Board;
 
@@ -26,7 +28,7 @@ public class BoardView : MonoBehaviour
     {
         ArrangementManager = new StandardGameArrangement();
         
-        TileViews = TileFactory.Reset(Width, Height, this.gameObject);
+        TileViews = TileFactory.Reset(Width, Height, this.TileSpace);
         this.Board = new Board(
             GetTiles(this.TileViews),
             ArrangementManager.Initialize(
@@ -35,8 +37,13 @@ public class BoardView : MonoBehaviour
                 playerOne.FacingUp ? playerOne : playerTwo, 
                 playerTwo.FacingUp ? playerOne : playerTwo)
         );
+
+        RenderCoords(TileViews);
+
+    }
+
+    private void RenderCoords(TileView[,] tiles) {
         
-        // TODO render coords
     }
 
     private TileView TileAtPosition(Tile pos) {
@@ -153,5 +160,34 @@ public class BoardView : MonoBehaviour
     void Update()
     {
         
+    }
+    
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(
+            new Vector3(0, 0, 0),
+            new Vector3(
+                Width * TileFactory.DarkTilePrefabs[0].transform.localScale.x, 
+                Height * TileFactory.DarkTilePrefabs[0].transform.localScale.y, 
+                0)
+        );
+
+        // TODO draw the board wire
+        //float tw= width / tilePrefab.transform.localScale.x;
+        //float th = height / tilePrefab.transform.localScale.y;
+        //Vector3 size = new Vector3(tw, th);
+
+        //for (int x = 0; x < tiles.GetLength(0); x++)
+        //{
+        //    for (int y = 0; y < tiles.GetLength(1); y++)
+        //    {
+        //        Vector3 pos = new Vector3(x * tw, y * th);
+        //        Gizmos.DrawWireCube(
+        //            pos,
+        //            size
+        //        );
+        //        Debug.Log("here");
+        //    }
+        //}
     }
 }
