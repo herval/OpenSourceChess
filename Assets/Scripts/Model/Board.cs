@@ -2,12 +2,12 @@
         public Tile[,] Tiles;
         public Piece[,] Pieces;
 
-        public bool WhiteFacingUp;
+        public PlayerPosition FirstPlayerPosition;
         
-        public Board(Tile[,] tiles, Piece[,] pieces, bool whiteFacingUp) {
+        public Board(Tile[,] tiles, Piece[,] pieces, PlayerPosition firstPlayerPosition) {
             this.Tiles = tiles;
             this.Pieces = pieces;
-            this.WhiteFacingUp = whiteFacingUp;
+            this.FirstPlayerPosition = firstPlayerPosition;
         }
 
     }

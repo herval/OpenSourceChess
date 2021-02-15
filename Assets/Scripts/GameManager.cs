@@ -32,34 +32,32 @@ public class GameManager : MonoBehaviour {
     public TileFactory TileFactory;
     public PieceFactory PieceFactory;
 
-    public GameArrangement ArrangementManager;
-
     private void Start() {
         Prefs = PlayerPreferences.Instance;
 
         // when p2 is human, black is on bottom
         if (Prefs.PlayerTwoManager.IsHuman() && !Prefs.PlayerOneManager.IsHuman()) {
-            PlayerOne.FacingUp = false;
+            PlayerOne.StartingPosition = PlayerPosition.Top;
         }
         else {
-            PlayerOne.FacingUp = true;
+            PlayerOne.StartingPosition = PlayerPosition.Bottom;
         }
 
         PlayerOne.Color = Color.white;
-        PlayerTwo.FacingUp = !PlayerOne.FacingUp;
+        PlayerTwo.StartingPosition = PlayerOne.StartingPosition == PlayerPosition.Bottom ? PlayerPosition.Top : PlayerPosition.Bottom;
         PlayerTwo.Color = PlayerOne.Color == Color.white ? Color.black : Color.white;
 
         PlayerOne.TurnManager = Prefs.PlayerOneManager;
         PlayerTwo.TurnManager = Prefs.PlayerTwoManager;
 
-        ArrangementManager = new StandardGameArrangement(
-            PlayerOne.FacingUp ? PlayerOne : PlayerTwo,
-            PlayerTwo.FacingUp ? PlayerOne : PlayerTwo);
-
         var tiles = TileFactory.Initialize(BoardView.Width, BoardView.Height, BoardView);
-        var pieces = ArrangementManager.Initialize(PieceFactory, tiles);
+        var pieces = new Piece[BoardView.Width, BoardView.Height];
+        
+        // arrange player pieces
+        Prefs.PlayerOneArrangement.Position(PieceFactory, tiles, ref pieces, PlayerOne);
+        Prefs.PlayerTwoArrangement.Position(PieceFactory, tiles, ref pieces, PlayerTwo);
 
-        BoardView.Initialize(tiles, pieces, PlayerOne.FacingUp ? PlayerPositions.Bottom : PlayerPositions.Top);
+        BoardView.Initialize(tiles, pieces, PlayerOne.StartingPosition);
 
         UndoButton.onClick.AddListener(delegate { UndoMove(); });
         QuitButton.onClick.AddListener(delegate { Quit(); });

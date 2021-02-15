@@ -5,7 +5,7 @@ public class Player
 {
     public TurnManager TurnManager;
     public int Number;
-    public bool FacingUp;
+    public PlayerPosition StartingPosition;
 
     public bool InCheck = false;
     public List<Piece> Pieces = new List<Piece>();

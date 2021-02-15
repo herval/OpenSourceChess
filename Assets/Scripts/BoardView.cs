@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 
 
-public enum PlayerPositions {
+public enum PlayerPosition {
     Bottom,
     Top
 }
@@ -23,12 +23,12 @@ public class BoardView : MonoBehaviour {
     public int Height = 10; // 10 as default so a single tile has a scale of 0.1
 
     // Start is called before the first frame update
-    public void Initialize(TileView[,] tiles, Piece[,] pieces, PlayerPositions firstPlayerPosition) {
+    public void Initialize(TileView[,] tiles, Piece[,] pieces, PlayerPosition firstPlayerPosition) {
         this.TileViews = tiles;
         this.Board = new Board(
             TileView.ToTiles(tiles),
             pieces, 
-            firstPlayerPosition == PlayerPositions.Bottom
+            firstPlayerPosition
         );
         RenderCoords(TileViews);
     }

@@ -15,7 +15,7 @@ public class Tile {
         char x = Convert.ToChar(a + X);
         
         int zero = '0';
-        char y = board.WhiteFacingUp ? Convert.ToChar(zero + Y + 1) : Convert.ToChar((zero+board.Tiles.GetLength(1))- Y);
+        char y = board.FirstPlayerPosition == PlayerPosition.Bottom ? Convert.ToChar(zero + Y + 1) : Convert.ToChar((zero+board.Tiles.GetLength(1))- Y);
         
         return x + "" + y;
     }

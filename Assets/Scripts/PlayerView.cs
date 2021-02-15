@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerView : MonoBehaviour {
     public SpriteRenderer Avatar;
@@ -21,10 +22,10 @@ public class PlayerView : MonoBehaviour {
 
     public PiecesStack CapturedPieces;
 
-    public bool FacingUp {
-        get { return State.FacingUp; }
+    public PlayerPosition StartingPosition {
+        get { return State.StartingPosition; }
 
-        set { State.FacingUp = value; }
+        set { State.StartingPosition = value; }
     }
 
     public TurnManager TurnManager {

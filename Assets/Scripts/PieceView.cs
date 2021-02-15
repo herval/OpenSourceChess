@@ -113,10 +113,6 @@ public class PieceView : MonoBehaviour
         }
     }
 
-    public bool FacingUp {
-        get { return State.FacingUp; }
-    }
-
     public int Value {
         get {
             return State.Value;

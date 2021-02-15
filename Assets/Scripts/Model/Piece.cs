@@ -6,7 +6,7 @@ using UnityEngine;
 // lightweight representation of a piece, dettached from ui behaviors
 public class Piece {
     public PieceType Type;
-    public bool FacingUp;
+    public PlayerPosition StartingPosition;
     public Player Player;
     public bool MovedAtLeastOnce; // used for pawns' first move
     public Tile Tile;
@@ -324,7 +324,7 @@ public class Piece {
     private List<Move> tryMove(int x, int y, int deltaX, int deltaY, int maxMoves, Board board, List<Move> validMoves,
         MovementType movementType, Piece blocker, Move prev = null) {
         // flip the y axis when piece is facing down
-        int yFlip = FacingUp ? 1 : -1;
+        int yFlip = StartingPosition == PlayerPosition.Bottom ? 1 : -1;
         int newX = x + deltaX;
         int newY = y + (deltaY * yFlip);
 

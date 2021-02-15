@@ -26,7 +26,7 @@ public class PieceFactory : MonoBehaviour
         GameObject prefab = null;
         int value = 0;
         bool isKing = false;
-        bool faceUp = player.FacingUp;
+        PlayerPosition faceUp = player.StartingPosition;
         bool isWhite = player.Color == Color.white;
         char name;
 
@@ -75,7 +75,7 @@ public class PieceFactory : MonoBehaviour
         p.State.IsKing = isKing;
         p.State.Type = pieceType;
         p.State.Value = value;
-        p.State.FacingUp = faceUp;
+        p.State.StartingPosition = faceUp;
         p.State.Player = player.State;
         p.State.FigurineAlgebraicNotation = name;
         p.SetTile(tileView, true, null);
