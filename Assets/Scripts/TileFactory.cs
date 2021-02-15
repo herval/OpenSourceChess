@@ -9,7 +9,7 @@ public class TileFactory : MonoBehaviour
     public GameObject[] LightTilePrefabs;
 
 
-    public TileView[,] Reset(int width, int height, BoardView board)
+    public TileView[,] Initialize(int width, int height, BoardView board)
     {
         var tiles = new TileView[width, height];
 

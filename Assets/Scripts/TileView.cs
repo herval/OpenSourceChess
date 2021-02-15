@@ -62,4 +62,15 @@ public class TileView : MonoBehaviour
         }
     }
 
+    public static Tile[,] ToTiles(TileView[,] tileViews) {
+        Tile[,] tiles = new Tile[tileViews.GetLength(0), tileViews.GetLength(1)];
+        for (int x = 0; x < tileViews.GetLength(0); x++) {
+            for (int y = 0; y < tileViews.GetLength(1); y++) {
+                tiles[x, y] = tileViews[x, y].State;
+            }
+        }
+
+        return tiles;
+
+    }
 }

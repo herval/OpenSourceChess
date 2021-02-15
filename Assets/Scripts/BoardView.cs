@@ -4,10 +4,13 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public class BoardView : MonoBehaviour
-{
-    public GameArrangement ArrangementManager;
 
+public enum PlayerPositions {
+    Bottom,
+    Top
+}
+
+public class BoardView : MonoBehaviour {
     private TileView CurrentHighlightedTileView;
     public PieceView CurrentPieceView;
 
@@ -16,31 +19,18 @@ public class BoardView : MonoBehaviour
     public TileView[,] TileViews;
     public Board Board;
 
-    // TODO make these a single thing
-    public TileFactory TileFactory;
-    public PieceFactory PieceFactory;
-
     public int Width = 10;
     public int Height = 10; // 10 as default so a single tile has a scale of 0.1
 
     // Start is called before the first frame update
-    public void Initialize(PlayerView playerOne, PlayerView playerTwo)
-    {
-        ArrangementManager = new StandardGameArrangement();
-
-        TileViews = TileFactory.Reset(Width, Height, this);
+    public void Initialize(TileView[,] tiles, Piece[,] pieces, PlayerPositions firstPlayerPosition) {
+        this.TileViews = tiles;
         this.Board = new Board(
-            GetTiles(this.TileViews),
-            ArrangementManager.Initialize(
-                PieceFactory, 
-                TileViews, 
-                playerOne.FacingUp ? playerOne : playerTwo, 
-                playerTwo.FacingUp ? playerOne : playerTwo),
-            playerOne.FacingUp
+            TileView.ToTiles(tiles),
+            pieces, 
+            firstPlayerPosition == PlayerPositions.Bottom
         );
-
         RenderCoords(TileViews);
-
     }
 
     private void RenderCoords(TileView[,] tiles) {
@@ -54,7 +44,7 @@ public class BoardView : MonoBehaviour
     private TileView TileAtPosition(Tile pos) {
         return TileViews[pos.X, pos.Y];
     }
-    
+
     [CanBeNull]
     public TileView TileAt(Vector3 mousePosition) {
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
@@ -117,7 +107,7 @@ public class BoardView : MonoBehaviour
             TogglePotentialMoves(pieceView);
         }
     }
-    
+
     private void HighlightTile(TileView tileView, PieceView currentPieceView, PlayerView player) {
         if (tileView == null && CurrentHighlightedTileView != null) {
             CurrentHighlightedTileView.Highlighted = false;
@@ -150,31 +140,14 @@ public class BoardView : MonoBehaviour
         return tile.CurrentPiece;
     }
 
-    private Tile[,] GetTiles(TileView[,] tileView) {
-        Tile[,] tiles = new Tile[tileView.GetLength(0), tileView.GetLength(1)];
-        for (int x = 0; x < tileView.GetLength(0); x++) {
-            for (int y = 0; y < tileView.GetLength(1); y++) {
-                tiles[x, y] = tileView[x, y].State;
-            }
-        }
-
-        return tiles;
-    }
-
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
     }
-    
-    private void OnDrawGizmos()
-    {
+
+    private void OnDrawGizmos() {
         Gizmos.DrawWireCube(
             new Vector3(0, 0, 0),
-            new Vector3(
-                Width * TileFactory.DarkTilePrefabs[0].transform.localScale.x, 
-                Height * TileFactory.DarkTilePrefabs[0].transform.localScale.y, 
-                0)
+            this.GetComponent<SpriteRenderer>().bounds.size
         );
 
         // TODO draw the board wire

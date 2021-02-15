@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class GameArrangement {
-    public abstract Piece[,] Initialize(PieceFactory factory, TileView[,] boardView, PlayerView bottomPlayer,
-        PlayerView topPlayer);
+    public abstract Piece[,] Initialize(PieceFactory factory, TileView[,] boardView);
 }
 
 // a classic game of chess
@@ -19,13 +18,19 @@ public class StandardGameArrangement : GameArrangement {
         },
     };
 
+    public PlayerView BottomPlayer;
+    public PlayerView TopPlayer;
 
+    public StandardGameArrangement(PlayerView bottomPlayer, PlayerView topPlayer) {
+        this.BottomPlayer = bottomPlayer;
+        this.TopPlayer = topPlayer;
+    }
+
+    
     // Start is called before the first frame update
     public override Piece[,] Initialize(
         PieceFactory factory,
-        TileView[,] boardView,
-        PlayerView bottomPlayer,
-        PlayerView topPlayer
+        TileView[,] boardView
     ) {
         Piece[,] pieces = new Piece[boardView.GetLength(0), boardView.GetLength(1)];
 
@@ -33,14 +38,14 @@ public class StandardGameArrangement : GameArrangement {
         for (int y = 0; y < Arrangement.GetLength(0); y++) {
             for (int x = 0; x < Arrangement.GetLength(1); x++) {
                 pieces[x, boardView.GetLength(1) - y - 1] = AddPiece(factory, Arrangement[y, x],
-                    boardView[x, boardView.GetLength(1) - y - 1], topPlayer);
+                    boardView[x, boardView.GetLength(1) - y - 1], TopPlayer);
             }
         }
 
         // render bottom pieces
         for (int y = 0; y < Arrangement.GetLength(0); y++) {
             for (int x = 0; x < Arrangement.GetLength(1); x++) {
-                pieces[x, y] = AddPiece(factory, Arrangement[y, x], boardView[x, y], bottomPlayer);
+                pieces[x, y] = AddPiece(factory, Arrangement[y, x], boardView[x, y], BottomPlayer);
             }
         }
 

@@ -259,7 +259,6 @@ MonoBehaviour:
   ExitButton: {fileID: 0}
   NewGame: {fileID: 0}
   NewGameSettings: {fileID: 0}
-  ButtonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
   PlayerOneMode: {fileID: 0}
   PlayerTwoMode: {fileID: 0}
   StartButton: {fileID: 0}
@@ -446,7 +445,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5479272889975325806, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5479272889975325807, guid: f3a3db1cccaf34001ac9f61c5fcf840f, type: 3}
       propertyPath: m_Name
@@ -528,6 +527,8 @@ MonoBehaviour:
   QuitButton: {fileID: 1053450049}
   GameOverScreen: {fileID: 26209466}
   BoardView: {fileID: 324793191}
+  TileFactory: {fileID: 1635185669}
+  PieceFactory: {fileID: 1635185667}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,7 +699,6 @@ MonoBehaviour:
   ExitButton: {fileID: 0}
   NewGame: {fileID: 0}
   NewGameSettings: {fileID: 0}
-  ButtonSelectedColor: {r: 0, g: 0, b: 0, a: 0}
   PlayerOneMode: {fileID: 0}
   PlayerTwoMode: {fileID: 0}
   StartButton: {fileID: 0}

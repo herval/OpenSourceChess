@@ -26,7 +26,13 @@ public class GameManager : MonoBehaviour {
 
     private bool WaitingForAnimation = false;
 
-    public BoardView BoardView; 
+    public BoardView BoardView;
+
+    // TODO make these a single thing
+    public TileFactory TileFactory;
+    public PieceFactory PieceFactory;
+
+    public GameArrangement ArrangementManager;
 
     private void Start() {
         Prefs = PlayerPreferences.Instance;
@@ -42,11 +48,18 @@ public class GameManager : MonoBehaviour {
         PlayerOne.Color = Color.white;
         PlayerTwo.FacingUp = !PlayerOne.FacingUp;
         PlayerTwo.Color = PlayerOne.Color == Color.white ? Color.black : Color.white;
-        
+
         PlayerOne.TurnManager = Prefs.PlayerOneManager;
         PlayerTwo.TurnManager = Prefs.PlayerTwoManager;
 
-        BoardView.Initialize(PlayerOne, PlayerTwo);
+        ArrangementManager = new StandardGameArrangement(
+            PlayerOne.FacingUp ? PlayerOne : PlayerTwo,
+            PlayerTwo.FacingUp ? PlayerOne : PlayerTwo);
+
+        var tiles = TileFactory.Initialize(BoardView.Width, BoardView.Height, BoardView);
+        var pieces = ArrangementManager.Initialize(PieceFactory, tiles);
+
+        BoardView.Initialize(tiles, pieces, PlayerOne.FacingUp ? PlayerPositions.Bottom : PlayerPositions.Top);
 
         UndoButton.onClick.AddListener(delegate { UndoMove(); });
         QuitButton.onClick.AddListener(delegate { Quit(); });
@@ -118,7 +131,7 @@ public class GameManager : MonoBehaviour {
 
         Execute(
             CurrentPlayer.ActOn(
-                CurrentPlayer == PlayerOne ? PlayerTwo : PlayerOne, 
+                CurrentPlayer == PlayerOne ? PlayerTwo : PlayerOne,
                 BoardView.Board,
                 BoardView.TileViews)
         );
@@ -176,7 +189,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void UpdateUI() {
-        TurnStatusDisplay.text = (CurrentPlayer.Color == Color.black ? "Dark" : "Light") + "'s turn";
+        TurnStatusDisplay.text = (CurrentPlayer.Color == Color.black ? "Black" : "White") + "'s turn";
     }
-
 }
