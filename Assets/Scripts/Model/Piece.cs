@@ -73,7 +73,7 @@ public class Piece {
         // 2 unblocked to the right
         var x = king.Tile.X;
         var y = king.Tile.Y;
-        if (x + 3 < board.Pieces.Length) {
+        if (x + 3 < board.Pieces.GetLength(0)) {
             var rook = board.Pieces[x + 3, y];
             if (rook != null) {
                 if (board.Pieces[x + 1, y] == null &&

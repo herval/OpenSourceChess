@@ -70,6 +70,32 @@ public class HordeArrangement : PieceArrangement {
     }
 }
 
+public class TinyArmyArrangement : PieceArrangement {
+    private PieceType[] possibleTypes =
+        {PieceType.Pawn, PieceType.Queen, PieceType.Bishop, PieceType.Knight, PieceType.Rook};
+
+    protected override PieceType?[,] Arrangement() {
+        PieceType?[,] arrangement = new PieceType?[3, 8];
+
+        var kingPosX = Random.Range(0, arrangement.GetLength(0));
+        var kingPosY = Random.Range(0, arrangement.GetLength(1)-1);
+        arrangement[kingPosX, kingPosY] = PieceType.King;
+
+        int piecesRemaining = 5;
+        while (piecesRemaining > 0) {
+            var x = Random.Range(0, arrangement.GetLength(0));
+            var y = Random.Range(0, arrangement.GetLength(1)-1);
+            
+            if (arrangement[x, y] == null) {
+                arrangement[x, y] = possibleTypes[Random.Range(0, possibleTypes.Length)];
+                piecesRemaining--;
+            }
+        }
+
+        return arrangement;
+    }
+}
+
 public class RandomArmyArrangement : PieceArrangement {
     private PieceType[] possibleTypes =
         {PieceType.Pawn, PieceType.Queen, PieceType.Bishop, PieceType.Knight, PieceType.Rook};
