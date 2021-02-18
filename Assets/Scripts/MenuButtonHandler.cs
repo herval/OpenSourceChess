@@ -8,9 +8,6 @@ using System;
 using UnityEngine.Serialization;
 
 public class MenuButtonHandler : MonoBehaviour {
-    public static string PLAYER = "Human";
-    public static string COMPUTER = "Computer";
-
     public Button ExitButton;
     public Button NewGame;
     public GameObject NewGameSettings;
@@ -47,8 +44,9 @@ public class MenuButtonHandler : MonoBehaviour {
         };
 
         NewGameSettings.SetActive(false);
-        SetCaption(PlayerOneMode, turnManagerToString(PlayerOneManager));
-        SetCaption(PlayerTwoMode, turnManagerToString(PlayerTwoManager));
+
+        SetCaption(PlayerOneMode, Player.TypeToString(PlayerType.PLAYER));
+        SetCaption(PlayerTwoMode, Player.TypeToString(PlayerType.PLAYER));
 
         SetCaption(PlayerOneArrangement, ArrangementToString(PlayerOneArrangementType));
         SetCaption(PlayerTwoArrangement, ArrangementToString(PlayerTwoArrangementType));
@@ -57,8 +55,8 @@ public class MenuButtonHandler : MonoBehaviour {
         NewGame.onClick.AddListener(delegate () { ShowGameOptions(); });
         StartButton.onClick.AddListener(delegate () { StartGame(); });
 
-        PlayerOneMode.onClick.AddListener(delegate () { PlayerOneManager = toggleSelection(PlayerOneMode, PlayerOneManager); });
-        PlayerTwoMode.onClick.AddListener(delegate () { PlayerTwoManager = toggleSelection(PlayerTwoMode, PlayerTwoManager); });
+        PlayerOneMode.onClick.AddListener(delegate () { PlayerOneManager = toggleSelection(PlayerOneMode); });
+        PlayerTwoMode.onClick.AddListener(delegate () { PlayerTwoManager = toggleSelection(PlayerTwoMode); });
 
         PlayerOneArrangement.onClick.AddListener(delegate () { PlayerOneArrangementType = toggleArrangementSelection(PlayerOneArrangement, PlayerOneArrangementType); });
         PlayerTwoArrangement.onClick.AddListener(delegate () { PlayerTwoArrangementType = toggleArrangementSelection(PlayerTwoArrangement, PlayerTwoArrangementType); });
@@ -100,33 +98,39 @@ public class MenuButtonHandler : MonoBehaviour {
         NewGameSettings.SetActive(true);
     }
 
-    private string turnManagerToString(Type newTurnManager) {
-        var kind = PLAYER;
-        if (newTurnManager != typeof(TurnManager)) // any non-vanilla is AI
-        {
-            kind = COMPUTER;
-        }
-
-        return kind;
+    private String Caption(Button bt) {
+        return bt.GetComponentInChildren<Text>().text;
     }
 
-    private Type toggleSelection(Button btn, Type currentTurnManager) {
-        Type newTurnManager;
-        if (currentTurnManager == typeof(TurnManager)) {
-            newTurnManager = AiType;
-        } else {
-            newTurnManager = typeof(TurnManager);
+    private Type toggleSelection(Button btn) {
+        var newTxt = PlayerType.PLAYER;
+        Type newTurnManager = null;
+
+        switch (Player.StringToType(Caption(btn))) {
+            case PlayerType.PLAYER:
+                newTxt = PlayerType.COMPUTER;
+                newTurnManager = AiType;
+                break;
+            case PlayerType.COMPUTER:
+                newTxt = PlayerType.REMOTE;
+                newTurnManager = typeof(RemoteTurnManager);
+                break;
+            case PlayerType.REMOTE:
+                newTxt = PlayerType.PLAYER;
+                newTurnManager = typeof(TurnManager);
+                break;
         }
 
-        SetCaption(btn, turnManagerToString(newTurnManager));
+        SetCaption(btn, Player.TypeToString(newTxt));
+
         return newTurnManager;
     }
 
     public void Exit() {
 #if UNITY_EDITOR
-         // Application.Quit() does not work in the editor so
-         // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
-         UnityEditor.EditorApplication.isPlaying = false;
+        // Application.Quit() does not work in the editor so
+        // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
@@ -158,3 +162,4 @@ public class MenuButtonHandler : MonoBehaviour {
         }
     }
 }
+

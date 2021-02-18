@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoltRuntimeSettings
   m_EditorClassIdentifier: 
   _config:
-    framesPerSecond: 60
+    framesPerSecond: 10
     packetSize: 1200
     packetMaxEventSize: 512
     maxEntityPriority: 65536

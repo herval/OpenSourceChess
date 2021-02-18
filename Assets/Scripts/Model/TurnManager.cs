@@ -16,6 +16,10 @@ public class TurnManager {
         return null;
     }
 
+    public virtual void GameStarted(Player player, Player opponent, Board board) {
+        
+    }
+
     public virtual bool IsHuman() {
         return true;
     }

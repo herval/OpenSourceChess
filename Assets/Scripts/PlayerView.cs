@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class PlayerView : MonoBehaviour {
     public SpriteRenderer Avatar;
+
+    public Text Username;
 
     private Color _color;
 
@@ -31,7 +35,22 @@ public class PlayerView : MonoBehaviour {
     public TurnManager TurnManager {
         get { return State.TurnManager; }
 
-        set { State.TurnManager = value; }
+        set {
+            State.TurnManager = value;
+            UpdateUser();
+        }
+    }
+
+    private void UpdateUser() {
+        if (this.TurnManager is RemoteTurnManager) {
+            Username.text = ((RemoteTurnManager) TurnManager).Username();
+        }
+        else if (this.TurnManager.IsHuman()) {
+            Username.text = Player.TypeToString(PlayerType.PLAYER);
+        }
+        else {
+            Username.text = Player.TypeToString(PlayerType.COMPUTER);
+        }
     }
 
     public List<Piece> Pieces {
@@ -77,5 +96,14 @@ public class PlayerView : MonoBehaviour {
             tileTo,
             tileFrom,
             tileCapture);
+    }
+
+    private void Awake() {
+        Username.text = "foo?!!?";
+    }
+
+    private void Update() {
+        if (TurnManager is RemoteTurnManager) {
+        }
     }
 }

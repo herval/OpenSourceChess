@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 // keep game state and handle inputs
 public class GameManager : MonoBehaviour {
-    PlayerPreferences Prefs;
+    PlayerState Prefs;
 
     public Text TurnStatusDisplay;
 
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour {
     public PieceFactory PieceFactory;
 
     private void Start() {
-        Prefs = PlayerPreferences.Instance;
+        Prefs = PlayerState.Instance;
 
         // when p2 is human, black is on bottom
         if (Prefs.PlayerTwoManager.IsHuman() && !Prefs.PlayerOneManager.IsHuman()) {

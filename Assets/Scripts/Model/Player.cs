@@ -1,8 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+public enum PlayerType {
+    PLAYER,
+    COMPUTER,
+    REMOTE,
+}
+
 public class Player
 {
+    public static String TypeToString(PlayerType type) {
+        switch (type) {
+            case PlayerType.PLAYER:
+                return "Human";
+            case PlayerType.REMOTE:
+                return "Online Entity";
+            case PlayerType.COMPUTER:
+                return "Computer";
+        }
+
+        return "Unknown";
+    }
+
+    public static PlayerType StringToType(String str) {
+        switch (str) {
+            case "Human":
+                return PlayerType.PLAYER;
+            case "Online Entity":
+                return PlayerType.REMOTE;
+            case "Computer":
+                return PlayerType.COMPUTER;
+        }
+
+        return PlayerType.PLAYER;
+    }
+    
     public TurnManager TurnManager;
     public int Number;
     public PlayerPosition StartingPosition;
