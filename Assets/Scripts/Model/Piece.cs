@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum PieceType {
+    Rook,
+    King,
+    Queen,
+    Bishop,
+    Knight,
+    Pawn,
+    CheckersPawn,
+    CheckersKing,
+}
+
 // lightweight representation of a piece, dettached from ui behaviors
 public class Piece {
     public PieceType Type;
@@ -29,6 +40,16 @@ public class Piece {
         (1, 1),
         (-1, -1),
         (-1, 1),
+        (1, -1)
+    };
+
+    static (int, int)[] TOP_DIAGONALS = new (int, int)[] {
+        (1, 1),
+        (-1, 1),
+    };
+
+    static (int, int)[] BOTTOM_DIAGONALS = new (int, int)[] {
+        (-1, -1),
         (1, -1)
     };
 
@@ -207,8 +228,7 @@ public class Piece {
                     );
                     ;
                 });
-            }
-            else {
+            } else {
                 // if there's any directly threatening the king, current player is in check and can only defend
                 // enable only movements that will either block *all* attack vector or capture threatening pieces
                 attackVectors.ForEach(a => { p.PotentialMoves = p.PotentialMoves.FindAll(m => a.Contains(m.TileTo)); });
@@ -300,6 +320,17 @@ public class Piece {
                     MovementType.MoveOrCapture,
                     null);
                 break;
+
+            case PieceType.CheckersPawn:
+                var diags = this.StartingPosition == PlayerPosition.Bottom ? TOP_DIAGONALS : BOTTOM_DIAGONALS;
+
+                potentialMoves = tryAll(diags,
+                    Tile.X, Tile.Y,
+                    1, board,
+                    MovementType.MoveOnly,
+                    null);
+
+                break;
             default:
                 return;
         }
@@ -373,22 +404,11 @@ public class Piece {
             if (blocker != null) // || t.CurrentPiece.player == this.player)
             {
                 return validMoves;
-            }
-            else {
+            } else {
                 blocker = t;
             }
         }
 
         return tryMove(newX, newY, deltaX, deltaY, maxMoves - 1, board, validMoves, movementType, blocker, prev);
     }
-}
-
-
-public enum PieceType {
-    Rook,
-    King,
-    Queen,
-    Bishop,
-    Knight,
-    Pawn,
 }

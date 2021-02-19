@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // creates pieces & manages their assets
-public class PieceFactory : MonoBehaviour
-{
+public class PieceFactory : MonoBehaviour {
 
     public GameObject WhiteRook;
     public GameObject WhiteKing;
@@ -20,9 +19,11 @@ public class PieceFactory : MonoBehaviour
     public GameObject BlackPawn;
     public GameObject BlackKnight;
 
+    public GameObject WhiteCheckersPawn;
+    public GameObject BlackCheckersPawn;
 
-    public PieceView Create(TileView tileView, PieceType pieceType, PlayerView player)
-    {
+
+    public PieceView Create(TileView tileView, PieceType pieceType, PlayerView player) {
         GameObject prefab = null;
         int value = 0;
         bool isKing = false;
@@ -30,8 +31,7 @@ public class PieceFactory : MonoBehaviour
         bool isWhite = player.Color == Color.white;
         char name;
 
-        switch (pieceType)
-        {
+        switch (pieceType) {
             case PieceType.Rook:
                 value = 50;
                 prefab = isWhite ? WhiteRook : BlackRook;
@@ -48,7 +48,7 @@ public class PieceFactory : MonoBehaviour
                 isKing = true;
                 prefab = isWhite ? WhiteKing : BlackKing;
                 name = 'K';
-;                break;
+                break;
             case PieceType.Queen:
                 value = 90;
                 prefab = isWhite ? WhiteQueen : BlackQueen;
@@ -64,6 +64,12 @@ public class PieceFactory : MonoBehaviour
                 prefab = isWhite ? WhiteKnight : BlackKnight;
                 name = 'N';
                 break;
+            case PieceType.CheckersPawn:
+                value = 10;
+                prefab = isWhite ? WhiteCheckersPawn : BlackCheckersPawn;
+                name = 'C';
+                break;
+
             default:
                 Debug.Log("Unsupported type: " + pieceType);
                 return null;

@@ -23,8 +23,7 @@ public abstract class PieceArrangement {
                     }
                 }
             }
-        }
-        else {
+        } else {
             // render bottom pieces
             for (int y = 0; y < arrangement.GetLength(0); y++) {
                 for (int x = 0; x < arrangement.GetLength(1); x++) {
@@ -44,6 +43,22 @@ public abstract class PieceArrangement {
         p.transform.position = tile.transform.position;
 
         return p.State;
+    }
+}
+
+public class CheckersArrangement : PieceArrangement {
+    PieceType?[,] arrangement = {
+        {
+            PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null
+        }, {
+            null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn,null, PieceType.CheckersPawn
+        }, {
+            PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null
+        }
+    };
+
+    protected override PieceType?[,] Arrangement() {
+        return arrangement;
     }
 }
 
@@ -78,14 +93,14 @@ public class TinyArmyArrangement : PieceArrangement {
         PieceType?[,] arrangement = new PieceType?[3, 8];
 
         var kingPosX = Random.Range(0, arrangement.GetLength(0));
-        var kingPosY = Random.Range(0, arrangement.GetLength(1)-1);
+        var kingPosY = Random.Range(0, arrangement.GetLength(1) - 1);
         arrangement[kingPosX, kingPosY] = PieceType.King;
 
         int piecesRemaining = 5;
         while (piecesRemaining > 0) {
             var x = Random.Range(0, arrangement.GetLength(0));
-            var y = Random.Range(0, arrangement.GetLength(1)-1);
-            
+            var y = Random.Range(0, arrangement.GetLength(1) - 1);
+
             if (arrangement[x, y] == null) {
                 arrangement[x, y] = possibleTypes[Random.Range(0, possibleTypes.Length)];
                 piecesRemaining--;
