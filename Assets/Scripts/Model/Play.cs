@@ -17,8 +17,8 @@ public class Lose : Play {
 public class Move : Play {
     public readonly Board Board;
     public readonly Piece OwnPiece;
-    public readonly Piece PieceAtDestination; // is there a piece blocking 'ownPiece' to move to this tile?
-    public readonly bool CanCaptureAtDestination; // is ownPiece able to CAPTURE an opponent piece at this Tile, or just walk there if it's empty?
+    public readonly Piece CapturedPiece; // is there a piece blocking 'ownPiece' to move to this tile?
+    public readonly Tile PieceCapturedAt; // not null if this move includes capturing a piece at this tile. It's usually the same as the TileTo, except for en passant or checkers moves
     public readonly Move PreviousPlay; // reverse-linked list used to compute a movement vector
     public readonly Tile TileFrom;
     public readonly Tile TileTo;
@@ -34,9 +34,9 @@ public class Move : Play {
         Board board,
         Piece moving,
         Tile destinationTile,
-        Piece pieceAtDestination,
+        Piece capturedPiece,
         Move previous,
-        bool canCaptureAtDestination,
+        Tile captureAt,
         bool blocked, bool isFirstMove,
         bool isRewind = false,
         bool isCasteling = false,
@@ -49,16 +49,16 @@ public class Move : Play {
         this.BlockedMove = blocked;
         this.PreviousPlay = previous;
         this.OwnPiece = moving;
-        this.PieceAtDestination = pieceAtDestination;
+        this.CapturedPiece = capturedPiece;
         this.IsFirstMove = isFirstMove;
         this.IsRewind = isRewind;
-        this.CanCaptureAtDestination = canCaptureAtDestination;
+        this.PieceCapturedAt = captureAt;
         this.IsCasteling = isCasteling;
-        }
+    }
 
     public bool IsCheck() {
-        return PieceAtDestination != null && PieceAtDestination.Player.Number != OwnPiece.Player.Number &&
-               PieceAtDestination.IsKing;
+        return CapturedPiece != null && CapturedPiece.Player.Number != OwnPiece.Player.Number &&
+               CapturedPiece.IsKing;
     }
 
     // a list of all the tiles that led to the the current play position
@@ -76,19 +76,19 @@ public class Move : Play {
     }
 
     public Piece[,] Execute() {
-        Piece[,] res = (Piece[,]) Board.Pieces.Clone();
+        Piece[,] res = (Piece[,])Board.Pieces.Clone();
 
         // if can move, get going
         // destroy existing child piece
-        if (!IsRewind && PieceAtDestination != null) {
+        if (!IsRewind && CapturedPiece != null) {
             Debug.Log("Killing existing on " + this);
-            PieceAtDestination.Tile = null;
+            CapturedPiece.Tile = null;
         }
 
-        if (IsRewind && PieceAtDestination != null) {
-            PieceAtDestination.Tile = TileFrom;
+        if (IsRewind && CapturedPiece != null) {
+            CapturedPiece.Tile = PieceCapturedAt;
 
-            res[TileFrom.X, TileFrom.Y] = PieceAtDestination;
+            res[PieceCapturedAt.X, PieceCapturedAt.Y] = CapturedPiece;
         }
 
         OwnPiece.MovedAtLeastOnce = !IsRewind || !IsFirstMove; // put back to unmoved
@@ -105,9 +105,9 @@ public class Move : Play {
             board: Board,
             moving: OwnPiece,
             destinationTile: TileFrom,
-            pieceAtDestination: this.PieceAtDestination,
+            capturedPiece: this.CapturedPiece,
             previous: null,
-            canCaptureAtDestination: true,
+            captureAt: this.PieceCapturedAt,
             blocked: false,
             isFirstMove: this.IsFirstMove,
             isRewind: true,
@@ -119,11 +119,11 @@ public class Move : Play {
         if (IsCasteling) {
             return "0-0 or 0-0-0"; // TODO represent this properly
         }
-        
+
         String res = "";
         res += OwnPiece.FigurineAlgebraicNotation;
 
-        if (PieceAtDestination != null) {
+        if (CapturedPiece != null) {
             res += "x";
         }
 
@@ -132,9 +132,9 @@ public class Move : Play {
         if (this.IsCheck() && !this.BlockedMove) {
             res += "+";
         }
-        
+
         // TODO represent checkmate?
-        
+
         return res;
     }
 }

@@ -106,9 +106,9 @@ public class Piece {
                             board,
                             moving: king,
                             board.Tiles[x + 2, y],
-                            pieceAtDestination: null,
                             null,
-                            false,
+                            null,
+                            null,
                             false,
                             !king.MovedAtLeastOnce,
                             false,
@@ -120,7 +120,7 @@ public class Piece {
                                     board.Tiles[x + 1, y],
                                     null,
                                     null,
-                                    false,
+                                    null,
                                     false,
                                     !rook.MovedAtLeastOnce,
                                     isCasteling: true
@@ -149,7 +149,7 @@ public class Piece {
                             board.Tiles[x - 2, y],
                             null,
                             null,
-                            false,
+                            null,
                             false,
                             !king.MovedAtLeastOnce,
                             false,
@@ -161,7 +161,7 @@ public class Piece {
                                     board.Tiles[x - 1, y],
                                     null,
                                     null,
-                                    false,
+                                    null,
                                     false,
                                     !rook.MovedAtLeastOnce,
                                     isCasteling: true
@@ -213,7 +213,7 @@ public class Piece {
                 // the king cannot move into traps!
                 var threatenedTiles = opponent.Pieces
                     .ConvertAll(p => p.PotentialMoves)
-                    .SelectMany(c => c.FindAll(m => m.CanCaptureAtDestination))
+                    .SelectMany(c => c.FindAll(m => m.PieceCapturedAt != null))
                     .ToList()
                     .ConvertAll(p => p.TileTo);
 
@@ -224,7 +224,7 @@ public class Piece {
                 blockedCheckAttempts.ForEach(a => {
                     Debug.Log("Evaluating blocked threat by " + a.OwnPiece);
                     p.PotentialMoves = p.PotentialMoves.FindAll(m =>
-                        m.PieceAtDestination != a.PieceAtDestination
+                        m.CapturedPiece != a.CapturedPiece
                     );
                     ;
                 });
@@ -383,14 +383,15 @@ public class Piece {
 
             // mark moves where the piece can only CAPTURE at the destination as blocked when there's nothing to capture there
             var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t == null);
+            var tileTo = board.Tiles[newX, newY];
 
             var newMove = new Move(
                 board,
                 this,
-                board.Tiles[newX, newY],
+                tileTo,
                 t,
                 prev,
-                canCaptureAtDestination: canCapture,
+                canCapture ? tileTo : null,
                 blocked: blockedMove,
                 isFirstMove: !this.MovedAtLeastOnce);
             prev = newMove;
