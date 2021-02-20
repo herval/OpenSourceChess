@@ -39,11 +39,12 @@ public class Movement : PieceCommand {
         // deselect current piece's tile
         OwnPiece.TileView.Selected = false;
 
-        if (Play.IsRewind && Play.CapturedPiece != null) {
+        if (Play.IsRewind && CapturedPiece != null) {
             CapturedPiece.SetTile(TileCapturedAt, true, null);
             CapturedPiece.Player.PutBack(CapturedPiece);
-        } else if (Play.CapturedPiece != null) {
+        } else if (CapturedPiece != null) {
             OwnPiece.Player.Capture(CapturedPiece);
+            TileCapturedAt.CurrentPiece = null;
         }
 
         OwnPiece.SetTile(TileTo, false, done);

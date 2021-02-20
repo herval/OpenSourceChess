@@ -5,16 +5,16 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 
-public class TileView : MonoBehaviour
-{
+public class TileView : MonoBehaviour {
     public bool Highlighted = false; // mouse over
     public bool Selected = false; // tile where the piece about to move is
     internal bool PotentialMove = false; // available tiles to move to
     internal bool BlockedMove = false; // moves piece is not able to get to (shown only for debugging)
+    internal bool Threatened = false; // is there a piece about to be captured here?
     public Color Color;
 
     public PieceView CurrentPiece;
-    
+
     public Tile State = new Tile(0, 0);
 
     public int X {
@@ -22,8 +22,8 @@ public class TileView : MonoBehaviour
             return State.X;
         }
         set {
-            State.X = value;  
-        } 
+            State.X = value;
+        }
     }
 
     public int Y {
@@ -38,26 +38,21 @@ public class TileView : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         // TODO use <Renderer>.material
 
-        if (Selected)
-        {
+        if (Selected || Threatened) {
             GetComponent<SpriteRenderer>().color = Color.red;
 #if UNITY_EDITOR
 } else if (BlockedMove) // for debugging only
         {
             GetComponent<SpriteRenderer>().color = Color.cyan;
 #endif
-        } else if (Highlighted)
-        {
+        } else if (Highlighted) {
             GetComponent<SpriteRenderer>().color = Color.yellow;
-        } else if (PotentialMove)
-        {
+        } else if (PotentialMove) {
             GetComponent<SpriteRenderer>().color = Color.green;
-        } else 
-        {
+        } else {
             GetComponent<SpriteRenderer>().color = Color;
         }
     }

@@ -66,7 +66,7 @@ public class PlayerView : MonoBehaviour {
 
         TileView tileFrom = tiles[move.TileFrom.X, move.TileFrom.Y];
         TileView tileTo = tiles[move.TileTo.X, move.TileTo.Y];
-        TileView tileCapture = move.PieceCapturedAt != null ? tiles[move.PieceCapturedAt.X, move.PieceCapturedAt.Y] : null;
+        TileView tileCapture = move.TileCaptured != null ? tiles[move.TileCaptured.X, move.TileCaptured.Y] : null;
         var ownPiece = tileFrom?.CurrentPiece;
         var destPiece = tileCapture?.CurrentPiece;
 

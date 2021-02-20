@@ -69,7 +69,7 @@ public class BoardView : MonoBehaviour {
     }
 
     public void TogglePotentialMoves(PieceView pieceView) {
-        if (pieceView != null && !pieceView.PotentialMoves.Any()) {
+        if (pieceView == null || !pieceView.PotentialMoves.Any()) {
             return;
         }
 
@@ -80,12 +80,18 @@ public class BoardView : MonoBehaviour {
             pieceView.PotentialMoves.ForEach(m => {
                 TileAtPosition(m.TileTo).BlockedMove = m.BlockedMove;
                 TileAtPosition(m.TileTo).PotentialMove = true;
+                if (m.TileCaptured != null) {
+                    TileAtPosition(m.TileCaptured).Threatened = true;
+                }
             });
         } else // de-select all
           {
             pieceView.PotentialMoves.ForEach(m => {
                 TileAtPosition(m.TileTo).BlockedMove = false;
                 TileAtPosition(m.TileTo).PotentialMove = false;
+                if (m.TileCaptured != null) {
+                    TileAtPosition(m.TileCaptured).Threatened = false;
+                }
             });
         }
     }

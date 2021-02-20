@@ -121,6 +121,7 @@ public class PieceView : MonoBehaviour {
             this.TileView.CurrentPiece = null; // remove ref from tile so piece doesn't show in two places at the same time
         }
         this.TileView = tileView;
+        tileView.CurrentPiece = this;
 
         this.transform.parent = tileView.transform;
         if (skipAnimation) {

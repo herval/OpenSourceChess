@@ -452,6 +452,7 @@ public class Piece {
             // mark moves where the piece can only CAPTURE at the destination as blocked when there's nothing to capture there
             var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t == null);
             var tileTo = board.Tiles[newX, newY];
+            var capturedPiece = board.Pieces[newX, newY];
 
             var newMove = new Move(
                 board,
@@ -459,7 +460,7 @@ public class Piece {
                 tileTo,
                 t,
                 prev,
-                canCapture ? tileTo : null,
+                canCapture && capturedPiece != null ? tileTo : null, // only fill this out if there's an actual captured piece
                 blocked: blockedMove,
                 isFirstMove: !this.MovedAtLeastOnce);
             prev = newMove;
