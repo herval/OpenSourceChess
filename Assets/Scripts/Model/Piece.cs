@@ -223,7 +223,7 @@ public class Piece {
                 // the king cannot move into traps!
                 var threatenedTiles = opponent.Pieces
                     .ConvertAll(p => p.PotentialMoves)
-                    .SelectMany(c => c.FindAll(m => m.PieceCapturedAt != null))
+                    .SelectMany(c => c.FindAll(m => m.TileCaptured != null))
                     .ToList()
                     .ConvertAll(p => p.TileTo);
 

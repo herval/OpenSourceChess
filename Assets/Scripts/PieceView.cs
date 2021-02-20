@@ -78,7 +78,7 @@ public class PieceView : MonoBehaviour {
             }
         }
 
-        var capturedTile = play.PieceCapturedAt != null ? tiles[play.PieceCapturedAt.X, play.PieceCapturedAt.Y] : null;
+        var capturedTile = play.TileCaptured != null ? tiles[play.TileCaptured.X, play.TileCaptured.Y] : null;
         var capturedPiece = capturedTile?.CurrentPiece;
 
         return new Movement(
