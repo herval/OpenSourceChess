@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ArrangementType {
+    Vanilla,
+    Checkers,
+    Random,
+    Tiny
+}
+
 public abstract class PieceArrangement {
     protected abstract PieceType?[,] Arrangement();
 

@@ -121,7 +121,7 @@ public class Move : Play {
             return "0-0 or 0-0-0"; // TODO represent this properly
         }
 
-        String res = "";
+        string res = "";
         res += OwnPiece.FigurineAlgebraicNotation;
 
         if (CapturedPiece != null) {

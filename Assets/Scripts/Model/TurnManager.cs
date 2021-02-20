@@ -5,13 +5,11 @@ using UnityEngine;
 // default turn manager checks for losing conditions
 public class TurnManager {
 
-    public virtual Play ActOn(Player player, Player opponent, Board board)
-    {
+    public virtual Play ActOn(Player player, Player opponent, Board board) {
         Piece.ComputePotentialMoves(board, player, opponent);
 
         var allMoves = player.UnblockedMoves();
-        if (allMoves.Count == 0)
-        {
+        if (allMoves.Count == 0) {
             return new Lose(player);
         }
 

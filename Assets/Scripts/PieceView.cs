@@ -90,7 +90,7 @@ public class PieceView : MonoBehaviour {
             capturedTile);
     }
 
-    public String name => (Player.Color == Color.white ? "white" : "black") + " " + State.Type.ToString();
+    public string name => (Player.Color == Color.white ? "white" : "black") + " " + State.Type.ToString();
 
     public bool MovedAtLeastOnce {
         get {
