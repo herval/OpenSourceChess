@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum ArrangementType {
@@ -10,7 +11,7 @@ public enum ArrangementType {
 }
 
 public abstract class PieceArrangement {
-    protected abstract PieceType?[,] Arrangement();
+    protected abstract PieceType?[,] Arrangement(PlayerView player);
 
     public void Position(
         PieceFactory factory,
@@ -18,7 +19,7 @@ public abstract class PieceArrangement {
         ref Piece[,] pieces,
         PlayerView player
     ) {
-        var arrangement = Arrangement();
+        var arrangement = Arrangement(player);
         if (player.StartingPosition == PlayerPosition.Top) {
             // render top pieces, they always belong to player facing down
             for (int y = 0; y < arrangement.GetLength(0); y++) {
@@ -54,7 +55,17 @@ public abstract class PieceArrangement {
 }
 
 public class CheckersArrangement : PieceArrangement {
-    PieceType?[,] arrangement = {
+    PieceType?[,] arrangementBottom = {
+        {
+            null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn,null, PieceType.CheckersPawn
+        }, {
+            PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null
+        }, {
+            null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn,null, PieceType.CheckersPawn
+        }
+    };
+
+    PieceType?[,] arrangementTop = {
         {
             PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null, PieceType.CheckersPawn, null
         }, {
@@ -64,8 +75,12 @@ public class CheckersArrangement : PieceArrangement {
         }
     };
 
-    protected override PieceType?[,] Arrangement() {
-        return arrangement;
+    protected override PieceType?[,] Arrangement(PlayerView player) {
+        if (player.StartingPosition == PlayerPosition.Bottom) {
+            return arrangementBottom;
+        } else {
+            return arrangementTop;
+        }
     }
 }
 
@@ -87,7 +102,7 @@ public class HordeArrangement : PieceArrangement {
     };
 
 
-    protected override PieceType?[,] Arrangement() {
+    protected override PieceType?[,] Arrangement(PlayerView player) {
         return arrangement;
     }
 }
@@ -96,7 +111,7 @@ public class TinyArmyArrangement : PieceArrangement {
     private PieceType[] possibleTypes =
         {PieceType.Pawn, PieceType.Queen, PieceType.Bishop, PieceType.Knight, PieceType.Rook};
 
-    protected override PieceType?[,] Arrangement() {
+    protected override PieceType?[,] Arrangement(PlayerView player) {
         PieceType?[,] arrangement = new PieceType?[3, 8];
 
         var kingPosX = Random.Range(0, arrangement.GetLength(0));
@@ -122,7 +137,7 @@ public class RandomArmyArrangement : PieceArrangement {
     private PieceType[] possibleTypes =
         {PieceType.Pawn, PieceType.Queen, PieceType.Bishop, PieceType.Knight, PieceType.Rook};
 
-    protected override PieceType?[,] Arrangement() {
+    protected override PieceType?[,] Arrangement(PlayerView player) {
         PieceType?[,] arrangement = new PieceType?[2, 8];
 
         var kingPos = Random.Range(0, 7);
@@ -151,7 +166,7 @@ public class StandardPieceArrangement : PieceArrangement {
         },
     };
 
-    protected override PieceType?[,] Arrangement() {
+    protected override PieceType?[,] Arrangement(PlayerView player) {
         return arrangement;
     }
 }

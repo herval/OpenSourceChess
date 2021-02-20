@@ -1225,7 +1225,10 @@ MonoBehaviour:
   NewGameSettings: {fileID: 1468217185}
   PlayerOneMode: {fileID: 1779513964}
   PlayerTwoMode: {fileID: 75493947}
+  PlayerOneArrangement: {fileID: 1605398401}
+  PlayerTwoArrangement: {fileID: 149761884}
   StartButton: {fileID: 1385540539}
+  arrangementTypes: 
 --- !u!1 &1117564043
 GameObject:
   m_ObjectHideFlags: 0
