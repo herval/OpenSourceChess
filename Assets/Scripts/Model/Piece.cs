@@ -345,7 +345,7 @@ public class Piece {
     private List<Move> CheckerMoves(Board board) {
         // basic moves
         var moves = tryAll(
-            this.StartingPosition == PlayerPosition.Bottom ? TOP_DIAGONALS : BOTTOM_DIAGONALS,
+            TOP_DIAGONALS, // "forward" only
             Tile.X, Tile.Y,
             1, board,
             MovementType.MoveOnly,
