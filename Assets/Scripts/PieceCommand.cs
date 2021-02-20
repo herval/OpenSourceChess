@@ -17,17 +17,19 @@ public class LoseGame : PieceCommand {
 public class Movement : PieceCommand {
     public readonly Move Play;
     private PieceView OwnPiece;
-    private PieceView PieceAtDestination;
+    private PieceView CapturedPiece;
     public TileView TileTo;
     public TileView TileFrom;
+    public TileView TileCapturedAt;
 
     public List<Movement> ConnectedMovements = new List<Movement>();
 
-    public Movement(Move play, PieceView ownPiece, PieceView pieceAtDestination, TileView tileTo, TileView tileFrom) {
+    public Movement(Move play, PieceView ownPiece, PieceView capturedPiece, TileView tileTo, TileView tileFrom, TileView tileCapturedPiece) {
         this.OwnPiece = ownPiece;
-        this.PieceAtDestination = pieceAtDestination;
+        this.CapturedPiece = capturedPiece;
         this.TileFrom = tileFrom;
         this.TileTo = tileTo;
+        this.TileCapturedAt = tileCapturedPiece;
         this.Play = play;
     }
 
@@ -38,10 +40,10 @@ public class Movement : PieceCommand {
         OwnPiece.TileView.Selected = false;
 
         if (Play.IsRewind && Play.CapturedPiece != null) {
-            PieceAtDestination.SetTile(TileFrom, true, null);
-            PieceAtDestination.Player.PutBack(PieceAtDestination);
+            CapturedPiece.SetTile(TileCapturedAt, true, null);
+            CapturedPiece.Player.PutBack(CapturedPiece);
         } else if (Play.CapturedPiece != null) {
-            OwnPiece.Player.Capture(PieceAtDestination);
+            OwnPiece.Player.Capture(CapturedPiece);
         }
 
         OwnPiece.SetTile(TileTo, false, done);
@@ -56,8 +58,9 @@ public class Movement : PieceCommand {
         return new Movement(
             play,
             this.OwnPiece,
-            this.PieceAtDestination,
+            this.CapturedPiece,
             this.TileFrom,
-            this.TileTo);
+            this.TileTo,
+            this.TileCapturedAt);
     }
 }

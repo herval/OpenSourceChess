@@ -38,8 +38,7 @@ public class GameManager : MonoBehaviour {
         // when p2 is human, black is on bottom
         if (Prefs.PlayerTwoManager.IsHuman() && !Prefs.PlayerOneManager.IsHuman()) {
             PlayerOne.StartingPosition = PlayerPosition.Top;
-        }
-        else {
+        } else {
             PlayerOne.StartingPosition = PlayerPosition.Bottom;
         }
 
@@ -52,7 +51,7 @@ public class GameManager : MonoBehaviour {
 
         var tiles = TileFactory.Initialize(BoardView.Width, BoardView.Height, BoardView);
         var pieces = new Piece[BoardView.Width, BoardView.Height];
-        
+
         // arrange player pieces
         Prefs.PlayerOneArrangement.Position(PieceFactory, tiles, ref pieces, PlayerOne);
         Prefs.PlayerTwoArrangement.Position(PieceFactory, tiles, ref pieces, PlayerTwo);
@@ -98,13 +97,11 @@ public class GameManager : MonoBehaviour {
         {
             if (BoardView.CurrentPieceView == null) {
                 BoardView.SelectPiece(BoardView.PieceAt(tile), CurrentPlayer);
-            }
-            else {
-                var play = BoardView.CurrentPieceView.UnblockedMoveTo(tile);
+            } else {
+                var play = BoardView.CurrentPieceView.UnblockedMoveTo(tile, this.BoardView.TileViews);
                 if (play != null) {
                     Execute(play);
-                }
-                else {
+                } else {
                     BoardView.SelectPiece(null, CurrentPlayer);
                 }
             }
@@ -121,8 +118,7 @@ public class GameManager : MonoBehaviour {
     private void OnNextTurn() {
         if (CurrentPlayer == null) {
             CurrentPlayer = PlayerOne;
-        }
-        else {
+        } else {
             PlayerView opponent = CurrentPlayer == PlayerOne ? PlayerTwo : PlayerOne;
             CurrentPlayer = opponent; // alternate player
         }
@@ -171,16 +167,14 @@ public class GameManager : MonoBehaviour {
 
         if (play.Play.IsRewind) {
             MoveLog.Pop();
-        }
-        else {
+        } else {
             MoveLog.Push(play);
         }
 
         BoardView.Board = play.Move(BoardView.Board, (moved) => {
             if (next != null && next.Count() > 0) {
                 moveRecursively(next[0], next.GetRange(1, next.Count - 1), done);
-            }
-            else {
+            } else {
                 moveRecursively(null, null, done);
             }
         });

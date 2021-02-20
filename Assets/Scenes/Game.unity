@@ -1280,6 +1280,8 @@ MonoBehaviour:
   BlackBishop: {fileID: 8142466828272293925, guid: 05df2a5526d7840b7a5c73cc268610c5, type: 3}
   BlackPawn: {fileID: 8142466828272293925, guid: 9dfe444e882b44b0e91abe7b9366bb89, type: 3}
   BlackKnight: {fileID: 8142466828272293925, guid: 5063eae1e47a842a0a0cea2804c2a5e6, type: 3}
+  WhiteCheckersPawn: {fileID: 8142466828272293925, guid: 0dd44edf58e2d4ec7bb7c96c35e00405, type: 3}
+  BlackCheckersPawn: {fileID: 8142466828272293925, guid: b50dc041172de48a88e8d7913e3541ef, type: 3}
 --- !u!4 &1635185668
 Transform:
   m_ObjectHideFlags: 0
@@ -1432,6 +1434,8 @@ MonoBehaviour:
   BlackBishop: {fileID: 8142466828272293925, guid: 57fb37dc292d940208bc03e2cc953a3f, type: 3}
   BlackPawn: {fileID: 8142466828272293925, guid: 42e873891b4414709847da52e36f389f, type: 3}
   BlackKnight: {fileID: 8142466828272293925, guid: 0f10fdc11a0b64a50aca03fd7ffed66b, type: 3}
+  WhiteCheckersPawn: {fileID: 8142466828272293925, guid: 0dd44edf58e2d4ec7bb7c96c35e00405, type: 3}
+  BlackCheckersPawn: {fileID: 8142466828272293925, guid: b50dc041172de48a88e8d7913e3541ef, type: 3}
 --- !u!114 &1824314226
 MonoBehaviour:
   m_ObjectHideFlags: 0

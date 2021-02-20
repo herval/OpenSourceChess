@@ -27,7 +27,7 @@ public class BoardView : MonoBehaviour {
         this.TileViews = tiles;
         this.Board = new Board(
             TileView.ToTiles(tiles),
-            pieces, 
+            pieces,
             firstPlayerPosition
         );
         RenderCoords(TileViews);
@@ -81,9 +81,8 @@ public class BoardView : MonoBehaviour {
                 TileAtPosition(m.TileTo).BlockedMove = m.BlockedMove;
                 TileAtPosition(m.TileTo).PotentialMove = true;
             });
-        }
-        else // de-select all
-        {
+        } else // de-select all
+          {
             pieceView.PotentialMoves.ForEach(m => {
                 TileAtPosition(m.TileTo).BlockedMove = false;
                 TileAtPosition(m.TileTo).PotentialMove = false;
@@ -125,7 +124,7 @@ public class BoardView : MonoBehaviour {
 
         // highlight only pieces you own - except when dragging one already
         if ((currentPieceView == null && CanSelect(PieceAt(tileView), player)) || // new piece selection
-            (currentPieceView != null && currentPieceView.UnblockedMoveTo(tileView) != null)) // potential move 
+            (currentPieceView != null && currentPieceView.UnblockedMoveTo(tileView, this.TileViews) != null)) // potential move 
         {
             tileView.Highlighted = true;
             CurrentHighlightedTileView = tileView;

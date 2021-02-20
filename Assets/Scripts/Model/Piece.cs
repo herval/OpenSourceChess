@@ -43,6 +43,11 @@ public class Piece {
         (1, -1)
     };
 
+    static (int, int)[] TOP_DOUBLE_DIAGONALS = new (int, int)[] {
+        (2, 2),
+        (-2, 2),
+    };
+
     static (int, int)[] TOP_DIAGONALS = new (int, int)[] {
         (1, 1),
         (-1, 1),
@@ -51,6 +56,11 @@ public class Piece {
     static (int, int)[] BOTTOM_DIAGONALS = new (int, int)[] {
         (-1, -1),
         (1, -1)
+    };
+
+    static (int, int)[] BOTTOM_DOUBLE_DIAGONALS = new (int, int)[] {
+        (-2, -2),
+        (2, -2)
     };
 
     static (int, int)[] LINEARS = new (int, int)[] {
@@ -322,13 +332,7 @@ public class Piece {
                 break;
 
             case PieceType.CheckersPawn:
-                var diags = this.StartingPosition == PlayerPosition.Bottom ? TOP_DIAGONALS : BOTTOM_DIAGONALS;
-
-                potentialMoves = tryAll(diags,
-                    Tile.X, Tile.Y,
-                    1, board,
-                    MovementType.MoveOnly,
-                    null);
+                potentialMoves = CheckerMoves(board);
 
                 break;
             default:
@@ -336,6 +340,70 @@ public class Piece {
         }
 
         this.PotentialMoves = potentialMoves.ToList();
+    }
+
+    private List<Move> CheckerMoves(Board board) {
+        // basic moves
+        var moves = tryAll(
+            this.StartingPosition == PlayerPosition.Bottom ? TOP_DIAGONALS : BOTTOM_DIAGONALS,
+            Tile.X, Tile.Y,
+            1, board,
+            MovementType.MoveOnly,
+            null);
+
+        // capturing by jumping over
+        (int, int)[] destinations;
+        (int, int)[] captures;
+
+        if (this.StartingPosition == PlayerPosition.Bottom) {
+            destinations = TOP_DOUBLE_DIAGONALS;
+            captures = TOP_DIAGONALS;
+        } else {
+            destinations = BOTTOM_DOUBLE_DIAGONALS;
+            captures = BOTTOM_DIAGONALS;
+        }
+
+        var curX = Tile.X;
+        var curY = Tile.Y;
+
+        for (int i = 0; i < destinations.Length; i++) {
+            var dest = destinations[i];
+            var capt = captures[i];
+
+            int dx = curX + dest.Item1;
+            int dy = curY + dest.Item2;
+
+            if (dx < 0 || dx >= board.Tiles.GetLength(0)) { // out of bounds, skip
+                continue;
+            }
+            if (dy < 0 || dy >= board.Tiles.GetLength(1)) { // out of bounds, skip
+                continue;
+            }
+
+            var cx = curX + capt.Item1;
+            var cy = curY + capt.Item2;
+
+            if (board.Pieces[dx, dy] == null) { // can jump here, nice
+                if (board.Pieces[cx, cy] != null && board.Pieces[cx, cy].Player != this.Player) {
+                    moves.Add(new Move(
+                        board,
+                        this,
+                        board.Tiles[dx, dy],
+                        board.Pieces[cx, cy],
+                        null,
+                        board.Tiles[cx, cy],
+                        false,
+                        !this.MovedAtLeastOnce,
+                        false,
+                        false,
+                        null
+                    ));
+                }
+            }
+
+        }
+
+        return moves;
     }
 
     private List<Move> tryAll((int, int)[] directions, int currentX, int currentY, int maxMoves, Board board,

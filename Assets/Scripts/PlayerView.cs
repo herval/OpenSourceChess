@@ -59,21 +59,23 @@ public class PlayerView : MonoBehaviour {
         }
 
         if (play is Lose) {
-            return new LoseGame(((Lose) play).Player);
+            return new LoseGame(((Lose)play).Player);
         }
 
-        Move move = (Move) play;
+        Move move = (Move)play;
 
         TileView tileFrom = tiles[move.TileFrom.X, move.TileFrom.Y];
         TileView tileTo = tiles[move.TileTo.X, move.TileTo.Y];
-        var destPiece = tileTo?.CurrentPiece;
+        TileView tileCapture = move.PieceCapturedAt != null ? tiles[move.PieceCapturedAt.X, move.PieceCapturedAt.Y] : null;
         var ownPiece = tileFrom?.CurrentPiece;
+        var destPiece = tileCapture?.CurrentPiece;
 
         return new Movement(
             move,
             ownPiece,
             destPiece,
             tileTo,
-            tileFrom);
+            tileFrom,
+            tileCapture);
     }
 }
