@@ -13,11 +13,9 @@ The current version of the game is pretty bare-bones, but already covers some ba
 
 ## Roadmap/to do
 
-- Finish the check/check-mate rules and end-of-game
-- Fix edge cases where the king commits suicide
-- Make Undo work properly
 - Introduce some basic AI for single player games
 - Better visuals! Animations! Sounds!
+- Online multiplayer support
 
 ## Acknowledgements
 
