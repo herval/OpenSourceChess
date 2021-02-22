@@ -25,10 +25,11 @@ public class Move : Play {
     public readonly bool BlockedMove; // is the piece unable to move to this tile?
     public readonly bool IsFirstMove; // is this the first move of a given piece?
 
-    public readonly bool IsCasteling; // casteling has a special notation
+    public MoveType MoveType; // casteling, en passant, etc are "special moves"
 
     public readonly List<Move> ConnectedPlays; // for plays involving multiple pieces (eg casteling)
     public readonly bool IsRewind;
+    private MoveType PreviousPieceMoveType;
 
     public Move(
         Board board,
@@ -37,9 +38,10 @@ public class Move : Play {
         Piece capturedPiece,
         Move previous,
         Tile captureAt,
-        bool blocked, bool isFirstMove,
+        MoveType moveType,
+        bool blocked,
+        bool isFirstMove,
         bool isRewind = false,
-        bool isCasteling = false,
         List<Move> connectedPlays = null
     ) {
         this.Board = board;
@@ -53,7 +55,7 @@ public class Move : Play {
         this.IsFirstMove = isFirstMove;
         this.IsRewind = isRewind;
         this.TileCaptured = captureAt;
-        this.IsCasteling = isCasteling;
+        this.MoveType = moveType;
     }
 
     public bool IsCheck() {
@@ -84,6 +86,10 @@ public class Move : Play {
         res[TileTo.X, TileTo.Y] = OwnPiece;
         res[TileFrom.X, TileFrom.Y] = null;
 
+        this.PreviousPieceMoveType = OwnPiece.LastMoveType;
+        OwnPiece.LastMoveType = this.MoveType;
+        Debug.Log("Own type: " + OwnPiece.LastMoveType + "," + this.MoveType);
+
         // if can move, get going
         // destroy existing child piece
         if (!IsRewind && CapturedPiece != null) {
@@ -92,9 +98,12 @@ public class Move : Play {
             res[TileCaptured.X, TileCaptured.Y] = null;
         }
 
-        if (IsRewind && CapturedPiece != null) {
-            CapturedPiece.Tile = TileCaptured;
-            res[TileCaptured.X, TileCaptured.Y] = CapturedPiece;
+        if (IsRewind) {
+            OwnPiece.LastMoveType = this.PreviousPieceMoveType;
+            if (CapturedPiece != null) {
+                CapturedPiece.Tile = TileCaptured;
+                res[TileCaptured.X, TileCaptured.Y] = CapturedPiece;
+            }
         }
 
         return res;
@@ -109,6 +118,7 @@ public class Move : Play {
             capturedPiece: this.CapturedPiece,
             previous: this.PreviousPlay,
             captureAt: this.TileCaptured,
+            moveType: this.MoveType,
             blocked: false,
             isFirstMove: this.IsFirstMove,
             isRewind: true,
@@ -117,7 +127,7 @@ public class Move : Play {
 
     // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
     public string ToFigurineAlgebraicNotation() {
-        if (IsCasteling) {
+        if (MoveType == MoveType.Casteling) {
             return "0-0 or 0-0-0"; // TODO represent this properly
         }
 

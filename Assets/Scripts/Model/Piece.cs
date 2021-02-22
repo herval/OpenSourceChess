@@ -14,6 +14,13 @@ public enum PieceType {
     CheckersKing,
 }
 
+public enum MoveType {
+    Movement,
+    Capture,
+    Casteling,
+    DoubleMove,
+}
+
 // lightweight representation of a piece, dettached from ui behaviors
 public class Piece {
     public PieceType Type;
@@ -25,6 +32,7 @@ public class Piece {
     public bool IsKing; // used to identify LE ROI
     public List<Move> PotentialMoves = new List<Move>();
     public char FigurineAlgebraicNotation; // algebraic notation name
+    public MoveType LastMoveType;
 
     private enum MovementType {
         MoveOrCapture,
@@ -119,10 +127,10 @@ public class Piece {
                             null,
                             null,
                             null,
-                            false,
-                            !king.MovedAtLeastOnce,
-                            false,
-                            isCasteling: true,
+                            moveType: MoveType.Casteling,
+                            blocked: false,
+                            isFirstMove: !king.MovedAtLeastOnce,
+                            isRewind: false,
                             connectedPlays: new List<Move>() {
                                 new Move(
                                     board,
@@ -131,9 +139,9 @@ public class Piece {
                                     null,
                                     null,
                                     null,
-                                    false,
-                                    !rook.MovedAtLeastOnce,
-                                    isCasteling: true
+                                    moveType: MoveType.Casteling,
+                                    blocked: false,
+                                    isFirstMove: !rook.MovedAtLeastOnce
                                 )
                             })
                     );
@@ -160,10 +168,10 @@ public class Piece {
                             null,
                             null,
                             null,
+                            moveType: MoveType.Casteling,
                             false,
                             !king.MovedAtLeastOnce,
                             false,
-                            isCasteling: true,
                             new List<Move>() {
                                 new Move(
                                     board,
@@ -171,10 +179,10 @@ public class Piece {
                                     board.Tiles[x - 1, y],
                                     null,
                                     null,
-                                    null,
-                                    false,
-                                    !rook.MovedAtLeastOnce,
-                                    isCasteling: true
+                                    captureAt: null,
+                                    moveType: MoveType.Casteling,
+                                    blocked: false,
+                                    isFirstMove: !rook.MovedAtLeastOnce
                                 )
                             })
                     );
@@ -304,24 +312,34 @@ public class Piece {
 
                 potentialMoves = tryAll(FORWARD,
                     Tile.X, Tile.Y,
-                    maxSquares, board,
+                    maxSquares,
+                    board,
                     MovementType.MoveOnly,
                     null);
 
+                potentialMoves.ForEach(m => {
+                    // double jump!
+                    if (Math.Abs(m.TileTo.Y - m.TileFrom.Y) > 1) {
+                        m.MoveType = MoveType.DoubleMove;
+                    }
+                });
+
                 // eating diagonally
-                potentialMoves.AddRange(
-                    tryMove(Tile.X, Tile.Y, 1, 1,
+                var captures = tryMove(Tile.X, Tile.Y, 1, 1,
                         1, board, new List<Move>(),
                         MovementType.CaptureOnly,
-                        null)
-                );
-                potentialMoves.AddRange(
+                        null);
+
+                captures.AddRange(
                     tryMove(Tile.X, Tile.Y, -1, 1,
                         1, board, new List<Move>(),
                         MovementType.CaptureOnly,
                         null)
                 );
 
+                potentialMoves.AddRange(captures);
+
+                potentialMoves.AddRange(EnPassantMoves(board, captures));
                 break;
             case PieceType.Knight:
                 potentialMoves = tryAll(KNIGHT_MOVES,
@@ -340,6 +358,49 @@ public class Piece {
         }
 
         this.PotentialMoves = potentialMoves.ToList();
+    }
+
+    private IEnumerable<Move> EnPassantMoves(Board board, List<Move> currentCaptures) {
+        // if there's a pawn that double-moved crossing his pawns diagonals, it's capturable
+        var pieces = board.Pieces;
+
+        var capturable = new List<Piece>();
+
+        if (this.Tile.X > 0) {
+            var neighbor = pieces[this.Tile.X - 1, this.Tile.Y];
+            if (neighbor != null && neighbor.LastMoveType == MoveType.DoubleMove && neighbor.Player != this.Player) {
+                capturable.Add(neighbor);
+            }
+        }
+
+        if (this.Tile.X < pieces.GetLength(0) - 1) {
+            var neighbor = pieces[this.Tile.X + 1, this.Tile.Y];
+            if (neighbor != null && neighbor.LastMoveType == MoveType.DoubleMove && neighbor.Player != this.Player) {
+                capturable.Add(neighbor);
+            }
+        }
+
+        // one up or one down
+        var dy = this.StartingPosition == PlayerPosition.Bottom ? 1 : -1;
+
+        var potentialEnPassants = capturable.ConvertAll(p => new Move(
+            board,
+            this,
+            board.Tiles[p.Tile.X, p.Tile.Y + dy],
+            board.Pieces[p.Tile.X, p.Tile.Y],
+            null,
+            board.Tiles[p.Tile.X, p.Tile.Y],
+            moveType: MoveType.Capture,
+            false,
+            !this.MovedAtLeastOnce,
+            false,
+            null)
+        );
+
+        // only count en passants when the pawn won't capture another piece at the destination
+        var regularCapturedTiles = currentCaptures.FindAll(c => c.CapturedPiece != null).ConvertAll(c => c.TileTo);
+
+        return potentialEnPassants.FindAll(m => !regularCapturedTiles.Contains(m.TileTo));
     }
 
     private List<Move> CheckerMoves(Board board) {
@@ -392,9 +453,9 @@ public class Piece {
                         board.Pieces[cx, cy],
                         null,
                         board.Tiles[cx, cy],
+                        moveType: MoveType.Casteling,
                         false,
                         !this.MovedAtLeastOnce,
-                        false,
                         false,
                         null
                     ));
@@ -411,8 +472,7 @@ public class Piece {
         var res = new List<Move>();
         foreach (var xy in directions) {
             res.AddRange(
-                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, board, new List<Move>(), movementType,
-                    blocker, null)
+                tryMove(currentX, currentY, xy.Item1, xy.Item2, maxMoves, board, new List<Move>(), movementType, blocker, null)
             );
         }
 
@@ -453,6 +513,7 @@ public class Piece {
             var blockedMove = blocker != null || (movementType == MovementType.CaptureOnly && t == null);
             var tileTo = board.Tiles[newX, newY];
             var capturedPiece = board.Pieces[newX, newY];
+            var isCapture = canCapture && capturedPiece != null;
 
             var newMove = new Move(
                 board,
@@ -460,7 +521,8 @@ public class Piece {
                 tileTo,
                 t,
                 prev,
-                canCapture && capturedPiece != null ? tileTo : null, // only fill this out if there's an actual captured piece
+                isCapture ? tileTo : null, // only fill this out if there's an actual captured piece
+                moveType: isCapture ? MoveType.Capture : MoveType.Movement,
                 blocked: blockedMove,
                 isFirstMove: !this.MovedAtLeastOnce);
             prev = newMove;
@@ -471,8 +533,7 @@ public class Piece {
         // but we compute the full motion anyway in case we get to a check
         if (t != null) {
             // already blocked by one piece OR by a piece the player owns, so no point on going further
-            if (blocker != null) // || t.CurrentPiece.player == this.player)
-            {
+            if (blocker != null) {
                 return validMoves;
             } else {
                 blocker = t;
