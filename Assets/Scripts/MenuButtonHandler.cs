@@ -137,7 +137,7 @@ public class MenuButtonHandler : MonoBehaviour {
     }
 
     public void StartGame() {
-        var prefs = PlayerPreferences.Instance;
+        var prefs = PlayerState.Instance;
         prefs.PlayerOneManager = (TurnManager)Activator.CreateInstance(PlayerOneManager);
         prefs.PlayerOneArrangement = (PieceArrangement)Activator.CreateInstance(ToArrangementType(PlayerOneArrangementType));
         prefs.PlayerTwoManager = (TurnManager)Activator.CreateInstance(PlayerTwoManager);

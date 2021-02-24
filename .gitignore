@@ -75,3 +75,4 @@ crashlytics-build.properties
 .idea/.idea.Chess Armies/.idea/indexLayout.xml
 .idea/.idea.Chess Armies/.idea/riderModule.iml
 .idea/.idea.Chess Armies/.idea/vcs.xml
+.env

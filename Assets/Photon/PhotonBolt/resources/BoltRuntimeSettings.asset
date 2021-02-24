@@ -60,7 +60,7 @@ MonoBehaviour:
   masterServerGameId: 09A20926-601A-4EF4-BFEE-374761B0D2A5
   showBoltEntityHints: 0
   serializeProjectAsText: 0
-  photonAppId: FIXMEFIXMEFIXME
+  photonAppId: FIXME
   photonUsePunch: 1
   photonCloudRegionIndex: 0
   instantiateMode: 2

@@ -26,11 +26,15 @@ public class GameManager : MonoBehaviour {
 
     private bool WaitingForAnimation = false;
 
+    public bool GameStarted;
+    public bool PlayersReady;
+
     public BoardView BoardView;
 
     // TODO make these a single thing
     public TileFactory TileFactory;
     public PieceFactory PieceFactory;
+    private RemoteTurnManager fakeRemoteTurn;
 
     private void Start() {
         Prefs = PlayerState.Instance;
@@ -43,7 +47,9 @@ public class GameManager : MonoBehaviour {
         }
 
         PlayerOne.Color = Color.white;
-        PlayerTwo.StartingPosition = PlayerOne.StartingPosition == PlayerPosition.Bottom ? PlayerPosition.Top : PlayerPosition.Bottom;
+        PlayerTwo.StartingPosition = PlayerOne.StartingPosition == PlayerPosition.Bottom
+            ? PlayerPosition.Top
+            : PlayerPosition.Bottom;
         PlayerTwo.Color = PlayerOne.Color == Color.white ? Color.black : Color.white;
 
         PlayerOne.TurnManager = Prefs.PlayerOneManager;
@@ -61,14 +67,22 @@ public class GameManager : MonoBehaviour {
         UndoButton.onClick.AddListener(delegate { UndoMove(); });
         QuitButton.onClick.AddListener(delegate { Quit(); });
 
-        OnNextTurn();
+        PlayerOne.TurnManager.OnGameStarting();
+        PlayerTwo.TurnManager.OnGameStarting();
     }
 
     private void Quit() {
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 
+    void TestRemote() {
+        this.fakeRemoteTurn = new RemoteTurnManager();
+        this.fakeRemoteTurn.OnGameStarting();
+    }
+
     void UndoMove() {
+        //TestRemote();
+
         Debug.Log("Undoing...");
         Movement undo = MoveLog.Last();
         if (undo != null) {
@@ -78,13 +92,24 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (PlayersReady && !GameStarted) {
+            OnNextTurn();
+            PlayerOne.TurnManager.GameStarted(PlayerOne.State, PlayerTwo.State, BoardView.Board);
+            PlayerTwo.TurnManager.GameStarted(PlayerTwo.State, PlayerOne.State, BoardView.Board);
+            GameStarted = true;
+        }
+
+        if (!PlayersReady) {
+            PlayersReady = PlayerOne.TurnManager.IsReady() && PlayerTwo.TurnManager.IsReady();
+            return;
+        }
+
         UpdateUI();
 
         BoardView.HighlightSelectedTile(CurrentPlayer);
 
         HandleClick();
     }
-
 
     private void HandleClick() {
         if (WaitingForAnimation) {

@@ -16,6 +16,14 @@ public class TurnManager {
         return null;
     }
 
+    public virtual bool IsReady() {
+        return true;
+    }
+    
+    public virtual void OnGameStarting() {
+        
+    }
+    
     public virtual void GameStarted(Player player, Player opponent, Board board) {
         
     }
