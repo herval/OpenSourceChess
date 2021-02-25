@@ -80,7 +80,7 @@ public class BoardView : MonoBehaviour {
             pieceView.PotentialMoves.ForEach(m => {
                 TileAtPosition(m.TileTo).BlockedMove = m.BlockedMove;
                 TileAtPosition(m.TileTo).PotentialMove = true;
-                if (m.TileCaptured != null) {
+                if (m.TileCaptured != null && m.CapturedPiece.Player != m.OwnPiece.Player) {
                     TileAtPosition(m.TileCaptured).Threatened = true;
                 }
             });
