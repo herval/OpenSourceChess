@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 // handle communication w/ a remote player
 public class RemoteTurnManager : TurnManager, IConnectionCallbacks, IMatchmakingCallbacks {
-    public String AppId = "f755bd34-887c-44db-92dc-83be9a36f77b"; // change this in an actual build
+    public String AppId = "f755bd34-887c-44db-92dc-83be9a36f77b"; // TODO change this in an actual build
 
     private readonly LoadBalancingClient client = new LoadBalancingClient();
     private bool quit;
